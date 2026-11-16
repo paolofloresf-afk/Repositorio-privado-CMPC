@@ -2299,7 +2299,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
     <div class="report-heading-row">
       <div>
         <h2 id="riskReportTitle">Informe preventivo de quemas próximas a predios CMPC</h2>
-        <p>Avisos SIDCO externos vigentes en el período y ubicados a 5 km o menos de predios CMPC.</p>
+        <p id="riskReportSubtitle">Avisos SIDCO externos vigentes en el período y ubicados a 5 km o menos de predios CMPC.</p>
       </div>
       <div class="report-brand"><img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo-cmpc.svg" alt="Logo CMPC"><span>MONITOREO TERRITORIAL · CHILE</span></div>
       <button type="button" class="secondary report-close" id="closeRiskReport">Cerrar informe</button>
@@ -2358,7 +2358,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
     <div class="report-heading-row">
       <div>
         <h2 id="firmsReportTitle">Detecciones térmicas próximas a predios CMPC</h2>
-        <p>Detecciones NASA FIRMS dentro de predios CMPC o a un máximo de 3 km del límite del predio más cercano.</p>
+        <p id="firmsReportSubtitle">Detecciones NASA FIRMS dentro de predios CMPC o a un máximo de 3 km del límite del predio más cercano.</p>
       </div>
       <div class="report-brand"><img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo-cmpc.svg" alt="Logo CMPC"><span>MONITOREO TERRITORIAL · CHILE</span></div>
       <button type="button" class="secondary report-close" id="closeFirmsReport">Cerrar informe</button>
@@ -3532,7 +3532,8 @@ setTimeout(()=>map.invalidateSize(),1000)
     const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
     const minKm=Number($('firmsReportMinKm').value),maxKm=Number($('firmsReportMaxKm').value);
     if(!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm<0||maxKm>3||minKm>=maxKm)return [];
-    const minMeters=minKm*1000,maxMeters=maxKm*1000;
+    $('riskReportSubtitle').textContent='Avisos SIDCO externos vigentes en el período y ubicados entre '+minKm+' y '+maxKm+' km de predios CMPC.';
+  const minMeters=minKm*1000,maxMeters=maxKm*1000;
     return firmsNearbyRecords.filter(record=>{
       if(Number(record.distance)<=0||Number(record.distance)<minMeters||Number(record.distance)>maxMeters)return false;
       const date=String(record.feature.properties?.acq_date||'');
@@ -3585,6 +3586,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       $('firmsReportStatus').textContent=!from||!to?'Selecciona el período de adquisición.':'La fecha inicial no puede ser posterior a la fecha final.';
       $('firmsReportCount').textContent='0 detecciones';$('firmsReportRows').innerHTML='<tr><td colspan="10" class="report-empty">Corrige o completa el período.</td></tr>';renderFirmsReportPagination();return;
     }
+    $('firmsReportSubtitle').textContent='Detecciones NASA FIRMS dentro de predios CMPC o entre '+minKm+' y '+maxKm+' km del límite del predio más cercano.';
     $('firmsReportStatus').textContent='Verificando capa completa de predios y cruce del Selector de Fundo...';
     try{
       if((DATA.predios?.features||[]).length<3000){
