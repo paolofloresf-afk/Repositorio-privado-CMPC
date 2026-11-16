@@ -1673,7 +1673,7 @@ html[data-theme="dark"] .firms-list-intro,html[data-theme="dark"] .firms-list-fo
 .listing-panel>h2{padding:18px 20px;border-bottom:1px solid rgba(150,178,185,.13);font-size:15px}
 .listing-scroll{width:100%;overflow-x:auto;padding:0 0 2px}
 .listing-column-heads,.listing-row{min-width:1200px;display:grid;align-items:center;column-gap:16px}
-.burn-list-grid{grid-template-columns:minmax(95px,.72fr) minmax(92px,.78fr) minmax(180px,1.48fr) minmax(112px,.9fr) minmax(135px,1.15fr) minmax(75px,.58fr) minmax(85px,.65fr) minmax(110px,.88fr) minmax(74px,.57fr)}
+.burn-list-grid{grid-template-columns:minmax(95px,.72fr) minmax(115px,.9fr) minmax(115px,.9fr) minmax(180px,1.48fr) minmax(135px,1.15fr) minmax(75px,.58fr) minmax(85px,.65fr) minmax(110px,.88fr) minmax(74px,.57fr)}
 .firms-list-grid{grid-template-columns:minmax(92px,.74fr) minmax(120px,1fr) minmax(165px,1.35fr) minmax(86px,.65fr) minmax(75px,.55fr) minmax(86px,.65fr) minmax(155px,1.25fr) minmax(80px,.6fr) minmax(58px,.42fr)}
 .listing-column-heads{padding:12px 18px 9px;color:#90aab0;font-size:9px;font-weight:850;letter-spacing:.075em;text-transform:uppercase}
 .listing-rows{display:grid;gap:7px;padding:4px 18px 13px}
@@ -1966,7 +1966,7 @@ html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:
   <h2>Listado de quemas (<span id="count">372</span>)</h2>
   <div class="listing-scroll">
     <div class="listing-column-heads burn-list-grid">
-      <span>Aviso</span><span>Fecha</span><span>Quema / clasificación</span><span>Horario</span><span>Predio CMPC cercano</span><span>Distancia</span><span>Orientación</span><span>Comuna</span><span>Alerta</span>
+      <span>Aviso</span><span>Inicio</span><span>Término</span><span>Quema / clasificación</span><span>Predio CMPC cercano</span><span>Distancia</span><span>Orientación</span><span>Comuna</span><span>Alerta</span>
     </div>
     <div id="tbody" class="listing-rows">
       <div class="listing-empty">Cargando listado de quemas…</div>
@@ -2261,6 +2261,17 @@ function normalizeSIDCODate(value){
  if(check.getUTCFullYear()!==year||check.getUTCMonth()!==month-1||check.getUTCDate()!==day)return '';
  return year+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
 }
+function formatSIDCODisplayDate(value){
+ const normalized=normalizeSIDCODate(value);
+ if(!normalized)return '';
+ const [year,month,day]=normalized.split('-').map(Number);
+ const labels=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+ return String(day).padStart(2,'0')+'-'+(labels[month-1]||String(month).padStart(2,'0'))+'-'+year;
+}
+function formatSIDCOTime(value){
+ const match=String(value??'').trim().match(/^(\d{1,2}):(\d{2})$/);
+ return match?match[1].padStart(2,'0')+':'+match[2]:'';
+}
 function eventActiveInWindow(e,from,to){
  const start=normalizeSIDCODate(e?.fecha);
  if(!start)return false;
@@ -2273,10 +2284,14 @@ const fmtDist=m=>m<1000?Math.round(m)+' m':(m/1000).toFixed(2)+' km';
 function popup(e){
  const feature=(DATA.predios?.features||[]).find(f=>String(f.properties?.predio||'').trim().toUpperCase()===String(e.predio_cercano||'').trim().toUpperCase());
  const fields=feature?predioMapFields(feature):{code:'',commune:''};
- const startLabel=[e.fecha,e.inicio].filter(Boolean).join(' · ');
- const endLabel=[e.fecha_fin||e.fecha,e.termino].filter(Boolean).join(' · ');
+ const startDate=formatSIDCODisplayDate(e.fecha);
+ const startTime=formatSIDCOTime(e.inicio);
+ const endDate=formatSIDCODisplayDate(e.fecha_fin||e.fecha);
+ const endTime=formatSIDCOTime(e.termino);
+ const startLabel=[startDate,startTime].filter(Boolean).join(' · ');
+ const endLabel=[endDate,endTime].filter(Boolean).join(' · ');
  const timeLines=(startLabel?'<br><b>Inicio de quema:</b> '+escapePopupText(startLabel):'')+
-   (endLabel?'<br><b>Fin de quema:</b> '+escapePopupText(endLabel):'');
+   (endLabel?'<br><b>Término de quema:</b> '+escapePopupText(endLabel):'');
  return `<b style="color:${isInside(e)?'#43845D':colors[e.alerta]}">${category(e)}</b><br><b>${e.alerta}</b> · ${escapePopupText(e.quema||'Quema SIDCO')}${timeLines}<br>Comuna del aviso: ${escapePopupText(e.comuna||'No informada')}<br>Predio CMPC: ${escapePopupText(e.predio_cercano||'No informado')}<br>Código de predio: <b>${escapePopupText(fields.code||'No disponible en la capa actual')}</b><br>Comuna del predio: <b>${escapePopupText(fields.commune||'No informada en la capa actual')}</b><br>Distancia: <b>${fmtDist(e.distancia_m)}</b><br>Orientación: ${escapePopupText(e.orientacion)}${e.rumbo_grados!==null?' ('+e.rumbo_grados+'°)':''}<br>Aviso: ${escapePopupText(e.aviso||'s/i')}`;
 }
 let burnListRecords=[];
@@ -2292,13 +2307,15 @@ function renderBurnList(){
     ? 'Mostrando '+(start+1).toLocaleString('es-CL')+'–'+(start+page.length).toLocaleString('es-CL')+' de '+total.toLocaleString('es-CL')
     : 'Mostrando 0 de 0';
   document.getElementById('tbody').innerHTML=page.length?page.map(({event:e,index})=>{
-    const horario=[e.inicio||'',e.termino||''].filter(Boolean).join(' – ');
-    const period=[e.fecha,e.fecha_fin&&e.fecha_fin!==e.fecha?'hasta '+e.fecha_fin:''].filter(Boolean).join(' ');
+    const startDate=formatSIDCODisplayDate(e.fecha);
+    const startTime=formatSIDCOTime(e.inicio);
+    const endDate=formatSIDCODisplayDate(e.fecha_fin||e.fecha);
+    const endTime=formatSIDCOTime(e.termino);
     return '<div class="listing-row burn-list-grid burn-list-row" data-event-index="'+index+'" role="button" tabindex="0" title="Seleccionar quema y localizar en el mapa">'+
       '<div class="listing-cell"><span class="listing-code">'+escapePopupText(e.aviso||'—')+'</span><small>SIDCO</small></div>'+
-      '<div class="listing-cell"><strong>'+escapePopupText(e.fecha||'')+'</strong><small>'+escapePopupText(e.fecha_fin&&e.fecha_fin!==e.fecha?'Hasta '+e.fecha_fin:'Fecha de aviso')+'</small></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(startDate||'—')+'</strong><small>'+(startTime?'Inicio · '+escapePopupText(startTime):'Hora no informada')+'</small></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(endDate||'—')+'</strong><small>'+(endTime?'Término · '+escapePopupText(endTime):'Hora no informada')+'</small></div>'+
       '<div class="listing-cell listing-main-cell"><strong>'+escapePopupText(e.quema||'Quema sin nombre')+'</strong><small>QUEMA EXTERNA · '+escapePopupText(e.comuna||'')+'</small></div>'+
-      '<div class="listing-cell"><strong>'+escapePopupText(horario||'Horario no indicado')+'</strong><small>Inicio – término</small></div>'+
       '<div class="listing-cell"><strong>'+escapePopupText(e.predio_cercano||'Sin predio cercano')+'</strong><small>Predio CMPC de referencia</small></div>'+
       '<div class="listing-cell"><strong>'+escapePopupText(fmtDist(Number(e.distancia_m)||0))+'</strong></div>'+
       '<div class="listing-cell"><strong>'+escapePopupText(e.orientacion||'')+'</strong><small>Orientación</small></div>'+
