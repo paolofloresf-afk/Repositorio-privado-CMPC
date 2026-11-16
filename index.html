@@ -2025,6 +2025,40 @@ html[data-theme="dark"] .panel h2{padding:14px 16px}
 html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 </style>
 
+<style id="cmpc-report-pdf-style">
+.report-brand{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 0 13px;margin:0 0 16px;border-bottom:2px solid #2c7778}
+.report-brand img{display:block;width:112px;height:63px;object-fit:contain;object-position:left center}
+.report-brand span{font-size:9px;letter-spacing:.18em;font-weight:850;color:#4d7377}
+.report-heading{padding:14px 18px 0;border-top:7px solid #173f43;background:linear-gradient(110deg,rgba(23,63,67,.06),transparent 65%)}
+.report-eyebrow{letter-spacing:.18em}
+.report-period{border-left:4px solid #2c7778}
+.report-kpi{break-inside:avoid}
+.report-insight-card{break-inside:avoid}
+.report-table tr{break-inside:avoid}
+.report-disclaimer{break-inside:avoid}
+@page{size:A4 landscape;margin:13mm 12mm 15mm}
+@media print{
+ body{background:#fff!important;color:#20383b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){position:static!important;width:100%!important;max-width:none!important;padding:0!important;margin:0!important}
+ #riskReportModule:not([hidden]) .report-heading,#firmsReportModule:not([hidden]) .report-heading{padding:0 0 10px!important;margin:0 0 10px!important;border-top:0!important;background:none!important}
+ .report-brand{margin-bottom:10px;padding-bottom:8px}
+ .report-brand img{width:96px;height:52px}
+ .report-heading h2{font-size:21pt!important;color:#173f43!important}
+ .report-heading p{font-size:8pt!important;color:#53686b!important}
+ .report-eyebrow{color:#2c7778!important}
+ .report-panel{background:#fff!important;color:#20383b!important}
+ .report-kpi,.report-insight-card,.report-period,.report-method{background:#f3f7f7!important;border-color:#d7e2e2!important}
+ .report-kpi strong,.report-table-heading h3{color:#173f43!important}
+ .report-table-wrap{overflow:visible!important;border-color:#d7e2e2!important}
+ .report-table{width:100%!important;min-width:0!important;font-size:7pt!important;border-collapse:collapse!important}
+ .report-table th{position:static!important;background:#173f43!important;color:#fff!important}
+ .report-table th,.report-table td{padding:4px 5px!important;border-bottom:1px solid #d7e2e2!important}
+ .report-map-button{display:none!important}
+ .report-controls,.report-close,.report-pagination-footer{display:none!important}
+ .report-status{color:#53686b!important}
+ .report-disclaimer{color:#53686b!important}
+}
+</style>
 </head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -2197,6 +2231,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 
 <section id="riskReportModule" class="report-module" hidden aria-labelledby="riskReportTitle">
   <div class="report-heading">
+    <div class="report-brand"><img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo-cmpc.svg" alt="Logo CMPC"><span>MONITOREO TERRITORIAL · CHILE</span></div>
     <div class="report-eyebrow">INFORME OPERACIONAL · SIDCO / CONAF</div>
     <div class="report-heading-row">
       <div>
@@ -2253,6 +2288,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 
 <section id="firmsReportModule" class="report-module" hidden aria-labelledby="firmsReportTitle">
   <div class="report-heading">
+    <div class="report-brand"><img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo-cmpc.svg" alt="Logo CMPC"><span>MONITOREO TERRITORIAL · CHILE</span></div>
     <div class="report-eyebrow">INFORME DE PROXIMIDAD · NASA FIRMS</div>
     <div class="report-heading-row">
       <div>
@@ -3543,7 +3579,12 @@ setTimeout(()=>map.invalidateSize(),1000)
   $('refreshFirmsReport').addEventListener('click',renderFirmsReport);
   $('firmsReportFrom').addEventListener('change',renderFirmsReport);
   $('firmsReportTo').addEventListener('change',renderFirmsReport);
-  $('printFirmsReport').addEventListener('click',()=>window.print());
+  $('printFirmsReport').addEventListener('click',()=>{
+    const previous=firmsReportPageSize;firmsReportPageSize=Math.max(1,firmsReportRows.length);firmsReportPage=0;renderFirmsReportPagination();
+    const restore=()=>{firmsReportPageSize=previous;firmsReportPage=0;renderFirmsReportPagination();window.removeEventListener('afterprint',restore);};
+    window.addEventListener('afterprint',restore,{once:true});window.print();
+    window.setTimeout(restore,1200);
+  });
   $('exportFirmsReport').addEventListener('click',exportFirmsReport);
   $('firmsReportPageSize').addEventListener('change',e=>{firmsReportPageSize=Number(e.target.value)||10;firmsReportPage=0;renderFirmsReportPagination();});
   $('firmsReportPagination').addEventListener('click',e=>{
@@ -4192,7 +4233,12 @@ setTimeout(()=>map.invalidateSize(),1000)
  fromInput.addEventListener('change',renderRiskReport);toInput.addEventListener('change',renderRiskReport);
  window.addEventListener('cmpc-live-events-updated',renderRiskReport);
  $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
- $('printReport').addEventListener('click',()=>window.print());
+ $('printReport').addEventListener('click',()=>{
+  const previous=pageSize;pageSize=Math.max(1,currentRows.length);currentPage=0;renderPagination();
+  const restore=()=>{pageSize=previous;renderPagination();window.removeEventListener('afterprint',restore);};
+  window.addEventListener('afterprint',restore,{once:true});window.print();
+  window.setTimeout(restore,1200);
+ });
  $('exportReport').addEventListener('click',exportCsv);
  $('closeRiskReport').addEventListener('click',()=>{reportModule.hidden=true;toggleButton.setAttribute('aria-expanded','false');});
  $('reportPageSize').addEventListener('change',e=>{pageSize=Number(e.target.value)||10;currentPage=0;renderPagination();});
