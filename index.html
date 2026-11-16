@@ -3245,7 +3245,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       const p=record.feature.properties||{},d=p.acq_date||'',sat=p.satellite||'';
       const dateOk=(!from||!d||d>=from)&&(!to||!d||d<=to);
       const satOk=satellite==='all'||(satellite==='other'?!['Aqua','Terra'].includes(sat):sat===satellite);
-      const distanceOk=Number(record.distance)>0&&Number(record.distance)<=Number(radius||5000);
+      const distanceOk=Number.isFinite(Number(record.distance))&&Number(record.distance)>=0&&Number(record.distance)<=Number(radius||5000);
       const predioProps=(DATA.predios?.features||[]).find(f=>String(f.properties?.predio||'')===record.predio)?.properties||{};
       const predioCommune=String(predioProps.comuna||predioProps.comuna_predio||predioProps.commune||'');
       const communeOk=!commune||predioCommune===commune;
