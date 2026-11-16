@@ -3,7 +3,7 @@
 <title>Monitor CMPC | Alertas territoriales</title>
 <meta name="description" content="Monitor territorial de avisos SIDCO próximos a predios CMPC.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e3a36'/%3E%3Cpath d='M32 9 16 29h9L13 45h38L39 29h9L32 9Z' fill='%2398c99a'/%3E%3Cpath d='M29 43h6v12h-6z' fill='%23d5e8d3'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316533b'/%3E%3Cpath d='M16 38C16 21 30 11 46 13 45 30 34 43 16 38Z' fill='%237dbb50'/%3E%3Cpath d='M17 43C24 27 39 21 51 24 47 39 34 49 17 43Z' fill='%233f934d'/%3E%3C/svg%3E">
 <style>
 :root{--navy:#0b1c32;--blue:#17395d;--cyan:#68c7df;--bg:#eef3f8;--ink:#17283d;--muted:#62758a}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -381,21 +381,45 @@ html[data-theme="dark"] .event-row:hover{background:#1b3324}
 html[data-theme="dark"] .kmz-dropzone{border-color:#456b4b;background:#14251a}
 html[data-theme="dark"] .kmz-dropzone:hover,html[data-theme="dark"] .kmz-dropzone.dragover{background:#1b3422;border-color:#78a97e}
 @media(max-width:650px){header{padding:18px}.header-copy{gap:12px}.header-copy h1{font-size:20px}.brand-symbol{width:23px;height:23px}}
+
+/* Logotipo CMPC original */
+.header-copy{display:flex;align-items:center;gap:20px;flex-wrap:nowrap}
+.header-brand{display:flex;align-items:center;gap:18px;flex:0 0 auto}
+.cmpc-logo-panel{display:flex;align-items:center;justify-content:center;min-width:124px;height:70px;padding:5px 10px;background:#fff;border:1px solid rgba(255,255,255,.52);border-radius:10px;box-shadow:0 3px 13px rgba(8,35,23,.12)}
+.cmpc-logo{display:block;width:112px;height:63px;max-width:100%;object-fit:contain}
+.header-divider{display:block;width:1px;height:38px;background:rgba(231,244,232,.28)}
+.header-copy h1{margin:0!important;max-width:700px;font-size:clamp(19px,2vw,26px);line-height:1.23;font-weight:640;letter-spacing:-.035em}
+.brand-lockup,.brand-symbol,.brand-name{display:none!important}
+.logo-attribution{margin-top:5px;font-size:9px;color:#829383}
+.logo-attribution a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+html[data-theme="dark"] .cmpc-logo-panel{background:#fff;border-color:#fff;box-shadow:0 3px 14px rgba(0,0,0,.3)}
+html[data-theme="dark"] .logo-attribution{color:#9aaf9d}
+@media(max-width:700px){
+ .header-inner{align-items:flex-start;flex-direction:column}
+ .header-copy{width:100%;align-items:center;gap:12px}
+ .header-brand{gap:10px}
+ .cmpc-logo-panel{min-width:95px;width:95px;height:54px;padding:4px 7px}
+ .cmpc-logo{width:83px;height:47px}
+ .header-divider{height:30px}
+ .header-copy h1{font-size:18px}
+ .theme-toggle{align-self:flex-start}
+}
+@media(max-width:420px){
+ .header-copy{gap:9px}
+ .cmpc-logo-panel{min-width:82px;width:82px;height:48px}
+ .cmpc-logo{width:72px;height:41px}
+ .header-copy h1{font-size:16px}
+}
 </style></head><body>
 <header>
   <div class="header-inner">
     <div class="header-copy">
-      <div class="brand-lockup" aria-label="CMPC · Monitor territorial">
-        <span class="brand-symbol" aria-hidden="true">
-          <svg viewBox="0 0 32 32" role="img">
-            <path d="M16 3 6.5 14.5h5.1L4 24h24l-7.6-9.5h5.1L16 3Z" fill="currentColor"/>
-            <path d="M14.6 20.5h2.8V29h-2.8z" fill="currentColor" opacity=".72"/>
-          </svg>
-        </span>
-        <span class="brand-name">CMPC</span>
-        
+      <div class="header-brand">
+        <div class="cmpc-logo-panel">
+          <img class="cmpc-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo-cmpc.svg" alt="Logotipo CMPC" width="112" height="63" loading="eager" decoding="async">
+        </div>
+        <span class="header-divider" aria-hidden="true"></span>
       </div>
-      
       <h1>Monitor de quemas próximas a predios CMPC</h1>
       
     </div>
@@ -472,7 +496,7 @@ html[data-theme="dark"] .kmz-dropzone:hover,html[data-theme="dark"] .kmz-dropzon
 <section class="panel"><h2>Mapa de Chile · imagen satelital, predios y alertas</h2><div id="map"></div><div id="mapBaseStatus" class="map-status">Base cartográfica: imagen satelital Esri. Puedes cambiar a topográfico o calles desde el selector de capas.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div></section>
 <section class="panel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 </div>
-<div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.</div>
+<div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.<div class="logo-attribution">Logotipo CMPC: <a href="https://commons.wikimedia.org/wiki/File:Logo-cmpc.svg" target="_blank" rel="noopener">archivo de CMPC en Wikimedia Commons</a> · Licencia CC BY-SA 4.0.</div></div>
 </main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/esri-leaflet@3.0.15/dist/esri-leaflet.js"></script>
