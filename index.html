@@ -2689,8 +2689,8 @@ function renderBurnList(){
 }
 function filter(){
  const from=document.getElementById('from').value,to=document.getElementById('to').value;
- window.dispatchEvent(new CustomEvent('cmpc-sidco-date-filter',{detail:{from,to}}));
  const commune=document.getElementById('commune').value,search=document.getElementById('search').value.toLowerCase(),radius=+document.getElementById('radius').value;
+ window.dispatchEvent(new CustomEvent('cmpc-global-filter',{detail:{from,to,commune,search,radius,showInside:document.getElementById('showInside').checked,showRed:document.getElementById('showRed').checked,showOrange:document.getElementById('showOrange').checked,showYellow:document.getElementById('showYellow').checked}}));
  visible=events.filter(e=>((!from&&!to)||eventActiveInWindow(e,from,to))&&(!commune||e.comuna===commune)&&Number(e.distancia_m)<=radius&&((isInside(e)&&document.getElementById('showInside').checked)||(!isInside(e)&&e.alerta==='ROJA'&&document.getElementById('showRed').checked)||(!isInside(e)&&e.alerta==='NARANJA'&&document.getElementById('showOrange').checked)||(!isInside(e)&&e.alerta==='AMARILLA'&&document.getElementById('showYellow').checked))&&(!search||(e.predio_cercano+' '+e.aviso+' '+e.quema).toLowerCase().includes(search)));
  markers.clearLayers();
  markerByEvent=[];
@@ -3191,25 +3191,30 @@ setTimeout(()=>map.invalidateSize(),1000)
   $('firmsPageSize').addEventListener('change',event=>{
     firmsPageSize=Math.max(1,Number(event.target.value)||5);firmsCurrentPage=0;renderFirmsListFromCurrentFilters();
   });
-  function renderFirmsListFromCurrentFilters(){
+  function getFirmsFilteredRecords(){
     const from=$('firmsFrom').value,to=$('firmsTo').value,satellite=$('firmsSatellite').value;
-    const filtered=firmsFeatures.filter(f=>{
-      const p=f.properties||{},d=p.acq_date||'',sat=p.satellite||'';
+    const {commune,search,radius}=globalMonitorFilters;
+    return firmsNearbyRecords.filter(record=>{
+      const p=record.feature.properties||{},d=p.acq_date||'',sat=p.satellite||'';
       const dateOk=(!from||!d||d>=from)&&(!to||!d||d<=to);
       const satOk=satellite==='all'||(satellite==='other'?!['Aqua','Terra'].includes(sat):sat===satellite);
-      return dateOk&&satOk;
+      const distanceOk=Number(record.distance)>0&&Number(record.distance)<=Number(radius||5000);
+      const predioProps=(DATA.predios?.features||[]).find(f=>String(f.properties?.predio||'')===record.predio)?.properties||{};
+      const predioCommune=String(predioProps.comuna||predioProps.comuna_predio||predioProps.commune||'');
+      const communeOk=!commune||predioCommune===commune;
+      const searchText=(record.predio+' '+record.zone+' '+sat+' '+(p.instrument||'')).toLowerCase();
+      const searchOk=!search||searchText.includes(search);
+      return dateOk&&satOk&&distanceOk&&communeOk&&searchOk;
     });
-    renderFirmsList(filtered);
+  }
+  function renderFirmsListFromCurrentFilters(){
+    const records=getFirmsFilteredRecords();
+    renderFirmsList(records.map(record=>record.feature));
   }
 
   function renderLayer(){
-    const from=$('firmsFrom').value,to=$('firmsTo').value,satellite=$('firmsSatellite').value;
-    const visible=firmsFeatures.filter(f=>{
-      const p=f.properties||{},d=p.acq_date||'',sat=p.satellite||'';
-      const dateOk=(!from||!d||d>=from)&&(!to||!d||d<=to);
-      const satOk=satellite==='all'||(satellite==='other'?!['Aqua','Terra'].includes(sat):sat===satellite);
-      return dateOk&&satOk;
-    });
+    const records=getFirmsFilteredRecords();
+    const visible=records.map(record=>record.feature);
     firmsLayer.clearLayers();
     firmsMarkersByKey.clear();
     visible.forEach(f=>{
@@ -3256,11 +3261,12 @@ setTimeout(()=>map.invalidateSize(),1000)
   window.addEventListener('cmpc-predios-loaded',rebuildFirmsNearbyRecords);
   if((DATA.predios?.features||[]).length>=3000)rebuildFirmsNearbyRecords();
 
-  // Sincroniza el período general del Monitor con la capa y el listado NASA FIRMS.
-  window.addEventListener('cmpc-sidco-date-filter',event=>{
-    const range=event.detail||{};
-    $('firmsFrom').value=range.from||'';
-    $('firmsTo').value=range.to||'';
+  // Sincroniza los filtros generales con NASA FIRMS: fecha, comuna, búsqueda y radio.
+  let globalMonitorFilters={from:'',to:'',commune:'',search:'',radius:5000};
+  window.addEventListener('cmpc-global-filter',event=>{
+    globalMonitorFilters={...globalMonitorFilters,...(event.detail||{})};
+    $('firmsFrom').value=globalMonitorFilters.from||'';
+    $('firmsTo').value=globalMonitorFilters.to||'';
     firmsCurrentPage=0;
     renderLayer();
   });
