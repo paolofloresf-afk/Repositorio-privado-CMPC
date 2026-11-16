@@ -3046,7 +3046,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     clone.classList.add('support-pdf-export',isFirms?'pdf-firms':'pdf-sidco');
     clone.querySelectorAll('[id]').forEach(node=>node.removeAttribute('id'));
     clone.querySelectorAll('.report-controls,.report-insight-grid,.report-method,.report-status,.report-close,.report-pagination-footer,.report-map-button').forEach(node=>node.remove());
-    clone.querySelectorAll('.report-table thead tr,.report-table tbody tr').forEach(row=>row.lastElementChild?.remove());
+    clone.querySelectorAll('.report-table thead tr,.report-table tbody tr').forEach(row=>{if(row.children.length>1)row.lastElementChild.remove();});
 
     const wrapper=document.createElement('div');
     wrapper.style.cssText='position:fixed;left:-12000px;top:0;width:'+width+'px;background:#fff;z-index:-1;overflow:visible;';
@@ -3144,6 +3144,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       modal=document.createElement('div');
       modal.id='supportPdfPreview';
       modal.className='support-pdf-preview';
+      modal.hidden=true;
       modal.innerHTML=`
         <div class="support-pdf-preview-backdrop" data-preview-close></div>
         <section class="support-pdf-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="supportPdfPreviewTitle">
