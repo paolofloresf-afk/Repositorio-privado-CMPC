@@ -25,6 +25,17 @@ jobs:
         with:
           persist-credentials: true
 
+      - name: Validar JavaScript del dashboard
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path('index.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script(?:\\s[^>]*)?>(.*?)</script>', html, re.S)
+          Path('/tmp/cmpc-dashboard.js').write_text('\\n'.join(s for s in scripts if s.strip()), encoding='utf-8')
+          PY
+          node --check /tmp/cmpc-dashboard.js
+
       - name: Preparar carpeta pública
         run: |
           rm -rf dist
@@ -41,4 +52,4 @@ jobs:
 
       - name: Avisar si falta configurar Cloudflare
         if: ${{ env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' }}
-        run: echo "SIDCO fue procesado; la publicación queda pendiente de configurar los secretos de Cloudflare."
+        run: echo "Los datos KMZ ya están integrados en el repositorio; la publicación queda pendiente de configurar los secretos de Cloudflare."
