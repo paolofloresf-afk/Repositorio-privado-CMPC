@@ -1205,9 +1205,9 @@ html[data-theme="dark"] .report-map-button{background:#245257!important;border-c
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/><path d="M3 21h18"/></svg>
       <span>Conversor de coordenadas</span>
     </a>
-    <a class="sidebar-link report-shortcut" id="navReport" href="#riskReportModule" title="Ir al informe preventivo dentro del Monitor de quemas">
+    <a class="sidebar-link" id="navReport" href="#riskReportModule" title="Informe quemas CONAF">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M15 3v5h5M9 13h7M9 17h7M9 9h2"/></svg>
-      <span>Informe preventivo · 5 días</span>
+      <span>Informe quemas CONAF</span>
     </a>
   </nav>
   <div class="sidebar-workspace">
@@ -1339,9 +1339,42 @@ html[data-theme="dark"] .report-map-button{background:#245257!important;border-c
   <div class="kmz-status" id="kmzStatus" role="status" aria-live="polite">Selecciona el KMZ más reciente que descargaste desde SIDCO.</div>
   <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div><div class="kmz-sync-status" id="sidcoStatus">SIDCO: snapshot inicial cargado</div>
 </section>
-<section id="riskReportModule" class="report-module" aria-labelledby="riskReportTitle">
+
+<div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.<div class="logo-attribution">Logotipo CMPC: <a href="https://commons.wikimedia.org/wiki/File:Logo-cmpc.svg" target="_blank" rel="noopener">archivo de CMPC en Wikimedia Commons</a> · Licencia CC BY-SA 4.0.</div></div>
+
+</section>
+<section id="coordinateConverter" class="module-page converter-module" aria-labelledby="converterTitle">
+  <div class="converter-heading">
+    <div class="converter-eyebrow">HERRAMIENTAS TERRITORIALES</div>
+    <h2 id="converterTitle">Conversor de coordenadas</h2>
+    <p>Convierte coordenadas geográficas entre grados, minutos y segundos (GMS) y grados decimales.</p>
+  </div>
+  <section class="panel converter-card">
+    <div class="converter-card-title">
+      <div>
+        <h3>Conversión geográfica</h3>
+        <p>Ingresa primero la latitud y luego la longitud, separadas por una coma o en líneas distintas.</p>
+      </div>
+      <span class="converter-chip">GMS ↔ Decimal</span>
+    </div>
+    <label for="coordinateInput" class="converter-label">COORDENADAS DE ENTRADA</label>
+    <textarea id="coordinateInput" class="converter-input" spellcheck="false" placeholder="Ejemplo GMS:&#10;37°4'59&quot;S, 71°47'52&quot;W&#10;&#10;O decimal:&#10;-37.083056, -71.797778"></textarea>
+    <div class="converter-actions">
+      <button type="button" id="convertCoordinates">Convertir coordenadas</button>
+      <button type="button" id="copyCoordinates" class="secondary" disabled>Copiar resultado</button>
+      <button type="button" id="clearCoordinates" class="secondary">Limpiar</button>
+    </div>
+    <div id="coordinateOutput" class="coordinate-output" role="status" aria-live="polite">
+      <span class="coordinate-output-label">RESULTADO</span>
+      <p>Esperando coordenadas...</p>
+    </div>
+    <div id="coordinateMessage" class="coordinate-message" aria-live="polite"></div>
+    <div class="converter-footnote">Esta herramienta cambia el formato de presentación entre GMS y decimal. No transforma datum ni convierte coordenadas UTM.</div>
+  </section>
+
+<section id="riskReportModule" class="module-page report-module" aria-labelledby="riskReportTitle">
   <div class="report-heading">
-    <div class="report-eyebrow">MONITOR DE QUEMAS · ANÁLISIS PREVENTIVO</div>
+    <div class="report-eyebrow">CENTRO DE MONITOREO · SIDCO</div>
     <h2 id="riskReportTitle">Informe preventivo de quemas próximas a predios CMPC</h2>
     <p>Proyección de avisos de quema externos con vigencia en el período seleccionado. Se excluyen los avisos ubicados dentro de predios CMPC.</p>
   </div>
@@ -1374,37 +1407,6 @@ html[data-theme="dark"] .report-map-button{background:#245257!important;border-c
     <div class="report-disclaimer">Este informe se construye con los avisos SIDCO cargados en el monitor. Un aviso corresponde a una quema declarada/programada y no confirma por sí solo que exista un incendio ni que la actividad esté autorizada. Las distancias son en línea recta respecto del polígono CMPC más cercano. La vigencia se calcula entre la fecha de inicio y la fecha de término informadas.</div>
   </section>
 </section>
-<div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.<div class="logo-attribution">Logotipo CMPC: <a href="https://commons.wikimedia.org/wiki/File:Logo-cmpc.svg" target="_blank" rel="noopener">archivo de CMPC en Wikimedia Commons</a> · Licencia CC BY-SA 4.0.</div></div>
-
-</section>
-<section id="coordinateConverter" class="module-page converter-module" aria-labelledby="converterTitle">
-  <div class="converter-heading">
-    <div class="converter-eyebrow">HERRAMIENTAS TERRITORIALES</div>
-    <h2 id="converterTitle">Conversor de coordenadas</h2>
-    <p>Convierte coordenadas geográficas entre grados, minutos y segundos (GMS) y grados decimales.</p>
-  </div>
-  <section class="panel converter-card">
-    <div class="converter-card-title">
-      <div>
-        <h3>Conversión geográfica</h3>
-        <p>Ingresa primero la latitud y luego la longitud, separadas por una coma o en líneas distintas.</p>
-      </div>
-      <span class="converter-chip">GMS ↔ Decimal</span>
-    </div>
-    <label for="coordinateInput" class="converter-label">COORDENADAS DE ENTRADA</label>
-    <textarea id="coordinateInput" class="converter-input" spellcheck="false" placeholder="Ejemplo GMS:&#10;37°4'59&quot;S, 71°47'52&quot;W&#10;&#10;O decimal:&#10;-37.083056, -71.797778"></textarea>
-    <div class="converter-actions">
-      <button type="button" id="convertCoordinates">Convertir coordenadas</button>
-      <button type="button" id="copyCoordinates" class="secondary" disabled>Copiar resultado</button>
-      <button type="button" id="clearCoordinates" class="secondary">Limpiar</button>
-    </div>
-    <div id="coordinateOutput" class="coordinate-output" role="status" aria-live="polite">
-      <span class="coordinate-output-label">RESULTADO</span>
-      <p>Esperando coordenadas...</p>
-    </div>
-    <div id="coordinateMessage" class="coordinate-message" aria-live="polite"></div>
-    <div class="converter-footnote">Esta herramienta cambia el formato de presentación entre GMS y decimal. No transforma datum ni convierte coordenadas UTM.</div>
-  </section>
   <div class="converter-example-grid">
     <div class="converter-example">
       <span>GRADOS, MINUTOS Y SEGUNDOS</span>
@@ -2107,7 +2109,8 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
 (() => {
  const modules={
   monitor:{page:document.getElementById('burnMonitorModule'),link:document.getElementById('navMonitor'),title:'Monitor de quemas próximas a predios CMPC',docTitle:'Monitor CMPC | Alertas territoriales'},
-  coordinates:{page:document.getElementById('coordinateConverter'),link:document.getElementById('navCoordinates'),title:'Conversor de coordenadas',docTitle:'Conversor de coordenadas | Monitor CMPC'}
+  coordinates:{page:document.getElementById('coordinateConverter'),link:document.getElementById('navCoordinates'),title:'Conversor de coordenadas',docTitle:'Conversor de coordenadas | Monitor CMPC'},
+  report:{page:document.getElementById('riskReportModule'),link:document.getElementById('navReport'),title:'Informe quemas CONAF',docTitle:'Informe quemas CONAF | Monitor CMPC'}
  };
  const title=document.getElementById('pageTitle');
  function closeSidebar(){
@@ -2129,16 +2132,11 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
   if(scrollToTop)window.scrollTo({top:0,behavior:'smooth'});
   closeSidebar();
   if(name==='monitor')window.setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize({pan:false});},100);
+  if(name==='report'&&typeof window.renderRiskReport==='function')window.renderRiskReport();
  }
  modules.monitor.link.addEventListener('click',event=>{event.preventDefault();selectModule('monitor');});
  modules.coordinates.link.addEventListener('click',event=>{event.preventDefault();selectModule('coordinates');});
- document.getElementById('navReport').addEventListener('click',event=>{
-  event.preventDefault();
-  selectModule('monitor',false);
-  if(typeof window.renderRiskReport==='function')window.renderRiskReport();
-  const report=document.getElementById('riskReportModule');
-  window.setTimeout(()=>report.scrollIntoView({behavior:'smooth',block:'start'}),120);
- });
+ modules.report.link.addEventListener('click',event=>{event.preventDefault();selectModule('report');});
 })();
 </script>
 
