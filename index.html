@@ -1468,7 +1468,7 @@ const escapePopupText=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&am
 let selectedPredioLayer=null;
 // Los filtros y la leyenda se encuentran agrupados en el panel superior.
 const predLayer=L.geoJSON(DATA.predios,{
-  style:()=>({color:'#238b45',weight:1.25,fillColor:'#52b96b',fillOpacity:.15}),
+  style:()=>({color:'#1f8b43',weight:1.5,fillColor:'#52b96b',fillOpacity:.18}),
   onEachFeature:(feature,layer)=>{
     const p=feature.properties||{};
     const nombre=escapePopupText(p.predio||'Predio CMPC');
@@ -1490,10 +1490,11 @@ const predLayer=L.geoJSON(DATA.predios,{
     });
   }
 }).addTo(map);
-// Solo dos mapas base y una capa superpuesta de predios CMPC.
+// Las bases son excluyentes; la capa de predios contiene todos los polígonos disponibles.
+const prediosTotal=DATA.predios?.features?.length||0;
 L.control.layers(
-  {'Satelital':satelliteBase,'Topográfico':topoBase,'Base oscura':darkBase},
-  {'Predios CMPC':predLayer},
+  {'Satelital':satelliteBase,'Topográfico':topoBase,'CARTO Dark Matter':darkBase},
+  {['Predios CMPC · todos ('+prediosTotal+')']:predLayer},
   {collapsed:true,position:'topright'}
 ).addTo(map);
 const rangeGroup=document.getElementById('mapRangeGroup');
@@ -1590,7 +1591,16 @@ document.getElementById('clearDates').addEventListener('click',()=>{
 document.getElementById('reset').onclick=()=>{document.getElementById('from').value=defaultPeriod().from;document.getElementById('to').value=defaultPeriod().to;document.getElementById('commune').value='';document.getElementById('search').value='';document.getElementById('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id).checked=true);if(!map.hasLayer(predLayer))predLayer.addTo(map);filter()};
 document.getElementById('csv').onclick=()=>{const cols=['fecha','alerta','comuna','quema','aviso','predio_cercano','distancia_m','distancia_km','orientacion','lat','lon'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv=[cols.join(';'),...visible.map(e=>cols.map(c=>q(e[c])).join(';'))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='alertas_quemas_CPMC_noviembre_2026.csv';a.click();URL.revokeObjectURL(a.href)};
 filter();
-map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.setMaxBounds(chileBounds);setTimeout(()=>map.invalidateSize(),250);setTimeout(()=>map.invalidateSize(),1000)
+// Encuadra la extensión real de TODOS los predios cargados, no solo los cercanos a avisos.
+const allPrediosBounds=predLayer.getBounds();
+if(allPrediosBounds.isValid()){
+  map.fitBounds(allPrediosBounds,{padding:[34,34],maxZoom:7});
+}else{
+  map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});
+}
+map.setMaxBounds(chileBounds);
+setTimeout(()=>map.invalidateSize(),250);
+setTimeout(()=>map.invalidateSize(),1000)
 </script>
 <script>
 (() => {
