@@ -1438,21 +1438,15 @@ const satelliteBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/ser
 const topoBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{
   maxZoom:18,attribution:'Tiles &copy; Esri — Sources: Esri, USGS, NOAA'
 });
-// CARTO Dark Matter: fondo sin etiquetas + capa transparente de etiquetas.
+// CARTO Dark Matter raster, variante oficial compatible con Leaflet.
 const CARTO_BASEMAPS_KEY='cb1_59vd_1_9d4211b005e57bbe4c174097';
-const cartoDarkAttribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
-const darkNoLabels=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png?key='+CARTO_BASEMAPS_KEY,{
-  subdomains:'abcd',
+const cartoDarkBase=L.tileLayer('https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key='+CARTO_BASEMAPS_KEY,{
   minZoom:0,
+  maxNativeZoom:18,
   maxZoom:20,
-  attribution:cartoDarkAttribution
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 });
-const darkOnlyLabels=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png?key='+CARTO_BASEMAPS_KEY,{
-  subdomains:'abcd',
-  minZoom:0,
-  maxZoom:20
-});
-const darkBase=L.layerGroup([darkNoLabels,darkOnlyLabels]);
+const darkBase=cartoDarkBase;
 let satelliteFallbackUsed=false;
 satelliteBase.on('tileerror',()=>{
   if(!satelliteFallbackUsed && map.hasLayer(satelliteBase)){
