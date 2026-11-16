@@ -23,7 +23,7 @@ label{font-size:11px;color:var(--muted);font-weight:700;display:block;margin-bot
 .legend-check input{width:auto;margin:0;accent-color:#174b72}
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;flex:0 0 12px}
 .dot.violet{background:#7c3aed;border:2px solid #4c1d95}.dot.red{background:#d62828}.dot.orange{background:#f28c28}.dot.yellow{background:#e2b72c}
-.square{display:inline-block;width:13px;height:13px;background:#7cc8dc;border:1px solid #176b87;flex:0 0 13px}
+.square{display:inline-block;width:13px;height:13px;background:#52b96b;border:1px solid #238b45;flex:0 0 13px}
 .field-label{display:block;font-size:10px;font-weight:700;color:#60758a;margin:0 0 8px}
 .field-label input,.field-label select{display:block;width:100%;padding:7px;font-size:11px;margin-top:4px}
 .legend-actions{display:flex;gap:7px;margin-top:8px}.legend-actions button{font-size:10px;padding:8px 6px}
@@ -40,7 +40,7 @@ label{font-size:11px;color:var(--muted);font-weight:700;display:block;margin-bot
 .legend-option span:last-child{display:grid;gap:2px}.legend-option b{font-size:12px;color:#263d53}.legend-option small{font-size:10px;color:#718397;font-weight:400}
 .legend-dot{width:13px;height:13px;border-radius:50%;display:inline-block;flex:0 0 13px}
 .legend-dot.violet{background:#7c3aed;border:2px solid #4c1d95}.legend-dot.red{background:#d62828}.legend-dot.orange{background:#f28c28}.legend-dot.yellow{background:#e2b72c}
-.legend-square{width:13px;height:13px;display:inline-block;background:#7cc8dc;border:1px solid #176b87;flex:0 0 13px}
+.legend-square{width:13px;height:13px;display:inline-block;background:#52b96b;border:1px solid #238b45;flex:0 0 13px}
 .filter-grid{display:grid;grid-template-columns:repeat(3,minmax(130px,1fr));gap:10px}
 .filter-actions{display:flex;gap:8px;align-items:end}.filter-actions button{flex:1}
 @media(max-width:950px){.filter-grid{grid-template-columns:repeat(2,minmax(130px,1fr))}}
@@ -96,23 +96,6 @@ td{padding:9px 8px;border-bottom:1px solid #edf1f5}.event-row{cursor:pointer}.ev
 @media(max-width:1050px){.unified-grid{grid-template-columns:1fr 1fr}.actions-group{display:grid;grid-template-columns:1fr 1fr}.actions-group .control-title{grid-column:1/-1}}
 @media(max-width:600px){.unified-grid{grid-template-columns:1fr}.dates-group{grid-template-columns:1fr 1fr}.actions-group{grid-template-columns:1fr}}
 
-.weather-panel{background:#fff;border:1px solid #dbe4ec;border-radius:12px;box-shadow:0 2px 8px #17395d0b;margin-bottom:14px;padding:15px 17px}
-.weather-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.weather-head h2{font-size:15px;color:#17395d;margin:0 0 4px}.weather-head p{font-size:11px;color:#6b7e91;margin:0}
-.weather-controls{display:flex;align-items:end;gap:8px;flex-wrap:wrap}.weather-controls label{display:grid;gap:4px;margin:0;font-size:10px;font-weight:800;color:#60758a}
-.weather-controls select{min-width:230px;padding:8px;font-size:11px}.weather-controls button{width:auto;padding:9px 12px;font-size:11px}
-.weather-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0 9px;padding:8px 10px;border-radius:7px;background:#f2f6fa;color:#60758a;font-size:10px}
-.weather-metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.weather-metric{background:#f7f9fc;border:1px solid #e5ebf1;border-radius:8px;padding:10px;min-width:0}
-.weather-metric small{display:block;color:#6b7e91;font-size:10px;margin-bottom:6px}.weather-metric strong{display:block;font-size:20px;line-height:1.15;color:#17395d;font-variant-numeric:tabular-nums}
-.weather-metric span{display:block;font-size:10px;color:#718397;margin-top:4px}.forecast-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:14px 0 8px;color:#52677c;font-size:11px}
-.forecast-head span{font-size:10px;color:#8090a0}.weather-forecast{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
-.forecast-hour{background:#f7f9fc;border:1px solid #e5ebf1;border-radius:8px;padding:9px;text-align:center}.forecast-hour b{display:block;font-size:11px;color:#17395d;margin-bottom:5px}
-.forecast-hour strong{display:block;font-size:14px;color:#244c70}.forecast-hour span{display:block;font-size:10px;color:#718397;margin-top:4px}
-.forecast-empty{grid-column:1/-1;color:#718397;font-size:11px;padding:12px;background:#f7f9fc;border-radius:8px}
-.weather-disclaimer{font-size:10px;color:#7a8997;line-height:1.45;margin-top:10px}
-@media(max-width:1000px){.weather-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.weather-forecast{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:600px){.weather-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.weather-forecast{grid-template-columns:repeat(2,minmax(0,1fr))}.weather-controls,.weather-controls label,.weather-controls select,.weather-controls button{width:100%}}
-
 .kmz-import-panel{background:#fff;border:1px solid #dbe4ec;border-radius:12px;box-shadow:0 2px 8px #17395d0b;margin-bottom:14px;padding:15px 17px}
 .kmz-import-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .kmz-import-head h2{font-size:15px;color:#17395d;margin:0 0 4px}
@@ -133,8 +116,104 @@ td{padding:9px 8px;border-bottom:1px solid #edf1f5}.event-row{cursor:pointer}.ev
 .kmz-note{margin-top:8px;color:#788897;font-size:10px;line-height:1.45}
 @media(max-width:600px){.kmz-actions{display:grid;grid-template-columns:1fr}.kmz-actions button{width:100%}}
 
+
+/* Diseño renovado y selector de apariencia */
+:root{color-scheme:light;--surface:#fff;--surface-alt:#f7f9fc;--line:#dbe4ec;--soft-text:#718397}
+.kpis{grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.kpi{border-radius:14px;padding:18px 17px;box-shadow:0 5px 18px rgba(22,48,77,.055);transition:transform .18s ease,box-shadow .18s ease}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 9px 24px rgba(22,48,77,.09)}
+.top-date-panel,.kmz-import-panel{border-radius:14px;box-shadow:0 5px 18px rgba(22,48,77,.045)}
+.control-group{border-radius:11px}
+.header-inner{max-width:1500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.header-copy{min-width:0}
+.header-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;color:#9bc4d6;margin-bottom:7px}
+header h1{font-size:clamp(20px,2.3vw,27px);letter-spacing:-.025em}
+header p{line-height:1.5}
+.theme-toggle{width:auto;min-width:142px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:10px 13px;border:1px solid rgba(255,255,255,.32);border-radius:10px;background:rgba(255,255,255,.10);color:#fff;font-size:12px;font-weight:700;backdrop-filter:blur(8px);white-space:nowrap}
+.theme-toggle:hover{background:rgba(255,255,255,.18)}
+.theme-icon{font-size:17px;line-height:1}
+.kmz-sync-status{display:inline-flex;align-items:center;margin-top:8px;padding:5px 9px;border-radius:7px;background:#edf4f8;color:#597188;font-size:10px}
+#map{border-radius:0 0 14px 14px}
+.kpi,.panel{border-radius:14px}
+.burn-marker{transition:fill-opacity .15s ease}
+.leaflet-popup-content-wrapper{border-radius:10px}
+@media(max-width:950px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.header-inner{align-items:flex-start;flex-direction:column}.theme-toggle{align-self:flex-start}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+html[data-theme="dark"]{
+ color-scheme:dark;
+ --bg:#0b1220;--ink:#e7eef7;--muted:#a5b4c7;--surface:#121d2d;--surface-alt:#182538;--line:#2a3a50;--soft-text:#a7b7c9;
+}
+html[data-theme="dark"] body{background:var(--bg);color:var(--ink)}
+html[data-theme="dark"] .kpi,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .top-date-panel,
+html[data-theme="dark"] .kmz-import-panel{background:var(--surface);border-color:var(--line);color:var(--ink);box-shadow:0 7px 22px rgba(0,0,0,.2)}
+html[data-theme="dark"] .kpi span,
+html[data-theme="dark"] .unified-heading span,
+html[data-theme="dark"] .kmz-import-head p,
+html[data-theme="dark"] .note,
+html[data-theme="dark"] .footer{color:var(--muted)}
+html[data-theme="dark"] .unified-heading b,
+html[data-theme="dark"] .top-date-heading b,
+html[data-theme="dark"] .legend-head b,
+html[data-theme="dark"] .kmz-import-head h2{color:#e4edf7}
+html[data-theme="dark"] .control-group,
+html[data-theme="dark"] .legend-option,
+html[data-theme="dark"] .kmz-dropzone{background:var(--surface-alt);border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] .control-title,
+html[data-theme="dark"] .field-label,
+html[data-theme="dark"] .legend-check,
+html[data-theme="dark"] .legend-section-title,
+html[data-theme="dark"] .legend-title{color:#b5c4d5}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea{background:#0e1827;color:#e7eef7;border-color:#3a4c63}
+html[data-theme="dark"] input::placeholder{color:#8294a9}
+html[data-theme="dark"] button.secondary,
+html[data-theme="dark"] .dates-group .date-reset,
+html[data-theme="dark"] .kmz-actions .kmz-secondary{background:#26374e;color:#e7eef7}
+html[data-theme="dark"] .legend-head{border-color:var(--line)}
+html[data-theme="dark"] .legend-option{border-color:var(--line)}
+html[data-theme="dark"] .legend-option b{color:#e2ebf5}
+html[data-theme="dark"] .legend-option small,
+html[data-theme="dark"] .legend-head span{color:#9aacc0}
+html[data-theme="dark"] .map-status{background:#172438;color:#b4c3d4;border-color:#2a3a50}
+html[data-theme="dark"] .kmz-file-hint,
+html[data-theme="dark"] .kmz-note{color:#a1b1c3}
+html[data-theme="dark"] .kmz-sync-status{background:#203249;color:#bfd0e2}
+html[data-theme="dark"] .kmz-status{background:#1b2b40;color:#c5d4e4}
+html[data-theme="dark"] .kmz-status.success{background:#173b30;color:#a9e2c5}
+html[data-theme="dark"] .kmz-status.error{background:#472526;color:#ffc0bc}
+html[data-theme="dark"] .kmz-status.progress{background:#1c344b;color:#b7d9f4}
+html[data-theme="dark"] table th{background:#1c2b3f;color:#c1cede}
+html[data-theme="dark"] table td{border-color:#2a3a50;color:#e0e9f3}
+html[data-theme="dark"] .event-row:hover{background:#20334a}
+html[data-theme="dark"] .event-row.selected-event{background:#23415a;box-shadow:inset 4px 0 #62b8df}
+html[data-theme="dark"] .inside-row{background:#282340}
+html[data-theme="dark"] .leaflet-popup-content-wrapper,
+html[data-theme="dark"] .leaflet-popup-tip,
+html[data-theme="dark"] .leaflet-control-layers,
+html[data-theme="dark"] .leaflet-bar a{background:#172438;color:#e4edf7;border-color:#3a4b60}
+html[data-theme="dark"] .leaflet-control-layers-separator{border-color:#3a4b60}
+html[data-theme="dark"] .leaflet-control-attribution{background:rgba(18,29,45,.82);color:#b6c4d4}
+html[data-theme="dark"] .leaflet-control-attribution a{color:#8fc8e8}
+html[data-theme="dark"] .leaflet-bar a:hover{background:#263b54}
+html[data-theme="dark"] .leaflet-control-zoom-in,
+html[data-theme="dark"] .leaflet-control-zoom-out{color:#e4edf7}
 </style></head><body>
-<header><h1>Monitor de quemas próximas a predios CMPC</h1><p>SIDCO · Noviembre 2026 · Cruce geoespacial con Fundos CMPC · Corte de datos: archivo actualizado al 15-11-2026 21:15</p></header>
+<header>
+  <div class="header-inner">
+    <div class="header-copy">
+      <div class="header-eyebrow">MONITOREO TERRITORIAL · SIDCO / CMPC</div>
+      <h1>Monitor de quemas próximas a predios CMPC</h1>
+      <p>Alertas georreferenciadas · Cruce espacial con predios CMPC · Datos del archivo disponible</p>
+    </div>
+    <button type="button" id="themeToggle" class="theme-toggle" aria-label="Cambiar a modo oscuro" aria-pressed="false">
+      <span class="theme-icon" aria-hidden="true">☾</span><span id="themeLabel">Modo oscuro</span>
+    </button>
+  </div>
+</header>
 <main>
 <div class="kpis">
 <div class="kpi"><strong id="kTotal">372</strong><span>Quemas a 5 km o menos</span></div>
@@ -197,27 +276,8 @@ td{padding:9px 8px;border-bottom:1px solid #edf1f5}.event-row{cursor:pointer}.ev
     <button type="button" id="downloadProcessed" class="kmz-secondary" disabled>Descargar events.json actualizado</button>
   </div>
   <div class="kmz-status" id="kmzStatus" role="status" aria-live="polite">Selecciona el KMZ más reciente que descargaste desde SIDCO.</div>
-  <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div>
+  <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div><div class="kmz-sync-status" id="sidcoStatus">SIDCO: snapshot inicial cargado</div>
 </section>
-<section class="weather-panel" aria-label="Monitoreo meteorológico CMPC">
-  <div class="weather-head">
-    <div><h2>Monitoreo meteorológico CMPC</h2><p>Condiciones actuales estimadas por modelo y pronóstico horario para el sector de un aviso SIDCO.</p></div>
-    <div class="weather-controls"><label>SECTOR / AVISO<select id="weatherEventSelect"></select></label><button id="weatherRefresh" type="button">Actualizar ahora</button></div>
-  </div>
-  <div class="weather-meta"><span id="weatherStatus">Esperando consulta meteorológica…</span><span id="sidcoStatus">SIDCO: snapshot inicial cargado</span><span>Fuente: Open-Meteo · modelo meteorológico</span></div>
-  <div class="weather-metrics">
-    <div class="weather-metric"><small>Viento</small><strong id="wxWind">—</strong><span id="wxDirection">Dirección —</span></div>
-    <div class="weather-metric"><small>Ráfagas</small><strong id="wxGust">—</strong><span>km/h</span></div>
-    <div class="weather-metric"><small>Temperatura</small><strong id="wxTemp">—</strong><span>°C</span></div>
-    <div class="weather-metric"><small>Humedad relativa</small><strong id="wxHumidity">—</strong><span>%</span></div>
-    <div class="weather-metric"><small>Precipitación</small><strong id="wxRain">—</strong><span>mm</span></div>
-    <div class="weather-metric"><small>Dirección del viento</small><strong id="wxCompass">—</strong><span id="wxBearing">—</span></div>
-  </div>
-  <div class="forecast-head"><b>Pronóstico horario · próximas 6 horas</b><span>Según última actualización del modelo</span></div>
-  <div id="weatherForecast" class="weather-forecast"><div class="forecast-empty">Selecciona un aviso para consultar las condiciones meteorológicas.</div></div>
-  <div class="weather-disclaimer">Estos valores son estimaciones de un modelo meteorológico en la coordenada del aviso; no equivalen a una medición de una estación instalada en ese punto. El panel consulta automáticamente cada 15 minutos mientras el informe permanece abierto.</div>
-</section>
-
 <div class="layout">
 <section class="panel"><h2>Mapa de Chile · imagen satelital, predios y alertas</h2><div id="map"></div><div id="mapBaseStatus" class="map-status">Base cartográfica: imagen satelital Esri. Puedes cambiar a topográfico o calles desde el selector de capas.</div><div class="note">El mapa utiliza imágenes satelitales Esri como base predeterminada. Puedes alternar entre satélite, topográfico y calles desde el selector de capas arriba a la derecha. Los puntos violetas grandes identifican avisos cuya ubicación cae dentro de un polígono CMPC (clasificación operativa “Quema CMPC · dentro”); los demás puntos conservan el color de su alerta por distancia. Los polígonos celestes muestran predios CMPC asociados a eventos dentro de 5 km. Haz clic en cualquier predio para que el mapa se desplace y acerque automáticamente a su ubicación; el predio seleccionado quedará resaltado. Selecciona un punto para ver fecha, distancia, orientación y predio más cercano. La orientación indica el rumbo desde el límite del predio hacia la quema.</div></section>
 <section class="panel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
@@ -260,7 +320,7 @@ L.control.scale({metric:true,imperial:false}).addTo(map);
 let selectedPredioLayer=null;
 // Los filtros y la leyenda se encuentran agrupados en el panel superior.
 const predLayer=L.geoJSON(DATA.predios,{
-  style:()=>({color:'#176b87',weight:1.4,fillColor:'#7cc8dc',fillOpacity:.22}),
+  style:()=>({color:'#238b45',weight:1.25,fillColor:'#52b96b',fillOpacity:.15}),
   onEachFeature:(feature,layer)=>{
     const nombre=feature.properties?.predio || 'Predio CMPC';
     const zona=feature.properties?.zona || 'Sin zona informada';
@@ -290,7 +350,7 @@ function filter(){
  visible=events.filter(e=>(!from||e.fecha>=from)&&(!to||e.fecha<=to)&&(!commune||e.comuna===commune)&&e.distancia_m<=radius&&((isInside(e)&&document.getElementById('showInside').checked)||(!isInside(e)&&e.alerta==='ROJA'&&document.getElementById('showRed').checked)||(!isInside(e)&&e.alerta==='NARANJA'&&document.getElementById('showOrange').checked)||(!isInside(e)&&e.alerta==='AMARILLA'&&document.getElementById('showYellow').checked))&&(!search||(e.predio_cercano+' '+e.aviso+' '+e.quema).toLowerCase().includes(search)));
  markers.clearLayers();
  markerByEvent=[];
- visible.forEach((e,index)=>{const inside=isInside(e);const m=L.circleMarker([e.lat,e.lon],{radius:inside?9:6,color:inside?'#4c1d95':'#fff',weight:inside?2:1,fillColor:inside?colors.CMPC:colors[e.alerta],fillOpacity:.98});m.bindPopup(popup(e));m.addTo(markers);markerByEvent[index]=m});
+ visible.forEach((e,index)=>{const inside=isInside(e);const markerColor=inside?colors.CMPC:colors[e.alerta];const m=L.circleMarker([e.lat,e.lon],{radius:inside?7:5,color:markerColor,weight:1.35,opacity:.78,fillColor:markerColor,fillOpacity:.58,className:'burn-marker'});m.bindPopup(popup(e));m.addTo(markers);markerByEvent[index]=m});
  document.getElementById('count').textContent=visible.length;
  document.getElementById('kTotal').textContent=visible.length;
  document.getElementById('kRed').textContent=visible.filter(e=>e.alerta==='ROJA').length;
@@ -336,42 +396,7 @@ map.fitBounds([[-56.0,-76.0],[-17.0,-66.0]],{padding:[12,12]});setTimeout(()=>ma
 </script>
 <script>
 (() => {
- const $=id=>document.getElementById(id), select=$('weatherEventSelect'), status=$('weatherStatus');
- const compass=d=>d===null||d===undefined?'—':['N','NE','E','SE','S','SO','O','NO'][Math.round(Number(d)/45)%8];
- const fmt=(v,d=0)=>v===null||v===undefined?'—':Number(v).toFixed(d);
- const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- function fillSelect(){
-  const prior=select.value;select.innerHTML='';
-  [...events].filter(e=>Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lon))).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).forEach((e,i)=>{
-   const o=document.createElement('option');o.value=e.id||String(i);
-   o.textContent=`${e.fecha||'s/f'} · ${e.comuna||'Sin comuna'} · ${e.aviso||e.quema||'Aviso SIDCO'}`;
-   o.dataset.lat=e.lat;o.dataset.lon=e.lon;select.appendChild(o);
-  });
-  if([...select.options].some(o=>o.value===prior))select.value=prior;
- }
- async function refreshWeather(){
-  const opt=select.selectedOptions[0];if(!opt){status.textContent='No hay avisos con coordenadas disponibles.';return;}
-  status.textContent='Consultando condiciones meteorológicas…';
-  $('weatherForecast').innerHTML='<div class="forecast-empty">Cargando pronóstico…</div>';
-  try{
-   const q=new URLSearchParams({latitude:opt.dataset.lat,longitude:opt.dataset.lon,timezone:'America/Santiago',wind_speed_unit:'kmh',
-    current:'temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,wind_gusts_10m',
-    hourly:'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,wind_speed_10m,wind_direction_10m,wind_gusts_10m',forecast_days:'2'});
-   const response=await fetch('https://api.open-meteo.com/v1/forecast?'+q.toString(),{cache:'no-store'});
-   if(!response.ok)throw new Error('Open-Meteo HTTP '+response.status);
-   const data=await response.json(),c=data.current||{};
-   $('wxWind').textContent=fmt(c.wind_speed_10m)+' km/h';$('wxDirection').textContent=compass(c.wind_direction_10m)+' · '+fmt(c.wind_direction_10m)+'°';
-   $('wxGust').textContent=fmt(c.wind_gusts_10m);$('wxTemp').textContent=fmt(c.temperature_2m,1);$('wxHumidity').textContent=fmt(c.relative_humidity_2m);
-   $('wxRain').textContent=fmt(c.precipitation,1);$('wxCompass').textContent=compass(c.wind_direction_10m);$('wxBearing').textContent=fmt(c.wind_direction_10m)+'° desde el norte';
-   const times=data.hourly?.time||[],start=Math.max(0,times.findIndex(t=>t>=String(c.time||'').slice(0,13))),h=data.hourly||[],cards=[];
-   for(let i=start;i<Math.min(start+6,times.length);i++)cards.push(`<div class="forecast-hour"><b>${safe(times[i].slice(11,16))}</b><strong>${fmt(h.temperature_2m?.[i])} °C</strong><span>Viento ${fmt(h.wind_speed_10m?.[i])} km/h</span><span>Ráfaga ${fmt(h.wind_gusts_10m?.[i])} km/h</span><span>Humedad ${fmt(h.relative_humidity_2m?.[i])}%</span><span>Lluvia ${fmt(h.precipitation?.[i],1)} mm</span></div>`);
-   $('weatherForecast').innerHTML=cards.join('')||'<div class="forecast-empty">Pronóstico horario no disponible.</div>';
-   status.textContent='Última consulta: '+new Date().toLocaleString('es-CL',{timeZone:'America/Santiago'})+' · '+Number(opt.dataset.lat).toFixed(4)+', '+Number(opt.dataset.lon).toFixed(4);
-  }catch(err){status.textContent='No fue posible actualizar meteorología: '+err.message;$('weatherForecast').innerHTML='<div class="forecast-empty">Reintenta en unos minutos.</div>';}
- }
- select.addEventListener('change',refreshWeather);$('weatherRefresh').addEventListener('click',refreshWeather);
- fillSelect();refreshWeather();window.setInterval(refreshWeather,15*60*1000);
- window.addEventListener('cmpc-live-events-updated',()=>{fillSelect();refreshWeather();});
+ const $=id=>document.getElementById(id);
  async function loadLiveEvents(){
   try{
    const r=await fetch('./events.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
@@ -656,4 +681,28 @@ map.fitBounds([[-56.0,-76.0],[-17.0,-66.0]],{padding:[12,12]});setTimeout(()=>ma
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
 })();
-</script></body></html>
+</script>
+<script>
+(() => {
+  const root=document.documentElement;
+  const button=document.getElementById('themeToggle');
+  const label=document.getElementById('themeLabel');
+  if(!button||!label)return;
+  const saved=localStorage.getItem('cmpc-theme');
+  function applyTheme(theme){
+    root.dataset.theme=theme;
+    const dark=theme==='dark';
+    button.setAttribute('aria-pressed',String(dark));
+    button.setAttribute('aria-label',dark?'Cambiar a modo claro':'Cambiar a modo oscuro');
+    label.textContent=dark?'Modo claro':'Modo oscuro';
+    button.querySelector('.theme-icon').textContent=dark?'☀':'☾';
+  }
+  applyTheme(saved==='dark'?'dark':'light');
+  button.addEventListener('click',()=>{
+    const next=root.dataset.theme==='dark'?'light':'dark';
+    applyTheme(next);
+    localStorage.setItem('cmpc-theme',next);
+  });
+})();
+</script>
+</body></html>
