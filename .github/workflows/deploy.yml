@@ -48,9 +48,15 @@ jobs:
             echo "Los datos SIDCO no cambiaron; se mantiene la versión anterior."
           fi
 
+      - name: Preparar carpeta pública
+        run: |
+          rm -rf dist
+          mkdir -p dist
+          cp index.html events.json dist/
+
       - name: Publicar dashboard en Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=monitor-cmpc-cloud --branch=main
+          command: pages deploy dist --project-name=monitor-cmpc-cloud --branch=main
