@@ -382,32 +382,23 @@ html[data-theme="dark"] .kmz-dropzone{border-color:#456b4b;background:#14251a}
 html[data-theme="dark"] .kmz-dropzone:hover,html[data-theme="dark"] .kmz-dropzone.dragover{background:#1b3422;border-color:#78a97e}
 @media(max-width:650px){header{padding:18px}.header-copy{gap:12px}.header-copy h1{font-size:20px}.brand-symbol{width:23px;height:23px}}
 
-/* Logotipo CMPC original */
-.header-copy{display:flex;align-items:center;gap:20px;flex-wrap:nowrap}
-.header-brand{display:flex;align-items:center;gap:18px;flex:0 0 auto}
-.cmpc-logo-panel{display:flex;align-items:center;justify-content:center;min-width:124px;height:70px;padding:5px 10px;background:#fff;border:1px solid rgba(255,255,255,.52);border-radius:10px;box-shadow:0 3px 13px rgba(8,35,23,.12)}
-.cmpc-logo{display:block;width:112px;height:63px;max-width:100%;object-fit:contain}
-.header-divider{display:block;width:1px;height:38px;background:rgba(231,244,232,.28)}
-.header-copy h1{margin:0!important;max-width:700px;font-size:clamp(19px,2vw,26px);line-height:1.23;font-weight:640;letter-spacing:-.035em}
-.brand-lockup,.brand-symbol,.brand-name{display:none!important}
-.logo-attribution{margin-top:5px;font-size:9px;color:#829383}
-.logo-attribution a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-html[data-theme="dark"] .cmpc-logo-panel{background:#fff;border-color:#fff;box-shadow:0 3px 14px rgba(0,0,0,.3)}
-html[data-theme="dark"] .logo-attribution{color:#9aaf9d}
+/* Pinito del Monitor: símbolo compacto, sin logotipo corporativo */
+.header-copy{display:flex;align-items:center;gap:18px;flex-wrap:nowrap}
+.header-pine{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;color:#b9d9ad}
+.header-pine svg{display:block;width:34px;height:34px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.16))}
+.header-copy h1{margin:0!important;max-width:760px;font-size:clamp(19px,2vw,26px);line-height:1.23;font-weight:640;letter-spacing:-.035em}
 @media(max-width:700px){
- .header-inner{align-items:flex-start;flex-direction:column}
- .header-copy{width:100%;align-items:center;gap:12px}
- .header-brand{gap:10px}
- .cmpc-logo-panel{min-width:95px;width:95px;height:54px;padding:4px 7px}
- .cmpc-logo{width:83px;height:47px}
- .header-divider{height:30px}
+ .header-inner{align-items:center;flex-direction:row}
+ .header-copy{width:auto;flex:1;min-width:0;align-items:center;gap:11px}
+ .header-pine{flex-basis:36px;width:36px;height:36px}
+ .header-pine svg{width:30px;height:30px}
  .header-copy h1{font-size:18px}
- .theme-toggle{align-self:flex-start}
+ .theme-toggle{align-self:center}
 }
 @media(max-width:420px){
- .header-copy{gap:9px}
- .cmpc-logo-panel{min-width:82px;width:82px;height:48px}
- .cmpc-logo{width:72px;height:41px}
+ .header-copy{gap:8px}
+ .header-pine{flex-basis:31px;width:31px;height:31px}
+ .header-pine svg{width:27px;height:27px}
  .header-copy h1{font-size:16px}
 }
 
@@ -1461,11 +1452,11 @@ html:not([data-theme="dark"]) .actions-dropdown-menu button{
 <header>
   <div class="header-inner">
     <div class="header-copy">
-      <div class="header-brand">
-        <div class="cmpc-logo-panel">
-          <img class="cmpc-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo-cmpc.svg" alt="Logotipo CMPC" width="112" height="63" loading="eager" decoding="async">
-        </div>
-        <span class="header-divider" aria-hidden="true"></span>
+      <div class="header-pine" aria-hidden="true">
+        <svg viewBox="0 0 32 32" focusable="false">
+          <path d="M16 3 6.5 14.5h5.1L4 24h24l-7.6-9.5h5.1L16 3Z" fill="currentColor"/>
+          <path d="M14.6 20.5h2.8V29h-2.8z" fill="currentColor" opacity=".78"/>
+        </svg>
       </div>
       <h1 id="pageTitle">Monitor de quemas próximas a predios CMPC</h1>
       
@@ -1737,20 +1728,22 @@ const layerControl=L.control.layers(
 (async function loadAllPrediosOnMap(){
   const status=document.getElementById('mapBaseStatus');
   try{
-    const response=await fetch('./predios.geojson?v=full-3169',{cache:'force-cache'});
+    const response=await fetch('./predios.geojson?v=full-3169-20261116',{cache:'no-store'});
     if(!response.ok)throw new Error('HTTP '+response.status);
     const collection=await response.json();
     const features=(collection.features||[]).filter(feature=>feature.geometry&&(feature.geometry.type==='Polygon'||feature.geometry.type==='MultiPolygon'));
-    if(!features.length)throw new Error('El GeoJSON no contiene polígonos válidos.');
+    const expectedPredios=3169;
+    if(features.length<expectedPredios)throw new Error('Se esperaban '+expectedPredios.toLocaleString('es-CL')+' polígonos CMPC y el archivo entregó '+features.length.toLocaleString('es-CL')+'.');
     predLayer.clearLayers();
     predLayer.addData({type:'FeatureCollection',features});
     DATA.predios={type:'FeatureCollection',features};
     prediosTotal=features.length;
+    if(!map.hasLayer(predLayer))predLayer.addTo(map);
     layerControl.removeLayer(predLayer);
-    layerControl.addOverlay(predLayer,'Predios CMPC · todos ('+prediosTotal+')');
+    layerControl.addOverlay(predLayer,'Predios CMPC · todos ('+prediosTotal.toLocaleString('es-CL')+')');
     const bounds=predLayer.getBounds();
     if(bounds.isValid())map.fitBounds(bounds,{padding:[22,22],maxZoom:7});
-    if(status)status.textContent='Capa completa cargada: '+prediosTotal.toLocaleString('es-CL')+' polígonos CMPC. Activa o desactiva la capa desde el selector del mapa.';
+    if(status)status.textContent='Capa completa cargada y visible: '+prediosTotal.toLocaleString('es-CL')+' predios CMPC. Las alertas se mantienen por encima de los polígonos.';
   }catch(error){
     if(status)status.textContent='No se pudo cargar la capa completa de predios CMPC: '+error.message+'. Se mantienen los polígonos iniciales disponibles.';
     console.error('Carga de predios CMPC:',error);
@@ -1875,7 +1868,7 @@ setTimeout(()=>map.invalidateSize(),1000)
    if(Array.isArray(payload.events)&&payload.events.length){
     events=payload.events;
     const period=defaultPeriod();$('from').value=period.from;$('to').value=period.to;
-    if(payload.predios&&typeof predLayer!=='undefined'){predLayer.clearLayers();predLayer.addData(payload.predios);}
+    // No reemplazar la capa territorial completa con payload.predios: ese campo contiene solo los predios próximos a avisos. La capa maestra de 3.169 polígonos se carga desde predios.geojson.
     const cs=$('commune');while(cs.options.length>1)cs.remove(1);
     [...new Set(events.map(e=>e.comuna).filter(Boolean))].sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;cs.appendChild(o);});
     filter();window.dispatchEvent(new Event('cmpc-live-events-updated'));
