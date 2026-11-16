@@ -2115,7 +2115,7 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
   const toggle=document.getElementById('sidebarToggle');
   if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Abrir panel lateral');}
  }
- function selectModule(name){
+ function selectModule(name,scrollToTop=true){
   const selected=modules[name];
   if(!selected)return;
   Object.entries(modules).forEach(([key,item])=>{
@@ -2126,7 +2126,7 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
   });
   title.textContent=selected.title;
   document.title=selected.docTitle;
-  window.scrollTo({top:0,behavior:'smooth'});
+  if(scrollToTop)window.scrollTo({top:0,behavior:'smooth'});
   closeSidebar();
   if(name==='monitor')window.setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize({pan:false});},100);
  }
@@ -2134,7 +2134,7 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
  modules.coordinates.link.addEventListener('click',event=>{event.preventDefault();selectModule('coordinates');});
  document.getElementById('navReport').addEventListener('click',event=>{
   event.preventDefault();
-  selectModule('monitor');
+  selectModule('monitor',false);
   if(typeof window.renderRiskReport==='function')window.renderRiskReport();
   const report=document.getElementById('riskReportModule');
   window.setTimeout(()=>report.scrollIntoView({behavior:'smooth',block:'start'}),120);
