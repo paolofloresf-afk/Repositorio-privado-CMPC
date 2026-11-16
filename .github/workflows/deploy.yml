@@ -38,14 +38,15 @@ jobs:
           PY
           node --check /tmp/cmpc-dashboard.js
 
-      - name: Preparar archivos públicos
+      - name: Comprobar archivos públicos
         run: |
-          rm -rf dist
-          mkdir -p dist
-          cp index.html events.json predios.geojson dist/
-          test -s dist/index.html
-          test -s dist/events.json
-          test -s dist/predios.geojson
+          test -s index.html
+          test -s events.json
+          test -s predios.geojson
+          test -s .assetsignore
+          grep -qx '!index.html' .assetsignore
+          grep -qx '!events.json' .assetsignore
+          grep -qx '!predios.geojson' .assetsignore
 
       - name: Comprobar credenciales de Cloudflare
         run: |
