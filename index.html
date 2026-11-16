@@ -1667,6 +1667,70 @@ html:not([data-theme="dark"]) .firms-locate-btn{background:#e4efe6;color:#315d3e
 html[data-theme="dark"] .firms-list-intro,html[data-theme="dark"] .firms-list-footer{color:#b7ceca}
 @media(max-width:650px){.firms-list-intro{padding:10px 12px}.firms-list-footer{align-items:flex-start;flex-direction:column}.firms-list-table{min-width:1260px}}
 
+
+/* Listados CMPC · filas compactas y paginación al estilo del selector de fundos */
+.listing-panel{overflow:hidden;margin-top:16px;border-radius:14px}
+.listing-panel>h2{padding:18px 20px;border-bottom:1px solid rgba(150,178,185,.13);font-size:15px}
+.listing-scroll{width:100%;overflow-x:auto;padding:0 0 2px}
+.listing-column-heads,.listing-row{min-width:1200px;display:grid;align-items:center;column-gap:16px}
+.burn-list-grid{grid-template-columns:minmax(95px,.72fr) minmax(92px,.78fr) minmax(180px,1.48fr) minmax(112px,.9fr) minmax(135px,1.15fr) minmax(75px,.58fr) minmax(85px,.65fr) minmax(110px,.88fr) minmax(74px,.57fr)}
+.firms-list-grid{grid-template-columns:minmax(92px,.74fr) minmax(120px,1fr) minmax(165px,1.35fr) minmax(86px,.65fr) minmax(75px,.55fr) minmax(86px,.65fr) minmax(155px,1.25fr) minmax(80px,.6fr) minmax(58px,.42fr)}
+.listing-column-heads{padding:12px 18px 9px;color:#90aab0;font-size:9px;font-weight:850;letter-spacing:.075em;text-transform:uppercase}
+.listing-rows{display:grid;gap:7px;padding:4px 18px 13px}
+.listing-row{position:relative;padding:12px 15px;min-height:64px;border:1px solid rgba(139,171,176,.13);border-radius:13px;background:#151b20;color:#dce7eb;font-size:12px;line-height:1.35;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.listing-row:nth-child(even){background:#171f25}
+.listing-row:hover,.listing-row:focus-visible{background:#1c292e;border-color:rgba(124,174,172,.38);outline:none}
+.listing-row:active{transform:translateY(1px)}
+.listing-cell{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.listing-cell strong{display:block;overflow:hidden;text-overflow:ellipsis;color:#e9f0f2;font-size:12px;font-weight:730}
+.listing-cell small{display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;color:#7f969f;font-size:10px;font-weight:500}
+.listing-code{font-size:11px;font-weight:850;color:#e8eff1;letter-spacing:.02em}
+.listing-main-cell strong{font-size:12px}
+.listing-muted{color:#96aab1}
+.listing-status{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:6px 11px;border-radius:30px;background:#9a5c08;color:#fff0d0;font-size:10px;font-weight:850;white-space:nowrap}
+.listing-status:before{content:"";width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:#ffd17a}
+.listing-status.ROJA{background:#702d35;color:#ffd2d4}
+.listing-status.ROJA:before{background:#ff9ca4}
+.listing-status.NARANJA{background:#78451e;color:#ffe0bd}
+.listing-status.NARANJA:before{background:#ffc07a}
+.listing-status.AMARILLA{background:#735c15;color:#ffedaf}
+.listing-status.AMARILLA:before{background:#ffe18b}
+.listing-status.CMPC{background:#24513e;color:#ccebd7}
+.listing-status.CMPC:before{background:#88d6a6}
+.listing-row-more{width:30px;height:30px;padding:0;border:0;border-radius:50%;background:transparent;color:#8fa5ae;font-size:18px;letter-spacing:1px}
+.listing-row-more:hover{background:rgba(135,173,180,.13);color:#e4eff1}
+.listing-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 18px 15px;color:#8fa5ae;font-size:11px}
+.listing-footer-left{display:flex;align-items:center;gap:10px;min-width:0;flex-wrap:wrap}
+.listing-page-size-label{margin:0!important}
+.listing-page-size-label select{width:auto;min-width:120px;min-height:32px;padding:5px 29px 5px 10px;border:1px solid #33414a;border-radius:9px;background:#171f25;color:#d7e4e8;font-size:11px}
+.listing-pagination{display:flex;align-items:center;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.listing-page-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border:1px solid transparent;border-radius:9px;background:transparent;color:#a9bcc4;font-size:12px;font-weight:650}
+.listing-page-btn:hover:not(:disabled){background:#243038;color:#f0f6f7}
+.listing-page-btn[aria-current="page"]{background:#4b291e;border-color:#6e3a25;color:#fff1e8}
+.listing-page-btn:disabled{opacity:.32;cursor:default}
+.listing-empty{padding:22px 14px;text-align:center;color:#92a6ae;font-size:11px}
+.firms-list-intro{margin:0;padding:10px 20px 13px;color:#91a7ae;font-size:11px;line-height:1.5}
+html:not([data-theme="dark"]) .listing-panel{background:#f9fbfa;border-color:#dae5dd}
+html:not([data-theme="dark"]) .listing-column-heads{color:#718a7c}
+html:not([data-theme="dark"]) .listing-row{background:#fff;color:#344b3c;border-color:#e0e9e1;box-shadow:0 2px 7px rgba(25,54,33,.035)}
+html:not([data-theme="dark"]) .listing-row:nth-child(even){background:#f6f9f6}
+html:not([data-theme="dark"]) .listing-row:hover,html:not([data-theme="dark"]) .listing-row:focus-visible{background:#eef5ee;border-color:#b7d0bb}
+html:not([data-theme="dark"]) .listing-cell strong,html:not([data-theme="dark"]) .listing-code{color:#233b2c}
+html:not([data-theme="dark"]) .listing-cell small,html:not([data-theme="dark"]) .listing-muted{color:#738879}
+html:not([data-theme="dark"]) .listing-footer,html:not([data-theme="dark"]) .firms-list-intro{color:#718578}
+html:not([data-theme="dark"]) .listing-page-size-label select{background:#fff;color:#344b3c;border-color:#d8e4d9}
+html:not([data-theme="dark"]) .listing-page-btn{color:#647b69}
+html:not([data-theme="dark"]) .listing-page-btn:hover:not(:disabled){background:#e8f0e8;color:#284c32}
+html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:#efe1d9;border-color:#ddc4b5;color:#6e3b22}
+@media(max-width:700px){
+ .listing-panel>h2{padding:15px 14px}
+ .listing-column-heads{padding-left:14px}
+ .listing-rows{padding-left:14px;padding-right:14px}
+ .listing-footer{align-items:flex-start;flex-direction:column;padding-left:14px;padding-right:14px}
+ .listing-footer-left{width:100%;justify-content:space-between}
+ .listing-pagination{width:100%;justify-content:center}
+}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1897,23 +1961,40 @@ html[data-theme="dark"] .firms-list-intro,html[data-theme="dark"] .firms-list-fo
   </div>
 </div><div id="mapBaseStatus" class="map-status">Mapa listo. Selecciona un predio, quema o foco para ver sus datos.</div>
 </section>
-<section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
-
-<section class="panel list-panel firms-list-panel" id="firmsListPanel">
-  <h2>Listado de detecciones NASA FIRMS cercanas (<span id="firmsListCount">0</span>)</h2>
-  <p class="firms-list-intro">Solo detecciones ubicadas dentro de predios CMPC o a un máximo de 5 km del predio CMPC más cercano. Selecciona “Ver mapa” para centrar el punto y abrir su ficha.</p>
-  <div class="firms-list-tablewrap">
-    <table class="firms-list-table">
-      <thead><tr>
-        <th>Satélite</th><th>Fecha</th><th>Hora UTC</th><th>Confianza</th><th>FRP (MW)</th>
-        <th>Predio CMPC más cercano</th><th>Distancia</th><th>Latitud</th><th>Longitud</th><th>Día / noche</th><th>Mapa</th>
-      </tr></thead>
-      <tbody id="firmsTbody"><tr><td class="firms-empty" colspan="11">Cargando detecciones NASA FIRMS…</td></tr></tbody>
-    </table>
+<section class="panel list-panel listing-panel" id="burnListPanel">
+  <h2>Listado de quemas (<span id="count">372</span>)</h2>
+  <div class="listing-scroll">
+    <div class="listing-column-heads burn-list-grid">
+      <span>Aviso</span><span>Fecha</span><span>Quema / clasificación</span><span>Horario</span><span>Predio CMPC cercano</span><span>Distancia</span><span>Orientación</span><span>Comuna</span><span>Alerta</span>
+    </div>
+    <div id="tbody" class="listing-rows">
+      <div class="listing-empty">Cargando listado de quemas…</div>
+    </div>
   </div>
-  <div class="firms-list-footer">
-    <span id="firmsListPageInfo">Calculando detecciones próximas a predios CMPC…</span>
-    <div><button type="button" id="firmsPagePrev" class="firms-page-btn" disabled>Anterior</button><button type="button" id="firmsPageNext" class="firms-page-btn" disabled>Siguiente</button></div>
+  <div class="listing-footer">
+    <div class="listing-footer-left">
+      <span id="burnPageInfo">Mostrando 0 de 0</span>
+      <label class="listing-page-size-label"> <select id="burnPageSize" aria-label="Registros de quemas por página"><option value="5" selected>5 por página</option><option value="10">10 por página</option><option value="20">20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select></label>
+    </div>
+    <div id="burnPagination" class="listing-pagination" aria-label="Paginación del listado de quemas"></div>
+  </div>
+</section>
+
+<section class="panel list-panel listing-panel firms-list-panel" id="firmsListPanel">
+  <h2>Listado de detecciones NASA FIRMS cercanas (<span id="firmsListCount">0</span>)</h2>
+  <p class="firms-list-intro">Solo detecciones ubicadas dentro de predios CMPC o a un máximo de 5 km del predio CMPC más cercano. Selecciona una fila para localizar el foco en el mapa.</p>
+  <div class="listing-scroll">
+    <div class="listing-column-heads firms-list-grid">
+      <span>Satélite</span><span>Fecha / hora UTC</span><span>Predio CMPC cercano</span><span>Distancia</span><span>FRP</span><span>Confianza</span><span>Coordenadas</span><span>Día / noche</span><span>Mapa</span>
+    </div>
+    <div id="firmsTbody" class="listing-rows firms-list-rows"><div class="listing-empty">Cargando detecciones NASA FIRMS…</div></div>
+  </div>
+  <div class="listing-footer">
+    <div class="listing-footer-left">
+      <span id="firmsListPageInfo">Calculando detecciones próximas a predios CMPC…</span>
+      <label class="listing-page-size-label"><select id="firmsPageSize" aria-label="Detecciones NASA por página"><option value="5" selected>5 por página</option><option value="10">10 por página</option><option value="20">20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select></label>
+    </div>
+    <div id="firmsPagination" class="listing-pagination" aria-label="Paginación de NASA FIRMS"></div>
   </div>
 </section>
 
@@ -2197,6 +2278,45 @@ function popup(e){
    (endLabel?'<br><b>Fin de quema:</b> '+escapePopupText(endLabel):'');
  return `<b style="color:${isInside(e)?'#43845D':colors[e.alerta]}">${category(e)}</b><br><b>${e.alerta}</b> · ${escapePopupText(e.quema||'Quema SIDCO')}${timeLines}<br>Comuna del aviso: ${escapePopupText(e.comuna||'No informada')}<br>Predio CMPC: ${escapePopupText(e.predio_cercano||'No informado')}<br>Código de predio: <b>${escapePopupText(fields.code||'No disponible en la capa actual')}</b><br>Comuna del predio: <b>${escapePopupText(fields.commune||'No informada en la capa actual')}</b><br>Distancia: <b>${fmtDist(e.distancia_m)}</b><br>Orientación: ${escapePopupText(e.orientacion)}${e.rumbo_grados!==null?' ('+e.rumbo_grados+'°)':''}<br>Aviso: ${escapePopupText(e.aviso||'s/i')}`;
 }
+let burnListRecords=[];
+let burnListPage=0;
+let burnPageSize=5;
+function renderBurnList(){
+  const total=burnListRecords.length;
+  const totalPages=Math.max(1,Math.ceil(total/burnPageSize));
+  burnListPage=Math.min(burnListPage,totalPages-1);
+  const start=burnListPage*burnPageSize;
+  const page=burnListRecords.slice(start,start+burnPageSize);
+  document.getElementById('burnPageInfo').textContent=total
+    ? 'Mostrando '+(start+1).toLocaleString('es-CL')+'–'+(start+page.length).toLocaleString('es-CL')+' de '+total.toLocaleString('es-CL')
+    : 'Mostrando 0 de 0';
+  document.getElementById('tbody').innerHTML=page.length?page.map(({event:e,index})=>{
+    const horario=[e.inicio||'',e.termino||''].filter(Boolean).join(' – ');
+    const period=[e.fecha,e.fecha_fin&&e.fecha_fin!==e.fecha?'hasta '+e.fecha_fin:''].filter(Boolean).join(' ');
+    return '<div class="listing-row burn-list-grid burn-list-row" data-event-index="'+index+'" role="button" tabindex="0" title="Seleccionar quema y localizar en el mapa">'+
+      '<div class="listing-cell"><span class="listing-code">'+escapePopupText(e.aviso||'—')+'</span><small>SIDCO</small></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(e.fecha||'')+'</strong><small>'+escapePopupText(e.fecha_fin&&e.fecha_fin!==e.fecha?'Hasta '+e.fecha_fin:'Fecha de aviso')+'</small></div>'+
+      '<div class="listing-cell listing-main-cell"><strong>'+escapePopupText(e.quema||'Quema sin nombre')+'</strong><small>QUEMA EXTERNA · '+escapePopupText(e.comuna||'')+'</small></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(horario||'Horario no indicado')+'</strong><small>Inicio – término</small></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(e.predio_cercano||'Sin predio cercano')+'</strong><small>Predio CMPC de referencia</small></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(fmtDist(Number(e.distancia_m)||0))+'</strong></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(e.orientacion||'')+'</strong><small>Orientación</small></div>'+
+      '<div class="listing-cell"><strong>'+escapePopupText(e.comuna||'')+'</strong><small>Comuna</small></div>'+
+      '<div class="listing-cell"><span class="listing-status '+escapePopupText(e.alerta||'')+'">'+escapePopupText(e.alerta||'Alerta')+'</span></div>'+
+    '</div>';
+  }).join(''):'<div class="listing-empty">No hay quemas externas para los filtros seleccionados.</div>';
+  const pager=document.getElementById('burnPagination');
+  const pageNumbers=Array.from({length:totalPages},(_,i)=>i).filter(i=>i===0||i===totalPages-1||Math.abs(i-burnListPage)<=2);
+  let html='<button class="listing-page-btn" type="button" data-burn-page="prev" aria-label="Página anterior" '+(burnListPage===0?'disabled':'')+'>‹</button>';
+  let last=-2;
+  pageNumbers.forEach(i=>{
+    if(i-last>1)html+='<span class="listing-muted">…</span>';
+    html+='<button class="listing-page-btn" type="button" data-burn-page="'+i+'" '+(i===burnListPage?'aria-current="page"':'')+'>'+(i+1)+'</button>';
+    last=i;
+  });
+  html+='<button class="listing-page-btn" type="button" data-burn-page="next" aria-label="Página siguiente" '+(burnListPage>=totalPages-1?'disabled':'')+'>›</button>';
+  pager.innerHTML=html;
+}
 function filter(){
  const from=document.getElementById('from').value,to=document.getElementById('to').value,commune=document.getElementById('commune').value,search=document.getElementById('search').value.toLowerCase(),radius=+document.getElementById('radius').value;
  visible=events.filter(e=>((!from&&!to)||eventActiveInWindow(e,from,to))&&(!commune||e.comuna===commune)&&Number(e.distancia_m)<=radius&&((isInside(e)&&document.getElementById('showInside').checked)||(!isInside(e)&&e.alerta==='ROJA'&&document.getElementById('showRed').checked)||(!isInside(e)&&e.alerta==='NARANJA'&&document.getElementById('showOrange').checked)||(!isInside(e)&&e.alerta==='AMARILLA'&&document.getElementById('showYellow').checked))&&(!search||(e.predio_cercano+' '+e.aviso+' '+e.quema).toLowerCase().includes(search)));
@@ -2213,14 +2333,15 @@ function filter(){
   const m=L.marker([e.lat,e.lon],{icon:dotIcon,pane:'alertMarkers',keyboard:true});
   m.bindPopup(popup(e));m.addTo(markers);markerByEvent[index]=m;
  });
- const externalBurnRows=visible.map((event,index)=>({event,index})).filter(item=>!isInside(item.event));
+ burnListRecords=visible.map((event,index)=>({event,index})).filter(item=>!isInside(item.event));
+ burnListPage=0;
  document.getElementById('count').textContent=externalBurnRows.length;
  document.getElementById('kTotal').textContent=visible.length;
  document.getElementById('kRed').textContent=visible.filter(e=>e.alerta==='ROJA').length;
  document.getElementById('kOrange').textContent=visible.filter(e=>e.alerta==='NARANJA').length;
  document.getElementById('kYellow').textContent=visible.filter(e=>e.alerta==='AMARILLA').length;
  document.getElementById('kInside').textContent=visible.filter(isInside).length;
- document.getElementById('tbody').innerHTML=externalBurnRows.slice(0,500).map(({event:e,index})=>`<tr class="event-row" data-event-index="${index}" tabindex="0" title="Haz clic para localizar esta quema en el mapa"><td><span class="pill">QUEMA EXTERNA</span></td><td><span class="pill ${e.alerta}">${e.alerta}</span></td><td>${e.fecha}</td><td>${e.comuna}</td><td>${e.predio_cercano}</td><td>${fmtDist(e.distancia_m)}</td><td>${e.orientacion}</td></tr>`).join('');
+ renderBurnList();
  updateNearbyPredioHighlights();
 }
 // Seleccionar una fila del listado centra el mapa en su quema y abre la ficha.
@@ -2235,14 +2356,27 @@ function locateEventRow(row){
   window.setTimeout(()=>{marker.openPopup()},650);
 }
 document.getElementById('tbody').addEventListener('click',ev=>{
-  const row=ev.target.closest('tr[data-event-index]');
+  const row=ev.target.closest('.burn-list-row[data-event-index]');
   if(row)locateEventRow(row);
 });
 document.getElementById('tbody').addEventListener('keydown',ev=>{
   if(ev.key==='Enter'||ev.key===' '){
-    const row=ev.target.closest('tr[data-event-index]');
+    const row=ev.target.closest('.burn-list-row[data-event-index]');
     if(row){ev.preventDefault();locateEventRow(row)}
   }
+});
+document.getElementById('burnPagination').addEventListener('click',ev=>{
+  const button=ev.target.closest('button[data-burn-page]');
+  if(!button)return;
+  const value=button.dataset.burnPage;
+  const totalPages=Math.max(1,Math.ceil(burnListRecords.length/burnPageSize));
+  if(value==='prev')burnListPage=Math.max(0,burnListPage-1);
+  else if(value==='next')burnListPage=Math.min(totalPages-1,burnListPage+1);
+  else burnListPage=Math.max(0,Math.min(totalPages-1,Number(value)||0));
+  renderBurnList();
+});
+document.getElementById('burnPageSize').addEventListener('change',ev=>{
+  burnPageSize=Math.max(1,Number(ev.target.value)||5);burnListPage=0;renderBurnList();
 });
 const communes=[...new Set(events.map(e=>e.comuna).filter(Boolean))].sort();communes.forEach(c=>{let o=document.createElement('option');o.value=c;o.textContent=c;document.getElementById('commune').appendChild(o)});
 ['from','to','commune','search','radius','showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id).addEventListener('input',filter));
@@ -2478,7 +2612,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   let firmsVisibleList=[];
   let firmsCurrentPage=0;
   const FIRMS_NEARBY_LIMIT_METERS=5000;
-  const FIRMS_LIST_PAGE_SIZE=100;
+  let firmsPageSize=5;
   const firmsMarkersByKey=new Map();
 
   // Encuadra de una sola vez el territorio de predios y las detecciones para que los puntos FIRMS no queden fuera de la vista inicial.
@@ -2616,50 +2750,74 @@ setTimeout(()=>map.invalidateSize(),1000)
       : firmsNearbyRecords;
     firmsVisibleList=records;
     $('firmsListCount').textContent=records.length.toLocaleString('es-CL');
-    const totalPages=Math.max(1,Math.ceil(records.length/FIRMS_LIST_PAGE_SIZE));
+    const totalPages=Math.max(1,Math.ceil(records.length/firmsPageSize));
     firmsCurrentPage=Math.min(firmsCurrentPage,totalPages-1);
-    const start=firmsCurrentPage*FIRMS_LIST_PAGE_SIZE;
-    const page=records.slice(start,start+FIRMS_LIST_PAGE_SIZE);
+    const start=firmsCurrentPage*firmsPageSize;
+    const page=records.slice(start,start+firmsPageSize);
     $('firmsListPageInfo').textContent=records.length
-      ? 'Mostrando '+(start+1).toLocaleString('es-CL')+'–'+(start+page.length).toLocaleString('es-CL')+' de '+records.length.toLocaleString('es-CL')+' detecciones dentro de 5 km.'
-      : (firmsFeatures.length?'No hay detecciones dentro de 5 km de predios CMPC con estos filtros.':'No hay detecciones NASA FIRMS cargadas.');
+      ? 'Mostrando '+(start+1).toLocaleString('es-CL')+'–'+(start+page.length).toLocaleString('es-CL')+' de '+records.length.toLocaleString('es-CL')
+      : (firmsFeatures.length?'Sin detecciones a 5 km de predios CMPC con estos filtros.':'No hay detecciones NASA FIRMS cargadas.');
     $('firmsTbody').innerHTML=page.length?page.map((record,index)=>{
       const p=record.feature.properties||{},c=record.feature.geometry.coordinates;
       const confidence=p.confidence==null?'':String(p.confidence)+(typeof p.confidence==='number'?'%':'');
-      const frp=p.frp_mw==null?'':Number(p.frp_mw).toFixed(2);
+      const frp=p.frp_mw==null?'':Number(p.frp_mw).toFixed(2)+' MW';
+      const coords=formatFirmsNumber(c[1])+', '+formatFirmsNumber(c[0]);
       const daynight=p.daynight==='D'?'Día':p.daynight==='N'?'Noche':'';
-      return '<tr class="firms-list-row">'+
-        '<td><span class="firms-satellite-pill">'+escapeHtml(p.satellite||'')+'</span></td>'+
-        '<td>'+escapeHtml(p.acq_date||'')+'</td>'+
-        '<td>'+escapeHtml(timeUTC(p.acq_time_utc))+'</td>'+
-        '<td><span class="firms-confidence-pill">'+escapeHtml(confidence)+'</span></td>'+
-        '<td class="firms-frp">'+escapeHtml(frp)+'</td>'+
-        '<td>'+escapeHtml(record.predio)+'</td>'+
-        '<td class="firms-near-distance">'+(record.distance<1000?Math.round(record.distance)+' m':(record.distance/1000).toFixed(2)+' km')+'</td>'+
-        '<td>'+formatFirmsNumber(c[1])+'</td>'+
-        '<td>'+formatFirmsNumber(c[0])+'</td>'+
-        '<td>'+daynight+'</td>'+
-        '<td><button type="button" class="firms-locate-btn" data-firms-record="'+(start+index)+'">Ver mapa</button></td>'+
-      '</tr>';
-    }).join(''):'<tr><td class="firms-empty" colspan="11">No hay detecciones NASA FIRMS próximas a predios CMPC (≤ 5 km).</td></tr>';
-    $('firmsPagePrev').disabled=firmsCurrentPage===0||!records.length;
-    $('firmsPageNext').disabled=firmsCurrentPage>=totalPages-1||!records.length;
+      const recordIndex=start+index;
+      return '<div class="listing-row firms-list-grid firms-list-row" data-firms-record="'+recordIndex+'" role="button" tabindex="0" title="Seleccionar detección y localizar en el mapa">'+
+        '<div class="listing-cell"><strong>'+escapeHtml(p.satellite||'NASA FIRMS')+'</strong><small>'+escapeHtml(p.instrument||'MODIS')+'</small></div>'+
+        '<div class="listing-cell"><strong>'+escapeHtml(p.acq_date||'')+'</strong><small>'+escapeHtml(timeUTC(p.acq_time_utc))+'</small></div>'+
+        '<div class="listing-cell"><strong>'+escapeHtml(record.predio)+'</strong><small>Predio CMPC más cercano</small></div>'+
+        '<div class="listing-cell"><strong>'+(record.distance<1000?Math.round(record.distance)+' m':(record.distance/1000).toFixed(2)+' km')+'</strong><small>Radio máximo 5 km</small></div>'+
+        '<div class="listing-cell"><strong>'+escapeHtml(frp)+'</strong><small>Potencia radiativa</small></div>'+
+        '<div class="listing-cell"><span class="listing-status '+(Number(p.confidence)>=70?'CMPC':'')+'">'+escapeHtml(confidence)+'</span></div>'+
+        '<div class="listing-cell"><strong>'+escapeHtml(coords)+'</strong><small>Latitud, longitud</small></div>'+
+        '<div class="listing-cell"><strong>'+escapeHtml(daynight)+'</strong><small>Día / noche</small></div>'+
+        '<div class="listing-cell"><button type="button" class="listing-row-more" data-firms-record="'+recordIndex+'" aria-label="Ver detección en el mapa">···</button></div>'+
+      '</div>';
+    }).join(''):'<div class="listing-empty">No hay detecciones NASA FIRMS próximas a predios CMPC (≤ 5 km).</div>';
+    const pager=$('firmsPagination');
+    const pageNumbers=Array.from({length:totalPages},(_,i)=>i).filter(i=>i===0||i===totalPages-1||Math.abs(i-firmsCurrentPage)<=2);
+    let html='<button class="listing-page-btn" type="button" data-firms-page="prev" aria-label="Página anterior" '+(firmsCurrentPage===0?'disabled':'')+'>‹</button>';
+    let last=-2;
+    pageNumbers.forEach(i=>{
+      if(i-last>1)html+='<span class="listing-muted">…</span>';
+      html+='<button class="listing-page-btn" type="button" data-firms-page="'+i+'" '+(i===firmsCurrentPage?'aria-current="page"':'')+'>'+(i+1)+'</button>';
+      last=i;
+    });
+    html+='<button class="listing-page-btn" type="button" data-firms-page="next" aria-label="Página siguiente" '+(firmsCurrentPage>=totalPages-1?'disabled':'')+'>›</button>';
+    pager.innerHTML=html;
   }
-  $('firmsTbody').addEventListener('click',event=>{
-    const button=event.target.closest('button[data-firms-record]');
-    if(!button)return;
-    const record=firmsVisibleList[Number(button.dataset.firmsRecord)];
+  function locateFirmsRecord(index){
+    const record=firmsVisibleList[Number(index)];
     if(!record)return;
     const c=record.feature.geometry.coordinates;
     map.flyTo([c[1],c[0]],Math.max(map.getZoom(),12),{duration:1});
     const marker=firmsMarkersByKey.get(record.key);
     if(marker)window.setTimeout(()=>marker.openPopup(),650);
+  }
+  $('firmsTbody').addEventListener('click',event=>{
+    const target=event.target.closest('[data-firms-record]');
+    if(target)locateFirmsRecord(target.dataset.firmsRecord);
   });
-  $('firmsPagePrev').addEventListener('click',()=>{
-    firmsCurrentPage=Math.max(0,firmsCurrentPage-1);renderFirmsListFromCurrentFilters();
+  $('firmsTbody').addEventListener('keydown',event=>{
+    if(event.key==='Enter'||event.key===' '){
+      const row=event.target.closest('.firms-list-row[data-firms-record]');
+      if(row){event.preventDefault();locateFirmsRecord(row.dataset.firmsRecord);}
+    }
   });
-  $('firmsPageNext').addEventListener('click',()=>{
-    firmsCurrentPage++;renderFirmsListFromCurrentFilters();
+  $('firmsPagination').addEventListener('click',event=>{
+    const button=event.target.closest('button[data-firms-page]');
+    if(!button)return;
+    const value=button.dataset.firmsPage;
+    const totalPages=Math.max(1,Math.ceil(firmsVisibleList.length/firmsPageSize));
+    if(value==='prev')firmsCurrentPage=Math.max(0,firmsCurrentPage-1);
+    else if(value==='next')firmsCurrentPage=Math.min(totalPages-1,firmsCurrentPage+1);
+    else firmsCurrentPage=Math.max(0,Math.min(totalPages-1,Number(value)||0));
+    renderFirmsListFromCurrentFilters();
+  });
+  $('firmsPageSize').addEventListener('change',event=>{
+    firmsPageSize=Math.max(1,Number(event.target.value)||5);firmsCurrentPage=0;renderFirmsListFromCurrentFilters();
   });
   function renderFirmsListFromCurrentFilters(){
     const from=$('firmsFrom').value,to=$('firmsTo').value,satellite=$('firmsSatellite').value;
