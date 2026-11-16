@@ -43,10 +43,12 @@ jobs:
           test -s index.html
           test -s events.json
           test -s predios.geojson
+          test -s firms_chile.geojson
           test -s .assetsignore
           grep -qx '!index.html' .assetsignore
           grep -qx '!events.json' .assetsignore
           grep -qx '!predios.geojson' .assetsignore
+          grep -qx '!firms_chile.geojson' .assetsignore
 
       - name: Comprobar credenciales de Cloudflare
         run: |
