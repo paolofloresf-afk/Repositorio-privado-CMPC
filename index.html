@@ -2011,6 +2011,8 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 /* El informe conserva el tema del Monitor en pantalla; solo el PDF se imprime en blanco. */
 @page{size:A4 portrait;margin:10mm 9mm 12mm}
 @media print{
+ a[href]::after{content:none!important;display:none!important}
+ a[href]{text-decoration:none!important;color:inherit!important}
  html,body{background:#fff!important;color:#20383b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  html,body{height:auto!important;min-height:0!important;overflow:visible!important}
  #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){break-after:auto!important;page-break-after:auto!important}
