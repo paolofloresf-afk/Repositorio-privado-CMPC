@@ -1680,6 +1680,7 @@ html[data-theme="dark"] .firms-list-intro,html[data-theme="dark"] .firms-list-fo
 .listing-row{position:relative;padding:12px 15px;min-height:64px;border:1px solid rgba(139,171,176,.13);border-radius:13px;background:#151b20;color:#dce7eb;font-size:12px;line-height:1.35;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
 .listing-row:nth-child(even){background:#171f25}
 .listing-row:hover,.listing-row:focus-visible{background:#1c292e;border-color:rgba(124,174,172,.38);outline:none}
+.listing-row.selected-event{background:#342b18!important;border-color:#b18a32!important;box-shadow:inset 3px 0 #f2bd45}
 .listing-row:active{transform:translateY(1px)}
 .listing-cell{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .listing-cell strong{display:block;overflow:hidden;text-overflow:ellipsis;color:#e9f0f2;font-size:12px;font-weight:730}
@@ -2350,7 +2351,7 @@ function locateEventRow(row){
   const event=visible[index];
   const marker=markerByEvent[index];
   if(!event||!marker)return;
-  document.querySelectorAll('#tbody tr.selected-event').forEach(r=>r.classList.remove('selected-event'));
+  document.querySelectorAll('#tbody .selected-event').forEach(r=>r.classList.remove('selected-event'));
   row.classList.add('selected-event');
   map.flyTo([event.lat,event.lon],Math.max(map.getZoom(),13),{duration:1.0});
   window.setTimeout(()=>{marker.openPopup()},650);
