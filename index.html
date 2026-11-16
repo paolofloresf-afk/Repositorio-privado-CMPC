@@ -3039,7 +3039,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     if(document.fonts?.ready)await document.fonts.ready;
 
     const isFirms=moduleId==='firmsReportModule';
-    const width=isFirms?1050:730;
+    const width=orientation==='landscape'?1123:794;
     const clone=source.cloneNode(true);
     clone.removeAttribute('id');
     clone.removeAttribute('hidden');
@@ -3052,7 +3052,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     wrapper.style.cssText='position:fixed;left:-12000px;top:0;width:'+width+'px;background:#fff;z-index:-1;overflow:visible;';
     const style=document.createElement('style');
     style.textContent=`
-      .support-pdf-export{display:block!important;visibility:visible!important;width:${width}px!important;max-width:none!important;margin:0!important;padding:0!important;background:#fff!important;color:#20383b!important;font-family:Inter,Arial,sans-serif!important;box-sizing:border-box!important}
+      .support-pdf-export{display:block!important;visibility:visible!important;width:${width}px!important;min-width:${width}px!important;max-width:none!important;margin:0!important;padding:0!important;background:#fff!important;color:#20383b!important;font-family:Inter,Arial,sans-serif!important;box-sizing:border-box!important}
       .support-pdf-export *{box-sizing:border-box!important;visibility:visible!important}
       .support-pdf-export .report-heading{margin:0 0 18px!important}
       .support-pdf-export .report-heading-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important}
@@ -3063,7 +3063,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       .support-pdf-export .report-brand{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;flex:0 0 auto!important;max-width:205px!important}
       .support-pdf-export .report-brand img{width:76px!important;height:40px!important;object-fit:contain!important}
       .support-pdf-export .report-brand span{display:block!important;max-width:110px!important;white-space:normal!important;font-size:7px!important;line-height:1.35!important;color:#587276!important}
-      .support-pdf-export .report-panel{padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;color:#20383b!important}
+      .support-pdf-export .report-panel{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;color:#20383b!important}
       .support-pdf-export .report-period{margin:0 0 10px!important;padding:9px 11px!important;background:#f3f8f8!important;border:1px solid #d1e0e1!important;color:#45666a!important;font-size:9px!important}
       .support-pdf-export .report-kpis{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important;margin:0 0 13px!important}
       .support-pdf-export .report-kpi{min-width:0!important;padding:8px!important;background:#f8fbfb!important;border:1px solid #d1e0e1!important;break-inside:avoid!important}
@@ -3072,8 +3072,8 @@ setTimeout(()=>map.invalidateSize(),1000)
       .support-pdf-export .report-table-heading{display:flex!important;margin:10px 0 7px!important}
       .support-pdf-export .report-table-heading h3{font-size:11px!important;color:#20383b!important}
       .support-pdf-export .report-table-heading span{font-size:8px!important;color:#688084!important}
-      .support-pdf-export .report-table-wrap{max-width:100%!important;width:100%!important;overflow:visible!important;border:1px solid #d1e0e1!important;border-radius:7px!important}
-      .support-pdf-export .report-table{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:${isFirms?7.4:8.4}px!important}
+      .support-pdf-export .report-table-wrap{display:block!important;max-width:none!important;width:100%!important;min-width:0!important;overflow:visible!important;border:1px solid #d1e0e1!important;border-radius:7px!important}
+      .support-pdf-export .report-table{display:table!important;width:100%!important;min-width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:${isFirms?7.4:8.4}px!important}
       .support-pdf-export .report-table th{position:static!important;background:#e5f0f0!important;color:#34575b!important;font-size:${isFirms?7.2:8.2}px!important;font-weight:800!important;line-height:1.2!important;padding:5px 4px!important;white-space:normal!important;overflow-wrap:anywhere!important}
       .support-pdf-export .report-table td{color:#29454a!important;border-color:#d5e2e2!important;font-size:${isFirms?7.2:8.2}px!important;line-height:1.28!important;padding:5px 4px!important;white-space:normal!important;overflow-wrap:anywhere!important;vertical-align:middle!important}
       .support-pdf-export .report-table td:first-child{white-space:normal!important}
@@ -3100,7 +3100,10 @@ setTimeout(()=>map.invalidateSize(),1000)
     `;
     clone.prepend(style);
     clone.style.width=width+'px';
+    clone.style.minWidth=width+'px';
     clone.style.maxWidth='none';
+    clone.style.display='block';
+    clone.style.boxSizing='border-box';
     wrapper.appendChild(clone);
     document.body.appendChild(wrapper);
 
@@ -3164,7 +3167,7 @@ setTimeout(()=>map.invalidateSize(),1000)
         .support-pdf-preview-backdrop{position:absolute;inset:0;background:rgba(7,18,20,.76);backdrop-filter:blur(4px)}
         .support-pdf-preview-dialog{position:relative;display:flex;flex-direction:column;width:min(1120px,96vw);height:min(94vh,1000px);background:#f5f8f8;border:1px solid #cbd9da;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.38)}
         .support-pdf-preview-head,.support-pdf-preview-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px;background:#fff;color:#20383b}
-        .support-pdf-preview-head{border-bottom:1px solid #d8e2e2}
+        .support-pdf-preview-head{border-bottom:1px solid #d8e2e2}.support-pdf-preview-head button{width:auto!important;min-width:150px!important;max-width:180px!important;flex:0 0 150px!important;white-space:nowrap!important;cursor:pointer!important;pointer-events:auto!important}.support-pdf-preview-head>div{flex:1 1 auto;min-width:0}
         .support-pdf-preview-head strong{display:block;font-size:14px}
         .support-pdf-preview-head small{display:block;margin-top:3px;color:#718589;font-size:11px}
         .support-pdf-preview-frame{display:block;flex:1;width:100%;min-height:0;border:0;background:#e8eeee}
@@ -3174,7 +3177,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       `;
       document.head.appendChild(style);
       document.body.appendChild(modal);
-      modal.querySelectorAll('[data-preview-close]').forEach(el=>el.addEventListener('click',()=>{modal.hidden=true;}));
+      modal.addEventListener('click',event=>{if(event.target.closest('[data-preview-close]')){event.preventDefault();event.stopPropagation();modal.hidden=true;}} ,true);
       document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modal.hidden)modal.hidden=true;});
       modal.querySelector('#supportPdfPreviewDownload').addEventListener('click',()=>{
         if(!modal._pdfBlob||!modal._pdfName)return;
