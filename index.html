@@ -1552,6 +1552,28 @@ html[data-theme="dark"] .import-card-status{background:#20363a;color:#c4dddd;bor
 @media(max-width:900px){.data-import-grid{grid-template-columns:1fr}.data-import-grid>.import-card{min-height:0}}
 @media(max-width:650px){.data-import-grid>.import-card{padding:13px}.import-card-head h2{font-size:14px!important}.import-card-stats{gap:6px}.firms-filter-grid{grid-template-columns:1fr 1fr}.firms-filter-grid label:last-child{grid-column:auto}}
 
+
+/* Desplegable para insertar fuentes de datos */
+.insert-data-dropdown{position:relative;margin-top:8px}
+.insert-data-dropdown>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;padding:9px 11px;border:1px solid #287f83;border-radius:8px;background:#164b50;color:#e9ffff;font-size:10px;font-weight:800;cursor:pointer}
+.insert-data-dropdown>summary::-webkit-details-marker{display:none}
+.insert-data-dropdown[open]>summary{background:#1b6266}
+.insert-data-dropdown .actions-dropdown-menu{z-index:1500;min-width:190px}
+.insert-data-dropdown .actions-dropdown-menu button{display:block;width:100%;text-align:left;margin:0 0 6px;border-radius:7px;background:#173e43;color:#e8f7f7;padding:10px 11px;font-size:10px}
+.insert-data-dropdown .actions-dropdown-menu button:last-child{margin-bottom:0}
+.data-import-grid[hidden],.data-import-grid .import-card[hidden]{display:none!important}
+.data-import-grid{grid-template-columns:minmax(0,760px);justify-content:start;margin:0 0 15px}
+.data-import-grid>.import-card{min-height:0;width:100%;box-shadow:0 10px 28px rgba(5,25,34,.12)}
+.import-card-head-actions{display:flex;align-items:center;gap:9px}
+.import-card-close{width:28px!important;height:28px;min-height:28px!important;padding:0!important;border:1px solid rgba(123,157,163,.25)!important;border-radius:50%!important;background:rgba(110,145,151,.12)!important;color:inherit!important;font-size:18px!important;line-height:1!important}
+.import-card-close:hover{background:rgba(110,145,151,.23)!important}
+html[data-theme="dark"] .insert-data-dropdown>summary{background:#124b50;border-color:#247d80;color:#eaffff}
+html[data-theme="dark"] .insert-data-dropdown[open]>summary{background:#176268}
+html[data-theme="dark"] .insert-data-dropdown .actions-dropdown-menu button{background:#1b3c43;color:#e7f5f5;border-color:#355a60}
+html:not([data-theme="dark"]) .insert-data-dropdown>summary{background:#e5f3f3;color:#17565a;border-color:#b9d7d7}
+html:not([data-theme="dark"]) .insert-data-dropdown .actions-dropdown-menu button{background:#eaf4f4;color:#1c5155;border-color:#d1e2e2}
+@media(max-width:900px){.data-import-grid{grid-template-columns:minmax(0,1fr)}}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1649,6 +1671,13 @@ html[data-theme="dark"] .import-card-status{background:#20363a;color:#c4dddd;bor
       <div class="control-title">ACCIONES</div>
       <button type="button" id="reset">Restablecer todos los filtros</button>
       <button type="button" id="csv">Exportar resultados a CSV</button>
+      <details class="actions-dropdown insert-data-dropdown" id="insertDataDropdown">
+        <summary>Insertar datos <span aria-hidden="true">⌄</span></summary>
+        <div class="actions-dropdown-menu">
+          <button type="button" id="openKmzImport">＋ Quemas SIDCO</button>
+          <button type="button" id="openFirmsImport">＋ NASA FIRMS</button>
+        </div>
+      </details>
       <details class="actions-dropdown" id="actionsDropdown">
         <summary>Informes <span aria-hidden="true">⌄</span></summary>
         <div class="actions-dropdown-menu">
@@ -1659,6 +1688,65 @@ html[data-theme="dark"] .import-card-status{background:#20363a;color:#c4dddd;bor
   </div>
 </section>
 
+<div class="data-import-grid" id="dataImportGrid" hidden>
+  <section class="kmz-import-panel import-card" id="kmzImportPanel" hidden>
+    <div class="import-card-head">
+      <h2>SIDCO</h2>
+      <div class="import-card-head-actions"><span class="import-card-tag">QUEMAS</span><button type="button" class="import-card-close" id="closeKmzImport" aria-label="Cerrar carga SIDCO">×</button></div>
+    </div>
+    <label class="import-dropzone" id="kmzDropzone" for="kmzFile">
+      <input type="file" id="kmzFile" accept=".kmz,.kml,application/vnd.google-earth.kmz,application/vnd.google-earth.kml+xml">
+      <span class="import-upload-icon">↑</span>
+      <span class="import-file-copy">
+        <strong>Seleccionar archivo KMZ</strong>
+        <small class="kmz-file-name" id="kmzFileName">Ningún archivo seleccionado</small>
+      </span>
+    </label>
+    <div class="kmz-actions import-card-actions">
+      <button type="button" id="processKmz" disabled>Procesar</button>
+      <button type="button" id="downloadProcessed" class="kmz-secondary" disabled>Descargar</button>
+    </div>
+    <div class="kmz-status import-card-status" id="kmzStatus" role="status" aria-live="polite">Esperando archivo SIDCO.</div>
+    <div class="kmz-sync-status import-card-sync" id="sidcoStatus">SIDCO: datos iniciales</div>
+  </section>
+
+  <section class="kmz-import-panel firms-import-panel import-card" id="firmsImportPanel" hidden>
+    <div class="import-card-head">
+      <h2>NASA FIRMS</h2>
+      <div class="import-card-head-actions"><span class="import-card-tag firms-tag">FOCOS DE CALOR</span><button type="button" class="import-card-close" id="closeFirmsImport" aria-label="Cerrar carga NASA FIRMS">×</button></div>
+    </div>
+    <div class="firms-stats import-card-stats" id="firmsStats">
+      <strong id="firmsTotal">—</strong><span>puntos</span>
+      <span class="stat-separator"></span>
+      <span><b id="firmsTerra">—</b> Terra</span>
+      <span><b id="firmsAqua">—</b> Aqua</span>
+      <span><b id="firmsOther">—</b> Otros</span>
+    </div>
+    <label class="import-dropzone firms-import-dropzone" for="firmsFile">
+      <input type="file" id="firmsFile" accept=".zip,.shp,.dbf,.shx,.prj,.cpg,.csv,.geojson,.json,application/zip,text/csv,application/json" multiple>
+      <span class="import-upload-icon firms-upload-icon">↑</span>
+      <span class="import-file-copy">
+        <strong>Seleccionar archivo FIRMS</strong>
+        <small class="kmz-file-name" id="firmsFileName">Ningún archivo seleccionado</small>
+      </span>
+    </label>
+    <details class="firms-options">
+      <summary>Filtros y opciones</summary>
+      <div class="firms-filter-grid">
+        <label>Desde<input type="date" id="firmsFrom"></label>
+        <label>Hasta<input type="date" id="firmsTo"></label>
+        <label>Satélite<select id="firmsSatellite"><option value="all">Todos</option><option value="Terra">Terra</option><option value="Aqua">Aqua</option><option value="other">Otros</option></select></label>
+      </div>
+      <label class="firms-replace-option"><input type="checkbox" id="firmsReplace"> Reemplazar datos actuales</label>
+      <small class="firms-file-help">Admite un ZIP completo o los archivos del Shapefile seleccionados juntos.</small>
+    </details>
+    <div class="kmz-actions firms-actions import-card-actions">
+      <button type="button" id="processFirms" disabled>Procesar</button>
+      <button type="button" id="downloadFirms" class="kmz-secondary">Descargar</button>
+    </div>
+    <div class="kmz-status import-card-status" id="firmsStatus" role="status" aria-live="polite">Cargando datos de Chile…</div>
+  </section>
+</div>
 
 
 <section id="riskReportModule" class="report-module" hidden aria-labelledby="riskReportTitle">
@@ -1724,65 +1812,6 @@ html[data-theme="dark"] .import-card-status{background:#20363a;color:#c4dddd;bor
 </section>
 <section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 
-<div class="data-import-grid">
-  <section class="kmz-import-panel import-card" id="kmzImportPanel">
-    <div class="import-card-head">
-      <h2>SIDCO</h2>
-      <span class="import-card-tag">QUEMAS</span>
-    </div>
-    <label class="import-dropzone" id="kmzDropzone" for="kmzFile">
-      <input type="file" id="kmzFile" accept=".kmz,.kml,application/vnd.google-earth.kmz,application/vnd.google-earth.kml+xml">
-      <span class="import-upload-icon">↑</span>
-      <span class="import-file-copy">
-        <strong>Seleccionar archivo KMZ</strong>
-        <small class="kmz-file-name" id="kmzFileName">Ningún archivo seleccionado</small>
-      </span>
-    </label>
-    <div class="kmz-actions import-card-actions">
-      <button type="button" id="processKmz" disabled>Procesar</button>
-      <button type="button" id="downloadProcessed" class="kmz-secondary" disabled>Descargar</button>
-    </div>
-    <div class="kmz-status import-card-status" id="kmzStatus" role="status" aria-live="polite">Esperando archivo SIDCO.</div>
-    <div class="kmz-sync-status import-card-sync" id="sidcoStatus">SIDCO: datos iniciales</div>
-  </section>
-
-  <section class="kmz-import-panel firms-import-panel import-card" id="firmsImportPanel">
-    <div class="import-card-head">
-      <h2>NASA FIRMS</h2>
-      <span class="import-card-tag firms-tag">FOCOS DE CALOR</span>
-    </div>
-    <div class="firms-stats import-card-stats" id="firmsStats">
-      <strong id="firmsTotal">—</strong><span>puntos</span>
-      <span class="stat-separator"></span>
-      <span><b id="firmsTerra">—</b> Terra</span>
-      <span><b id="firmsAqua">—</b> Aqua</span>
-      <span><b id="firmsOther">—</b> Otros</span>
-    </div>
-    <label class="import-dropzone firms-import-dropzone" for="firmsFile">
-      <input type="file" id="firmsFile" accept=".zip,.shp,.dbf,.shx,.prj,.cpg,.csv,.geojson,.json,application/zip,text/csv,application/json" multiple>
-      <span class="import-upload-icon firms-upload-icon">↑</span>
-      <span class="import-file-copy">
-        <strong>Seleccionar archivo FIRMS</strong>
-        <small class="kmz-file-name" id="firmsFileName">Ningún archivo seleccionado</small>
-      </span>
-    </label>
-    <details class="firms-options">
-      <summary>Filtros y opciones</summary>
-      <div class="firms-filter-grid">
-        <label>Desde<input type="date" id="firmsFrom"></label>
-        <label>Hasta<input type="date" id="firmsTo"></label>
-        <label>Satélite<select id="firmsSatellite"><option value="all">Todos</option><option value="Terra">Terra</option><option value="Aqua">Aqua</option><option value="other">Otros</option></select></label>
-      </div>
-      <label class="firms-replace-option"><input type="checkbox" id="firmsReplace"> Reemplazar datos actuales</label>
-      <small class="firms-file-help">Admite un ZIP completo o los archivos del Shapefile seleccionados juntos.</small>
-    </details>
-    <div class="kmz-actions firms-actions import-card-actions">
-      <button type="button" id="processFirms" disabled>Procesar</button>
-      <button type="button" id="downloadFirms" class="kmz-secondary">Descargar</button>
-    </div>
-    <div class="kmz-status import-card-status" id="firmsStatus" role="status" aria-live="polite">Cargando datos de Chile…</div>
-  </section>
-</div>
 
 <div class="footer">Distancia calculada desde cada aviso hasta el predio CMPC más cercano. Los puntos dentro de un predio se clasifican a 0 m.</div>
 
@@ -3059,4 +3088,34 @@ setTimeout(()=>map.invalidateSize(),1000)
 })();
 </script>
 
+<script>
+(() => {
+  const byId=id=>document.getElementById(id);
+  const grid=byId('dataImportGrid');
+  const sidco=byId('kmzImportPanel');
+  const firms=byId('firmsImportPanel');
+  const dropdown=byId('insertDataDropdown');
+  if(!grid||!sidco||!firms||!dropdown)return;
+  function openPanel(which){
+    sidco.hidden=which!=='sidco';
+    firms.hidden=which!=='firms';
+    grid.hidden=false;
+    dropdown.open=false;
+    const target=which==='sidco'?sidco:firms;
+    target.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  function closePanels(){
+    sidco.hidden=true;
+    firms.hidden=true;
+    grid.hidden=true;
+  }
+  byId('openKmzImport')?.addEventListener('click',()=>openPanel('sidco'));
+  byId('openFirmsImport')?.addEventListener('click',()=>openPanel('firms'));
+  byId('closeKmzImport')?.addEventListener('click',closePanels);
+  byId('closeFirmsImport')?.addEventListener('click',closePanels);
+  document.addEventListener('click',event=>{
+    if(!dropdown.contains(event.target))dropdown.open=false;
+  });
+})();
+</script>
 </body></html>
