@@ -2121,8 +2121,8 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
  function parseSIDCODate(value){
   if(!value)return '';
   const v=String(value).trim();
-  if(/^\\d{4}-\\d{2}-\\d{2}$/.test(v))return v;
-  const m=v.match(/^(\\d{1,2})[-/\\s]([a-záéíóúñ]{3})[-/\\s](\\d{4})$/i);
+  if(/^\d{4}-\d{2}-\d{2}$/.test(v))return v;
+  const m=v.match(/^(\d{1,2})[-/\s]([a-záéíóúñ]{3})[-/\s](\d{4})$/i);
   if(!m)return '';
   const month=monthMap[m[2].toLowerCase()];
   return month?m[3]+'-'+month+'-'+m[1].padStart(2,'0'):'';
@@ -2197,7 +2197,7 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
   const lines=[columns.join(';'),...currentHighRisk.map(e=>[
    e.fecha,e.inicio,e.termino,e.quema,e.aviso,e.comuna,e.predio_cercano,e.distancia_m,e.alerta,e.lat,e.lon
   ].map(quote).join(';'))];
-  const blob=new Blob(['\\ufeff'+lines.join('\\r\\n')],{type:'text/csv;charset=utf-8'});
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download='informe_riesgo_alto_CPMC_'+fromInput.value+'_'+toInput.value+'.csv';
   document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
