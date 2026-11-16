@@ -1769,6 +1769,10 @@ if(rangeGroup){
   };
   rangeControl.addTo(map);
 }
+// Panel independiente: las alertas siempre se dibujan sobre los polígonos CMPC.
+const alertPane=map.createPane('alertMarkers');
+alertPane.style.zIndex='650';
+alertPane.style.pointerEvents='auto';
 let markers=L.layerGroup().addTo(map), visible=[], markerByEvent=[];
 const colors={ROJA:'#d62828',NARANJA:'#f28c28',AMARILLA:'#e2b72c',CMPC:'#7c3aed'};
 const isInside=e=>Number(e.distancia_m)===0;
@@ -1808,7 +1812,7 @@ function filter(){
  visible=events.filter(e=>((!from&&!to)||eventActiveInWindow(e,from,to))&&(!commune||e.comuna===commune)&&Number(e.distancia_m)<=radius&&((isInside(e)&&document.getElementById('showInside').checked)||(!isInside(e)&&e.alerta==='ROJA'&&document.getElementById('showRed').checked)||(!isInside(e)&&e.alerta==='NARANJA'&&document.getElementById('showOrange').checked)||(!isInside(e)&&e.alerta==='AMARILLA'&&document.getElementById('showYellow').checked))&&(!search||(e.predio_cercano+' '+e.aviso+' '+e.quema).toLowerCase().includes(search)));
  markers.clearLayers();
  markerByEvent=[];
- visible.forEach((e,index)=>{const inside=isInside(e);const markerColor=inside?colors.CMPC:colors[e.alerta];const m=L.circleMarker([e.lat,e.lon],{radius:inside?7:5,color:markerColor,weight:1.35,opacity:.78,fillColor:markerColor,fillOpacity:.58,className:'burn-marker'});m.bindPopup(popup(e));m.addTo(markers);markerByEvent[index]=m});
+ visible.forEach((e,index)=>{const inside=isInside(e);const markerColor=inside?colors.CMPC:colors[e.alerta];const m=L.circleMarker([e.lat,e.lon],{radius:inside?7:5,color:markerColor,weight:1.35,opacity:.78,fillColor:markerColor,fillOpacity:.78,pane:'alertMarkers',className:'burn-marker'});m.bindPopup(popup(e));m.addTo(markers);markerByEvent[index]=m});
  document.getElementById('count').textContent=visible.length;
  document.getElementById('kTotal').textContent=visible.length;
  document.getElementById('kRed').textContent=visible.filter(e=>e.alerta==='ROJA').length;
