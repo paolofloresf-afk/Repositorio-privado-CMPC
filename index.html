@@ -1181,17 +1181,7 @@ html[data-theme="dark"] .coordinate-message.error{color:#FFB8B8}
  .report-kpis{grid-template-columns:1fr 1fr}
  .report-method{display:grid}
 }
-@media print{
- body *{visibility:hidden!important}
- #riskReportModule,#riskReportModule *{visibility:visible!important}
- #riskReportModule{display:block!important;position:absolute;inset:0;width:100%;max-width:none;padding:0;margin:0}
- #riskReportModule .report-controls,#riskReportModule .report-close{display:none!important}
- #riskReportModule .report-panel{border:0!important;box-shadow:none!important;padding:0!important}
- #riskReportModule .report-table-wrap{overflow:visible}
- #riskReportModule .report-table{min-width:0;font-size:8pt}
- #riskReportModule .report-table th,#riskReportModule .report-table td{padding:5px}
- #riskReportModule .report-map-button{display:none}
-}
+
 
 /* Modo claro: la misma paleta Azul petróleo del modo oscuro, en superficies claras */
 html:not([data-theme="dark"]){
@@ -1785,21 +1775,7 @@ html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:
 .report-firms-row:hover{background:var(--surface-alt)}
 @media(max-width:950px){.report-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.report-insight-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.report-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.report-pagination-footer{justify-content:center}.report-pagination-footer>span{width:100%;margin:0;text-align:left}.report-pagination{width:100%;justify-content:center}.report-pagination-footer label{margin-right:auto}}
-@media print{
- #riskReportModule[hidden],#firmsReportModule[hidden]{display:none!important}
- body *{visibility:hidden!important}
- #riskReportModule:not([hidden]),#riskReportModule:not([hidden]) *,
- #firmsReportModule:not([hidden]),#firmsReportModule:not([hidden]) *{visibility:visible!important}
- #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){display:block!important;position:absolute;inset:0;width:100%;max-width:none;padding:0;margin:0}
- #riskReportModule:not([hidden]) .report-controls,#firmsReportModule:not([hidden]) .report-controls,
- #riskReportModule:not([hidden]) .report-close,#firmsReportModule:not([hidden]) .report-close,
- #riskReportModule:not([hidden]) .report-pagination-footer,#firmsReportModule:not([hidden]) .report-pagination-footer{display:none!important}
- #riskReportModule:not([hidden]) .report-panel,#firmsReportModule:not([hidden]) .report-panel{border:0!important;box-shadow:none!important;padding:0!important}
- #riskReportModule:not([hidden]) .report-table-wrap,#firmsReportModule:not([hidden]) .report-table-wrap{overflow:visible}
- #riskReportModule:not([hidden]) .report-table,#firmsReportModule:not([hidden]) .report-table{min-width:0;font-size:7pt}
- #riskReportModule:not([hidden]) .report-table th,#riskReportModule:not([hidden]) .report-table td,
- #firmsReportModule:not([hidden]) .report-table th,#firmsReportModule:not([hidden]) .report-table td{padding:4px}
-}
+
 
 .map-quick-tools{display:grid;grid-template-columns:minmax(180px,1fr) auto minmax(220px,1.3fr) auto auto;gap:9px;align-items:end;padding:12px 14px;background:var(--surface-alt);border-bottom:1px solid var(--line)}
 .map-quick-tools label{margin:0;color:var(--muted);font-size:10px;font-weight:800}
@@ -2041,6 +2017,14 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 @page{size:A4 portrait;margin:10mm 9mm 12mm}
 @media print{
  html,body{background:#fff!important;color:#20383b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ html,body{height:auto!important;min-height:0!important;overflow:visible!important}
+ #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){break-after:auto!important;page-break-after:auto!important}
+ #riskReportModule:not([hidden]) .report-panel,#firmsReportModule:not([hidden]) .report-panel{break-after:auto!important;page-break-after:auto!important}
+ #riskReportModule:not([hidden]) .report-table-wrap,#firmsReportModule:not([hidden]) .report-table-wrap{height:auto!important;max-height:none!important;overflow:visible!important}
+ #riskReportModule:not([hidden]) .report-pagination-footer,#firmsReportModule:not([hidden]) .report-pagination-footer{display:none!important}
+ #riskReportModule:not([hidden]) .report-table tr,#firmsReportModule:not([hidden]) .report-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
+ #riskReportModule:not([hidden]) .report-disclaimer,#firmsReportModule:not([hidden]) .report-disclaimer{break-inside:avoid!important;page-break-inside:avoid!important}
+
  #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){display:block!important;position:static!important;width:100%!important;max-width:none!important;padding:0!important;margin:0!important;background:#fff!important}
  #riskReportModule:not([hidden]) .report-heading,#firmsReportModule:not([hidden]) .report-heading{padding:0 0 8px!important;margin:0 0 8px!important;background:#fff!important;border-top:0!important}
  #riskReportModule .report-heading-row,#firmsReportModule .report-heading-row{align-items:center!important;gap:12px!important}
