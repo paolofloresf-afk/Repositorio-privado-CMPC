@@ -3040,7 +3040,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     const clone=source.cloneNode(true);
     clone.id=moduleId;
     clone.removeAttribute('hidden');
-    clone.classList.add('support-pdf-export');
+    clone.classList.add('support-pdf-export',isFirms?'pdf-firms':'pdf-sidco');
     clone.querySelectorAll('[id]').forEach(node=>node.removeAttribute('id'));
     clone.querySelectorAll('.report-controls,.report-insight-grid,.report-method,.report-status,.report-close,.report-pagination-footer,.report-map-button').forEach(node=>node.remove());
     clone.querySelectorAll('.report-table thead tr,.report-table tbody tr').forEach(row=>{
@@ -3077,6 +3077,23 @@ setTimeout(()=>map.invalidateSize(),1000)
       .support-pdf-export .report-table{display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin:0!important;font-size:${isFirms?6.8:7.4}px!important}
       .support-pdf-export .report-table th{position:static!important;padding:5px 4px!important;background:#eaf0f0!important;color:#25484a!important;font-size:${isFirms?6.5:7}px!important;font-weight:800!important;line-height:1.2!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;border-bottom:1px solid #d5e2e2!important}
       .support-pdf-export .report-table td{padding:4px!important;color:#29454a!important;font-size:${isFirms?6.5:7}px!important;line-height:1.25!important;white-space:normal!important;overflow-wrap:anywhere!important;vertical-align:middle!important;border-bottom:1px solid #e1e9e9!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(1){width:13%!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(2){width:13%!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(3){width:21%!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(4){width:11%!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(5){width:20%!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(6){width:9%!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(7){width:13%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(1){width:9%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(2){width:9%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(3){width:13%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(4){width:8%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(5){width:12%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(6){width:12%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(7){width:14%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(8){width:8%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(9){width:7%!important}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(10){width:8%!important}
       .support-pdf-export .report-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
       .support-pdf-export .report-risk-chip{display:inline-flex!important;padding:3px 6px!important;border-radius:20px!important;font-size:6.5px!important;font-weight:800!important;white-space:nowrap!important}
       .support-pdf-export .report-disclaimer{display:block!important;margin:10px 0 0!important;padding:8px 0 0!important;border-top:1px solid #d5e2e2!important;color:#688084!important;font-size:7px!important;line-height:1.35!important}
