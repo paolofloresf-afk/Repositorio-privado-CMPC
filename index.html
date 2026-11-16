@@ -1,7 +1,9 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Alertas de quemas próximas a predios CMPC | Noviembre 2026</title>
+<title>Monitor CMPC | Alertas territoriales</title>
+<meta name="description" content="Monitor territorial de avisos SIDCO próximos a predios CMPC.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e3a36'/%3E%3Cpath d='M32 9 16 29h9L13 45h38L39 29h9L32 9Z' fill='%2398c99a'/%3E%3Cpath d='M29 43h6v12h-6z' fill='%23d5e8d3'/%3E%3C/svg%3E">
 <style>
 :root{--navy:#0b1c32;--blue:#17395d;--cyan:#68c7df;--bg:#eef3f8;--ink:#17283d;--muted:#62758a}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -321,11 +323,32 @@ html[data-theme="dark"] .footer{border-color:#2a3b50;color:#8fa3b8}
 html[data-theme="dark"] .leaflet-control-scale-line{border-color:#94a8b8!important;color:#d6e2ec!important;background:rgba(16,29,46,.82)!important}
 html[data-theme="dark"] .leaflet-popup-content-wrapper,html[data-theme="dark"] .leaflet-popup-tip{background:#17273b;color:#e5edf6}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+/* Firma visual discreta del monitor */
+.brand-lockup{display:flex;align-items:center;gap:8px;margin-bottom:17px;color:#d5e9e0}
+.brand-symbol{width:26px;height:26px;display:grid;place-items:center;color:#9bc9a4;opacity:.92}
+.brand-symbol svg{display:block;width:22px;height:22px}
+.brand-name{font-size:13px;line-height:1;font-weight:750;letter-spacing:.13em;color:#f2f7f4}
+.brand-divider{height:15px;width:1px;background:rgba(220,238,229,.34);margin:0 3px}
+.brand-caption{font-size:8px;letter-spacing:.16em;font-weight:700;color:#b1c9bf}
+.header-eyebrow{font-size:9px;letter-spacing:.16em;color:#a6c9d2;margin-bottom:8px}
+@media(max-width:600px){.brand-lockup{margin-bottom:14px}.brand-caption{font-size:7px;letter-spacing:.12em}}
 </style></head><body>
 <header>
   <div class="header-inner">
     <div class="header-copy">
-      <div class="header-eyebrow">MONITOREO TERRITORIAL · SIDCO / CMPC</div>
+      <div class="brand-lockup" aria-label="CMPC · Monitor territorial">
+        <span class="brand-symbol" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img">
+            <path d="M16 3 6.5 14.5h5.1L4 24h24l-7.6-9.5h5.1L16 3Z" fill="currentColor"/>
+            <path d="M14.6 20.5h2.8V29h-2.8z" fill="currentColor" opacity=".72"/>
+          </svg>
+        </span>
+        <span class="brand-name">CMPC</span>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <span class="brand-caption">MONITOREO TERRITORIAL</span>
+      </div>
+      <div class="header-eyebrow">SIDCO · ALERTAS GEORREFERENCIADAS</div>
       <h1>Monitor de quemas próximas a predios CMPC</h1>
       <p>Alertas georreferenciadas · Cruce espacial con predios CMPC · Datos del archivo disponible</p>
     </div>
