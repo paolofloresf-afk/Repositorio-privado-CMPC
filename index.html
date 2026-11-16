@@ -2357,7 +2357,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
       <label>KM HASTA<input type="number" id="reportMaxKm" min="0" max="5" step="0.5" value="5"></label>
       <button type="button" id="refreshReport">Actualizar informe</button>
       <button type="button" class="secondary" id="nextFiveDays">Próximos 5 días</button>
-      <button type="button" class="secondary" id="printReport">Imprimir / Guardar PDF</button>
+      <button type="button" class="secondary" id="printReport">Descargar PDF</button>
       <button type="button" class="secondary" id="exportReport">Exportar CSV</button>
     </div>
     <div class="report-period" id="reportPeriod">Período del informe: preparando...</div>
@@ -2415,7 +2415,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
       <label>KM DESDE<input type="number" id="firmsReportMinKm" min="0" max="3" step="0.5" value="0"></label>
       <label>KM HASTA<input type="number" id="firmsReportMaxKm" min="0" max="5" step="0.5" value="5"></label>
       <button type="button" id="refreshFirmsReport">Actualizar informe</button>
-      <button type="button" class="secondary" id="printFirmsReport">Imprimir / Guardar PDF</button>
+      <button type="button" class="secondary" id="printFirmsReport">Descargar PDF</button>
       <button type="button" class="secondary" id="exportFirmsReport">Exportar CSV</button>
     </div>
     <div class="report-period" id="firmsReportPeriod">Período de adquisición: preparando...</div>
@@ -3011,6 +3011,134 @@ setTimeout(()=>map.invalidateSize(),1000)
 </script>
 
 <script src="https://unpkg.com/shpjs@6.2.0/dist/shp.min.js"></script>
+<script>
+/* Exportación directa a PDF: genera el archivo en el navegador y evita los encabezados/pies de Chrome. */
+(() => {
+  let libraryPromise = null;
+  function loadPdfLibrary(){
+    if(window.html2pdf)return Promise.resolve(window.html2pdf);
+    if(!libraryPromise){
+      libraryPromise=new Promise((resolve,reject)=>{
+        const script=document.createElement('script');
+        script.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        script.async=true;
+        script.crossOrigin='anonymous';
+        script.referrerPolicy='no-referrer';
+        script.onload=()=>window.html2pdf?resolve(window.html2pdf):reject(new Error('La librería PDF no quedó disponible.'));
+        script.onerror=()=>reject(new Error('No se pudo cargar el generador PDF. Comprueba la conexión e inténtalo otra vez.'));
+        document.head.appendChild(script);
+      });
+    }
+    return libraryPromise;
+  }
+
+  async function download(moduleId,filename,orientation){
+    const source=document.getElementById(moduleId);
+    if(!source||source.hidden)throw new Error('Abre el informe antes de descargarlo.');
+    const html2pdf=await loadPdfLibrary();
+    if(document.fonts?.ready)await document.fonts.ready;
+
+    const isFirms=moduleId==='firmsReportModule';
+    const width=isFirms?1050:730;
+    const clone=source.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.removeAttribute('hidden');
+    clone.classList.add('support-pdf-export',isFirms?'pdf-firms':'pdf-sidco');
+    clone.querySelectorAll('[id]').forEach(node=>node.removeAttribute('id'));
+    clone.querySelectorAll('.report-controls,.report-insight-grid,.report-method,.report-status,.report-close,.report-pagination-footer,.report-map-button').forEach(node=>node.remove());
+    clone.querySelectorAll('.report-table thead tr,.report-table tbody tr').forEach(row=>row.lastElementChild?.remove());
+
+    const wrapper=document.createElement('div');
+    wrapper.style.cssText='position:fixed;left:-12000px;top:0;width:'+width+'px;background:#fff;z-index:-1;overflow:visible;';
+    const style=document.createElement('style');
+    style.textContent=`
+      .support-pdf-export{display:block!important;visibility:visible!important;width:${width}px!important;max-width:none!important;margin:0!important;padding:0!important;background:#fff!important;color:#20383b!important;font-family:Inter,Arial,sans-serif!important;box-sizing:border-box!important}
+      .support-pdf-export *{box-sizing:border-box!important;visibility:visible!important}
+      .support-pdf-export .report-heading{margin:0 0 18px!important}
+      .support-pdf-export .report-heading-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important}
+      .support-pdf-export .report-heading-row>div:first-child{flex:1 1 auto!important;min-width:0!important;max-width:72%!important}
+      .support-pdf-export .report-heading h2{font-size:${isFirms?23:22}px!important;line-height:1.2!important;color:#20383b!important;margin:0 0 7px!important}
+      .support-pdf-export .report-heading p{font-size:10px!important;line-height:1.45!important;color:#688084!important}
+      .support-pdf-export .report-eyebrow{font-size:9px!important;letter-spacing:.15em!important;color:#2c7d80!important}
+      .support-pdf-export .report-brand{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;flex:0 0 auto!important;max-width:205px!important}
+      .support-pdf-export .report-brand img{width:76px!important;height:40px!important;object-fit:contain!important}
+      .support-pdf-export .report-brand span{display:block!important;max-width:110px!important;white-space:normal!important;font-size:7px!important;line-height:1.35!important;color:#587276!important}
+      .support-pdf-export .report-panel{padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;color:#20383b!important}
+      .support-pdf-export .report-period{margin:0 0 10px!important;padding:9px 11px!important;background:#f3f8f8!important;border:1px solid #d1e0e1!important;color:#45666a!important;font-size:9px!important}
+      .support-pdf-export .report-kpis{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important;margin:0 0 13px!important}
+      .support-pdf-export .report-kpi{min-width:0!important;padding:8px!important;background:#f8fbfb!important;border:1px solid #d1e0e1!important;break-inside:avoid!important}
+      .support-pdf-export .report-kpi strong{font-size:19px!important;color:#20383b!important}
+      .support-pdf-export .report-kpi span{font-size:8px!important;line-height:1.25!important;color:#587276!important}
+      .support-pdf-export .report-table-heading{display:flex!important;margin:10px 0 7px!important}
+      .support-pdf-export .report-table-heading h3{font-size:11px!important;color:#20383b!important}
+      .support-pdf-export .report-table-heading span{font-size:8px!important;color:#688084!important}
+      .support-pdf-export .report-table-wrap{max-width:100%!important;width:100%!important;overflow:visible!important;border:1px solid #d1e0e1!important;border-radius:7px!important}
+      .support-pdf-export .report-table{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:${isFirms?7.4:8.4}px!important}
+      .support-pdf-export .report-table th{position:static!important;background:#e5f0f0!important;color:#34575b!important;font-size:${isFirms?7.2:8.2}px!important;font-weight:800!important;line-height:1.2!important;padding:5px 4px!important;white-space:normal!important;overflow-wrap:anywhere!important}
+      .support-pdf-export .report-table td{color:#29454a!important;border-color:#d5e2e2!important;font-size:${isFirms?7.2:8.2}px!important;line-height:1.28!important;padding:5px 4px!important;white-space:normal!important;overflow-wrap:anywhere!important;vertical-align:middle!important}
+      .support-pdf-export .report-table td:first-child{white-space:normal!important}
+      .support-pdf-export .report-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
+      .support-pdf-export .report-disclaimer{margin-top:10px!important;padding-top:8px!important;border-top:1px solid #d5e2e2!important;font-size:8px!important;line-height:1.4!important;color:#688084!important}
+      .support-pdf-export .report-risk-chip{font-size:7px!important}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(1){width:13%}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(2){width:13%}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(3){width:21%}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(4){width:11%}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(5){width:20%}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(6){width:9%}
+      .support-pdf-export.pdf-sidco .report-table th:nth-child(7){width:13%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(1){width:11%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(2){width:9%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(3){width:13%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(4){width:7%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(5){width:13%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(6){width:12%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(7){width:13%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(8){width:8%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(9){width:7%}
+      .support-pdf-export.pdf-firms .report-table th:nth-child(10){width:7%}
+    `;
+    clone.prepend(style);
+    clone.style.width=width+'px';
+    clone.style.maxWidth='none';
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
+
+    try{
+      const image=clone.querySelector('.report-brand img');
+      if(image){
+        image.crossOrigin='anonymous';
+        if(!image.complete)await Promise.race([new Promise(resolve=>image.addEventListener('load',resolve,{once:true})),new Promise(resolve=>setTimeout(resolve,3500))]);
+      }
+      const pdf=await html2pdf().set({
+        margin:[8,8,14,8],
+        image:{type:'jpeg',quality:0.97},
+        html2canvas:{scale:2,useCORS:true,allowTaint:false,backgroundColor:'#ffffff',logging:false,windowWidth:width},
+        jsPDF:{unit:'mm',format:'a4',orientation:orientation||'portrait'},
+        pagebreak:{mode:['css','legacy'],avoid:['tr','.report-kpi','.report-period']}
+      }).from(clone).toPdf().get('pdf');
+      const total=pdf.internal.getNumberOfPages();
+      for(let page=1;page<=total;page++){
+        pdf.setPage(page);
+        const pageWidth=pdf.internal.pageSize.getWidth();
+        const pageHeight=pdf.internal.pageSize.getHeight();
+        pdf.setDrawColor(218,229,229);
+        pdf.setLineWidth(.25);
+        pdf.line(8,pageHeight-10,pageWidth-8,pageHeight-10);
+        pdf.setFont('helvetica','normal');
+        pdf.setFontSize(7);
+        pdf.setTextColor(104,128,132);
+        pdf.text('SUPPORT · MONITOREO TERRITORIAL',8,pageHeight-5);
+        pdf.text('Página '+page+' de '+total,pageWidth-8,pageHeight-5,{align:'right'});
+      }
+      pdf.save(filename);
+    }finally{
+      wrapper.remove();
+    }
+  }
+  window.SupportReportPdf={download};
+})();
+</script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
@@ -3762,11 +3890,19 @@ setTimeout(()=>map.invalidateSize(),1000)
   $('refreshFirmsReport').addEventListener('click',renderFirmsReport);
   $('firmsReportFrom').addEventListener('change',renderFirmsReport);
   $('firmsReportTo').addEventListener('change',renderFirmsReport);$('firmsReportMinKm').addEventListener('change',renderFirmsReport);$('firmsReportMaxKm').addEventListener('change',renderFirmsReport);
-  $('printFirmsReport').addEventListener('click',()=>{
-    const previous=firmsReportPageSize;firmsReportPageSize=Math.max(1,firmsReportRows.length);firmsReportPage=0;renderFirmsReportPagination();
-    const restore=()=>{firmsReportPageSize=previous;firmsReportPage=0;renderFirmsReportPagination();window.removeEventListener('afterprint',restore);};
-    window.addEventListener('afterprint',restore,{once:true});window.print();
-    window.setTimeout(restore,1200);
+  $('printFirmsReport').addEventListener('click',async()=>{
+    const button=$('printFirmsReport'),previous=firmsReportPageSize,previousPage=firmsReportPage;
+    button.disabled=true;button.textContent='Preparando PDF…';
+    firmsReportPageSize=Math.max(1,firmsReportRows.length);firmsReportPage=0;renderFirmsReportPagination();
+    try{
+      const filename='SUPPORT_Informe_NASA_FIRMS_'+$('firmsReportFrom').value+'_'+$('firmsReportTo').value+'.pdf';
+      await window.SupportReportPdf.download('firmsReportModule',filename,'landscape');
+    }catch(error){
+      window.alert('No se pudo generar el PDF: '+error.message);
+    }finally{
+      firmsReportPageSize=previous;firmsReportPage=previousPage;renderFirmsReportPagination();
+      button.disabled=false;button.textContent='Descargar PDF';
+    }
   });
   $('exportFirmsReport').addEventListener('click',exportFirmsReport);
   $('firmsReportPageSize').addEventListener('change',e=>{firmsReportPageSize=Number(e.target.value)||10;firmsReportPage=0;renderFirmsReportPagination();});
@@ -4428,11 +4564,19 @@ setTimeout(()=>map.invalidateSize(),1000)
  window.addEventListener('cmpc-live-events-updated',renderRiskReport);
   window.addEventListener('cmpc-global-filter',event=>{const km=Number(event.detail?.radius||3000)/1000;const max=$('reportMaxKm');if(max){max.max=String(km);max.value=String(km);}if(!$('riskReportModule').hidden)renderRiskReport();});
  $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
- $('printReport').addEventListener('click',()=>{
-  const previous=pageSize;pageSize=Math.max(1,currentRows.length);currentPage=0;renderPagination();
-  const restore=()=>{pageSize=previous;renderPagination();window.removeEventListener('afterprint',restore);};
-  window.addEventListener('afterprint',restore,{once:true});window.print();
-  window.setTimeout(restore,1200);
+ $('printReport').addEventListener('click',async()=>{
+  const button=$('printReport'),previous=pageSize,previousPage=currentPage;
+  button.disabled=true;button.textContent='Preparando PDF…';
+  pageSize=Math.max(1,currentRows.length);currentPage=0;renderPagination();
+  try{
+   const filename='SUPPORT_Informe_SIDCO_CONAF_'+fromInput.value+'_'+toInput.value+'.pdf';
+   await window.SupportReportPdf.download('riskReportModule',filename,'portrait');
+  }catch(error){
+   window.alert('No se pudo generar el PDF: '+error.message);
+  }finally{
+   pageSize=previous;currentPage=previousPage;renderPagination();
+   button.disabled=false;button.textContent='Descargar PDF';
+  }
  });
  $('exportReport').addEventListener('click',exportCsv);
  $('closeRiskReport').addEventListener('click',()=>{reportModule.hidden=true;toggleButton.setAttribute('aria-expanded','false');});
