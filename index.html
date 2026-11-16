@@ -2110,7 +2110,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
       <div class="control-title">FILTROS DE BÚSQUEDA</div>
       <label class="field-label">Comuna<select id="commune"><option value="">Todas las comunas</option></select></label>
       <label class="field-label">Predio / aviso<input id="search" placeholder="Buscar predio, aviso o tipo de quema..."></label>
-      <label class="field-label">Radio máximo<select id="radius"><option value="1000">1 km</option><option value="3000">3 km</option><option value="5000" selected>5 km</option></select></label>
+      <label class="field-label">Radio máximo<select id="radius"><option value="1000">1 km</option><option value="3000">3 km</option><option value="5000">5 km</option></select></label>
     </div>
     <div class="control-group actions-group">
       <div class="control-title">ACCIONES</div>
@@ -2328,10 +2328,10 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
   <div class="control-title">RANGOS DE ALERTA</div>
   <p class="range-description">Muestra u oculta avisos por nivel de proximidad.</p>
   <div class="range-options">
-    <label class="legend-check"><input type="checkbox" id="showInside" checked><i class="dot green"></i><span>Dentro de predio CMPC · 0 km</span></label>
+    <label class="legend-check"><input type="checkbox" id="showInside"><i class="dot green"></i><span>Dentro de predio CMPC · 0 km</span></label>
     <label class="legend-check"><input type="checkbox" id="showRed" checked><i class="dot red"></i><span>Roja · menos de 1 km</span></label>
-    <label class="legend-check"><input type="checkbox" id="showOrange" checked><i class="dot orange"></i><span>Naranja · 1 a 3 km</span></label>
-    <label class="legend-check"><input type="checkbox" id="showYellow" checked><i class="dot yellow"></i><span>Amarilla · 3 a 5 km</span></label>
+    <label class="legend-check"><input type="checkbox" id="showOrange"><i class="dot orange"></i><span>Naranja · 1 a 3 km</span></label>
+    <label class="legend-check"><input type="checkbox" id="showYellow"><i class="dot yellow"></i><span>Amarilla · 3 a 5 km</span></label>
   </div>
 </div><div id="mapBaseStatus" class="map-status">Mapa listo. Selecciona un predio, quema o foco para ver sus datos.</div>
 </section>
@@ -2434,6 +2434,12 @@ const defaultPeriod=()=>{
   const shift=days=>{const d=new Date(today);d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)};
   return {from:shift(-2),to:shift(2)};
 };
+// Primera vista: solo avisos a 1 km o menos.
+document.getElementById('radius').value='1000';
+document.getElementById('showInside').checked=false;
+document.getElementById('showOrange').checked=false;
+document.getElementById('showYellow').checked=false;
+document.getElementById('showRed').checked=true;
 const initialPeriod=defaultPeriod();
 document.getElementById('from').value=initialPeriod.from;
 document.getElementById('to').value=initialPeriod.to;
