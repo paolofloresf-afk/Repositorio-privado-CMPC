@@ -1069,6 +1069,57 @@ html[data-theme="dark"] .theme-toggle:hover{
   background:rgba(100,183,173,.22)!important;
 }
 
+
+/* Navegación interna entre módulos del monitor */
+.module-page{display:none}
+.module-page.active{display:block}
+.converter-module{max-width:1180px;margin:0 auto;padding:28px 0 34px}
+.converter-heading{margin-bottom:20px}
+.converter-eyebrow{font-size:10px;letter-spacing:.18em;font-weight:850;color:#548b68;margin-bottom:8px}
+.converter-heading h2{margin:0 0 8px;font-size:clamp(23px,2.4vw,30px);letter-spacing:-.025em;color:var(--ink)}
+.converter-heading p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.converter-card{padding:22px!important}
+.converter-card-title{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+.converter-card-title h3{margin:0 0 6px;font-size:16px;color:var(--ink)}
+.converter-card-title p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+.converter-chip{display:inline-flex;align-items:center;padding:7px 10px;border-radius:20px;background:#e8f2eb;color:#315e3d;font-size:10px;font-weight:850;white-space:nowrap}
+.converter-label{display:block;margin-bottom:8px;color:var(--muted);font-size:10px;letter-spacing:.09em;font-weight:850}
+.converter-input{display:block;width:100%;min-height:145px;resize:vertical;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface-alt);color:var(--ink);font:14px/1.65 Consolas,Monaco,monospace}
+.converter-input:focus{outline:2px solid rgba(76,140,97,.2);border-color:#6d9f78}
+.converter-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.converter-actions button{width:auto;min-width:145px;padding:11px 14px;font-size:11px}
+.converter-actions button:disabled{opacity:.45;cursor:not-allowed}
+.coordinate-output{margin-top:18px;min-height:125px;padding:17px;border:1px solid var(--line);border-radius:10px;background:var(--surface-alt);color:var(--ink)}
+.coordinate-output-label{display:block;margin-bottom:12px;font-size:9px;font-weight:900;letter-spacing:.14em;color:var(--muted)}
+.coordinate-output p{margin:0;font-size:14px;line-height:1.7}
+.coordinate-output strong{display:block;margin:0 0 7px;font-size:11px;letter-spacing:.04em;color:var(--muted)}
+.coordinate-output .coordinate-value{font:600 17px/1.55 Consolas,Monaco,monospace;overflow-wrap:anywhere;color:var(--ink)}
+.coordinate-message{min-height:18px;margin-top:9px;font-size:11px;color:var(--muted)}
+.coordinate-message.error{color:#c34343}
+.coordinate-message.success{color:#398153}
+.converter-footnote{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);font-size:10px;line-height:1.55;color:var(--muted)}
+.converter-example-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.converter-example{padding:14px 16px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
+.converter-example span{display:block;margin-bottom:7px;font-size:9px;letter-spacing:.1em;font-weight:850;color:var(--muted)}
+.converter-example strong{font:600 12px/1.5 Consolas,Monaco,monospace;color:var(--ink)}
+html[data-theme="dark"] .converter-eyebrow{color:#80C9C0}
+html[data-theme="dark"] .converter-chip{background:#203B3F;color:#BCE1DE}
+html[data-theme="dark"] .converter-input,
+html[data-theme="dark"] .coordinate-output,
+html[data-theme="dark"] .converter-example{background:#18282B;border-color:#355054;color:#E1EEEE}
+html[data-theme="dark"] .converter-input:focus{border-color:#64B7AD;outline:2px solid rgba(100,183,173,.2)}
+html[data-theme="dark"] .coordinate-message.success{color:#80C9A8}
+html[data-theme="dark"] .coordinate-message.error{color:#FFB8B8}
+@media(max-width:650px){
+ .converter-module{padding:18px 0 26px}
+ .converter-card{padding:15px!important}
+ .converter-card-title{display:grid}
+ .converter-actions{display:grid;grid-template-columns:1fr 1fr}
+ .converter-actions button{width:100%;min-width:0}
+ .converter-actions button:first-child{grid-column:1/-1}
+ .converter-example-grid{grid-template-columns:1fr}
+}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1077,9 +1128,13 @@ html[data-theme="dark"] .theme-toggle:hover{
   </div>
   <nav class="sidebar-nav" aria-label="Módulos principales">
     <div class="sidebar-section-label">GENERAL</div>
-    <a class="sidebar-link active" href="#mainContent" aria-current="page" title="Monitor de quemas">
+    <a class="sidebar-link active" id="navMonitor" href="#mainContent" aria-current="page" title="Monitor de quemas">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>
       <span>Monitor de quemas</span>
+    </a>
+    <a class="sidebar-link" id="navCoordinates" href="#coordinateConverter" title="Conversor de coordenadas">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/><path d="M3 21h18"/></svg>
+      <span>Conversor de coordenadas</span>
     </a>
   </nav>
   <div class="sidebar-workspace">
@@ -1114,7 +1169,7 @@ html[data-theme="dark"] .theme-toggle:hover{
         </div>
         <span class="header-divider" aria-hidden="true"></span>
       </div>
-      <h1>Monitor de quemas próximas a predios CMPC</h1>
+      <h1 id="pageTitle">Monitor de quemas próximas a predios CMPC</h1>
       
     </div>
     <div class="header-actions">
@@ -1132,6 +1187,7 @@ html[data-theme="dark"] .theme-toggle:hover{
   </div>
 </header>
 <main id="mainContent">
+<section id="burnMonitorModule" class="module-page active">
 <div class="kpis">
 <div class="kpi"><strong id="kTotal">372</strong><span>Quemas a 5 km o menos</span></div>
 <div class="kpi"><strong class="red" id="kRed">155</strong><span>Alerta roja · menos de 1 km</span></div>
@@ -1211,6 +1267,47 @@ html[data-theme="dark"] .theme-toggle:hover{
   <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div><div class="kmz-sync-status" id="sidcoStatus">SIDCO: snapshot inicial cargado</div>
 </section>
 <div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.<div class="logo-attribution">Logotipo CMPC: <a href="https://commons.wikimedia.org/wiki/File:Logo-cmpc.svg" target="_blank" rel="noopener">archivo de CMPC en Wikimedia Commons</a> · Licencia CC BY-SA 4.0.</div></div>
+
+</section>
+<section id="coordinateConverter" class="module-page converter-module" aria-labelledby="converterTitle">
+  <div class="converter-heading">
+    <div class="converter-eyebrow">HERRAMIENTAS TERRITORIALES</div>
+    <h2 id="converterTitle">Conversor de coordenadas</h2>
+    <p>Convierte coordenadas geográficas entre grados, minutos y segundos (GMS) y grados decimales.</p>
+  </div>
+  <section class="panel converter-card">
+    <div class="converter-card-title">
+      <div>
+        <h3>Conversión geográfica</h3>
+        <p>Ingresa primero la latitud y luego la longitud, separadas por una coma o en líneas distintas.</p>
+      </div>
+      <span class="converter-chip">GMS ↔ Decimal</span>
+    </div>
+    <label for="coordinateInput" class="converter-label">COORDENADAS DE ENTRADA</label>
+    <textarea id="coordinateInput" class="converter-input" spellcheck="false" placeholder="Ejemplo GMS:&#10;37°4'59&quot;S, 71°47'52&quot;W&#10;&#10;O decimal:&#10;-37.083056, -71.797778"></textarea>
+    <div class="converter-actions">
+      <button type="button" id="convertCoordinates">Convertir coordenadas</button>
+      <button type="button" id="copyCoordinates" class="secondary" disabled>Copiar resultado</button>
+      <button type="button" id="clearCoordinates" class="secondary">Limpiar</button>
+    </div>
+    <div id="coordinateOutput" class="coordinate-output" role="status" aria-live="polite">
+      <span class="coordinate-output-label">RESULTADO</span>
+      <p>Esperando coordenadas...</p>
+    </div>
+    <div id="coordinateMessage" class="coordinate-message" aria-live="polite"></div>
+    <div class="converter-footnote">Esta herramienta cambia el formato de presentación entre GMS y decimal. No transforma datum ni convierte coordenadas UTM.</div>
+  </section>
+  <div class="converter-example-grid">
+    <div class="converter-example">
+      <span>GRADOS, MINUTOS Y SEGUNDOS</span>
+      <strong>37°4'59"S, 71°47'52"W</strong>
+    </div>
+    <div class="converter-example">
+      <span>GRADOS DECIMALES</span>
+      <strong>-37.083056, -71.797778</strong>
+    </div>
+  </div>
+</section>
 </main>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1742,4 +1839,154 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
  sync();
 })();
 </script>
+
+<script>
+(() => {
+  const input=document.getElementById('coordinateInput');
+  const output=document.getElementById('coordinateOutput');
+  const message=document.getElementById('coordinateMessage');
+  const convertButton=document.getElementById('convertCoordinates');
+  const copyButton=document.getElementById('copyCoordinates');
+  const clearButton=document.getElementById('clearCoordinates');
+  let copyText='';
+
+  function parseDmsPart(part,axis){
+    const match=part.trim().match(/^([+-]?\\d{1,3})\\s*°\\s*(\\d{1,2})\\s*['′’]\\s*(\\d{1,2}(?:\\.\\d+)?)\\s*(?:"|″|”)?\\s*([NSEW])$/i);
+    if(!match) return null;
+    const degrees=Number(match[1]),minutes=Number(match[2]),seconds=Number(match[3]);
+    const hemisphere=match[4].toUpperCase();
+    const validHemisphere=axis==='lat'?['N','S']:['E','W'];
+    if(!validHemisphere.includes(hemisphere)||minutes>=60||seconds>=60) return null;
+    const limit=axis==='lat'?90:180;
+    if(Math.abs(degrees)>limit||(Math.abs(degrees)===limit&&(minutes>0||seconds>0))) return null;
+    let decimal=Math.abs(degrees)+minutes/60+seconds/3600;
+    if(hemisphere==='S'||hemisphere==='W') decimal=-decimal;
+    return decimal;
+  }
+
+  function parsePair(raw){
+    const parts=raw.includes(',')?raw.split(',').map(x=>x.trim()):raw.split(/[\\n;]/).map(x=>x.trim()).filter(Boolean);
+    if(parts.length!==2||!parts[0]||!parts[1]) throw new Error('Ingresa latitud y longitud separadas por una coma o en dos líneas.');
+    const hasHemisphere=/[NSEW]/i.test(raw);
+    let lat,lon,source;
+    if(hasHemisphere){
+      lat=parseDmsPart(parts[0],'lat');
+      lon=parseDmsPart(parts[1],'lon');
+      if(lat===null||lon===null) throw new Error('Formato GMS no válido. Usa grados, minutos, segundos y hemisferio (N/S para latitud; E/W para longitud).');
+      source='GMS';
+    }else{
+      lat=Number(parts[0]);
+      lon=Number(parts[1]);
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)) throw new Error('No se reconocieron los valores decimales.');
+      if(lat < -90||lat > 90||lon < -180||lon > 180) throw new Error('Coordenadas fuera de rango. La latitud debe estar entre -90 y 90 y la longitud entre -180 y 180.');
+      source='decimal';
+    }
+    return {lat,lon,source};
+  }
+
+  function toDms(value,axis){
+    const hemisphere=axis==='lat'?(value<0?'S':'N'):(value<0?'W':'E');
+    let total=Math.round(Math.abs(value)*3600*100)/100;
+    let degrees=Math.floor(total/3600);
+    total-=degrees*3600;
+    let minutes=Math.floor(total/60);
+    let seconds=Math.round((total-minutes*60)*100)/100;
+    if(seconds>=60){seconds=0;minutes++;}
+    if(minutes>=60){minutes=0;degrees++;}
+    return degrees+'° '+minutes+"' "+seconds.toFixed(2)+'" '+hemisphere;
+  }
+
+  function showError(text){
+    output.innerHTML='<span class="coordinate-output-label">RESULTADO</span><p>Revisa el formato de las coordenadas.</p>';
+    message.textContent=text;
+    message.className='coordinate-message error';
+    copyText='';
+    copyButton.disabled=true;
+  }
+
+  function convert(){
+    const raw=input.value.trim();
+    if(!raw){showError('Ingresa una coordenada para comenzar.');return;}
+    try{
+      const result=parsePair(raw);
+      let heading,target;
+      if(result.source==='GMS'){
+        heading='COORDENADA DECIMAL';
+        target=result.lat.toFixed(6)+', '+result.lon.toFixed(6);
+      }else{
+        heading='COORDENADA GEOGRÁFICA (GMS)';
+        target=toDms(result.lat,'lat')+', '+toDms(result.lon,'lon');
+      }
+      copyText=target;
+      output.innerHTML='<span class="coordinate-output-label">RESULTADO</span><strong>'+heading+'</strong><p class="coordinate-value"></p>';
+      output.querySelector('.coordinate-value').textContent=target;
+      message.textContent='Conversión realizada correctamente.';
+      message.className='coordinate-message success';
+      copyButton.disabled=false;
+    }catch(error){showError(error.message);}
+  }
+
+  async function copyResult(){
+    if(!copyText)return;
+    try{
+      await navigator.clipboard.writeText(copyText);
+    }catch(error){
+      const temp=document.createElement('textarea');
+      temp.value=copyText;
+      temp.style.position='fixed';temp.style.opacity='0';
+      document.body.appendChild(temp);temp.select();
+      const copied=document.execCommand('copy');temp.remove();
+      if(!copied){message.textContent='No fue posible copiar automáticamente. Selecciona el resultado y cópialo.';message.className='coordinate-message error';return;}
+    }
+    message.textContent='Resultado copiado al portapapeles.';
+    message.className='coordinate-message success';
+  }
+
+  convertButton.addEventListener('click',convert);
+  copyButton.addEventListener('click',copyResult);
+  clearButton.addEventListener('click',()=>{
+    input.value='';copyText='';copyButton.disabled=true;
+    output.innerHTML='<span class="coordinate-output-label">RESULTADO</span><p>Esperando coordenadas...</p>';
+    message.textContent='';message.className='coordinate-message';
+    input.focus();
+  });
+  input.addEventListener('keydown',event=>{
+    if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){event.preventDefault();convert();}
+  });
+})();
+
+(() => {
+ const monitor=document.getElementById('burnMonitorModule');
+ const converter=document.getElementById('coordinateConverter');
+ const monitorLink=document.getElementById('navMonitor');
+ const converterLink=document.getElementById('navCoordinates');
+ const title=document.getElementById('pageTitle');
+ function selectModule(name){
+  const isConverter=name==='coordinates';
+  monitor.classList.toggle('active',!isConverter);
+  converter.classList.toggle('active',isConverter);
+  monitorLink.classList.toggle('active',!isConverter);
+  converterLink.classList.toggle('active',isConverter);
+  if(isConverter){
+   monitorLink.removeAttribute('aria-current');
+   converterLink.setAttribute('aria-current','page');
+   title.textContent='Conversor de coordenadas';
+   document.title='Conversor de coordenadas | Monitor CMPC';
+  }else{
+   converterLink.removeAttribute('aria-current');
+   monitorLink.setAttribute('aria-current','page');
+   title.textContent='Monitor de quemas próximas a predios CMPC';
+   document.title='Monitor CMPC | Alertas territoriales';
+   window.setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize({pan:false});},80);
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.body.classList.remove('sidebar-open');
+  const toggle=document.getElementById('sidebarToggle');
+  if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Abrir panel lateral');}
+ }
+ monitorLink.addEventListener('click',event=>{event.preventDefault();selectModule('monitor');});
+ converterLink.addEventListener('click',event=>{event.preventDefault();selectModule('coordinates');});
+})();
+</script>
+
 </body></html>
