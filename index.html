@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <title>Monitor CMPC | Alertas territoriales</title>
 <meta name="description" content="Monitor territorial de avisos SIDCO próximos a predios CMPC.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -1787,7 +1790,234 @@ html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:
  #firmsReportModule:not([hidden]) .report-table th,#firmsReportModule:not([hidden]) .report-table td{padding:4px}
 }
 
-</style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
+</style>
+<style id="cmpc-azul-petroleo-preview">
+/* Identidad visual de prueba: azul petróleo / Inter / densidad equilibrada.
+   Solo presentación: no modifica datos, capas, geometrías, filtros ni lógica. */
+html[data-theme="dark"]{
+ color-scheme:dark;
+ --navy:#102A32;
+ --blue:#24616A;
+ --cyan:#55B8B0;
+ --bg:#102A32;
+ --ink:#E6EEF0;
+ --muted:#A8C4C7;
+ --surface:#183D46;
+ --surface-alt:#15353D;
+ --line:#24616A;
+ --soft-text:#A8C4C7;
+}
+html[data-theme="dark"] body{
+ font-family:Inter,"Segoe UI",Arial,sans-serif;
+ background:linear-gradient(180deg,#102A32 0,#112F37 360px,#0D252C 100%);
+ color:#E6EEF0;
+ line-height:1.45;
+}
+html[data-theme="dark"] header{
+ background:linear-gradient(112deg,#0B2027 0%,#102A32 55%,#183D46 100%);
+ border-bottom:1px solid #24616A;
+}
+html[data-theme="dark"] .app-sidebar,
+html[data-theme="dark"] .sidebar-workspace,
+html[data-theme="dark"] .sidebar-module-card,
+html[data-theme="dark"] .sidebar-footer,
+html[data-theme="dark"] .sidebar-topline{
+ background:#102A32;
+ border-color:#24616A;
+ color:#E6EEF0;
+}
+html[data-theme="dark"] .sidebar-link{color:#B8D0D2}
+html[data-theme="dark"] .sidebar-link:hover,
+html[data-theme="dark"] .sidebar-link.active{background:#183D46;color:#E6EEF0;border-color:#2C7478}
+html[data-theme="dark"] .sidebar-section-label,
+html[data-theme="dark"] .sidebar-brand-caption,
+html[data-theme="dark"] .sidebar-footer-copy small{color:#91B2B6}
+html[data-theme="dark"] .kpi,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .top-date-panel,
+html[data-theme="dark"] .kmz-import-panel,
+html[data-theme="dark"] .firms-import-panel,
+html[data-theme="dark"] .listing-panel,
+html[data-theme="dark"] .report-panel,
+html[data-theme="dark"] .converter-card,
+html[data-theme="dark"] .import-card{
+ background:#183D46!important;
+ border-color:#24616A!important;
+ color:#E6EEF0!important;
+ box-shadow:0 6px 20px rgba(0,12,16,.2);
+}
+html[data-theme="dark"] .control-group,
+html[data-theme="dark"] .legend-option,
+html[data-theme="dark"] .kmz-dropzone,
+html[data-theme="dark"] .firms-dropzone,
+html[data-theme="dark"] .import-dropzone,
+html[data-theme="dark"] .converter-input,
+html[data-theme="dark"] .coordinate-output,
+html[data-theme="dark"] .converter-example,
+html[data-theme="dark"] .report-insight-card,
+html[data-theme="dark"] .report-period,
+html[data-theme="dark"] .report-kpi,
+html[data-theme="dark"] .report-method{
+ background:#15353D!important;
+ border-color:#24616A!important;
+ color:#E6EEF0!important;
+}
+html[data-theme="dark"] .panel h2,
+html[data-theme="dark"] .kmz-import-head h2,
+html[data-theme="dark"] .converter-heading h2,
+html[data-theme="dark"] .converter-card-title h3,
+html[data-theme="dark"] .report-heading h2,
+html[data-theme="dark"] .report-insight-title,
+html[data-theme="dark"] .listing-cell strong,
+html[data-theme="dark"] .listing-code{
+ color:#E6EEF0!important;
+}
+html[data-theme="dark"] .unified-heading,
+html[data-theme="dark"] .panel h2,
+html[data-theme="dark"] .listing-panel>h2{
+ border-color:#24616A!important;
+}
+html[data-theme="dark"] .unified-heading b,
+html[data-theme="dark"] .top-date-heading b,
+html[data-theme="dark"] .legend-head b,
+html[data-theme="dark"] .control-title,
+html[data-theme="dark"] .field-label,
+html[data-theme="dark"] .legend-check,
+html[data-theme="dark"] .legend-section-title,
+html[data-theme="dark"] .legend-title,
+html[data-theme="dark"] .firms-filter-grid label,
+html[data-theme="dark"] .report-eyebrow,
+html[data-theme="dark"] .converter-eyebrow{
+ color:#A9D4D2!important;
+}
+html[data-theme="dark"] .kpi span,
+html[data-theme="dark"] .unified-heading span,
+html[data-theme="dark"] .top-date-heading span,
+html[data-theme="dark"] .kmz-import-head p,
+html[data-theme="dark"] .note,
+html[data-theme="dark"] .footer,
+html[data-theme="dark"] .listing-cell small,
+html[data-theme="dark"] .listing-muted,
+html[data-theme="dark"] .listing-footer,
+html[data-theme="dark"] .firms-list-intro,
+html[data-theme="dark"] .firms-list-footer,
+html[data-theme="dark"] .converter-heading p,
+html[data-theme="dark"] .converter-card-title p,
+html[data-theme="dark"] .report-heading p,
+html[data-theme="dark"] .report-disclaimer{
+ color:#A8C4C7!important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .listing-page-size-label select,
+html[data-theme="dark"] .report-pagination-footer select{
+ background:#102A32!important;
+ color:#E6EEF0!important;
+ border-color:#2B6970!important;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#83A8AC!important}
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] .converter-input:focus{
+ border-color:#55B8B0!important;
+ box-shadow:0 0 0 3px rgba(85,184,176,.16)!important;
+}
+html[data-theme="dark"] button:not(.secondary):not(.theme-toggle):not(.icon-action):not(.fullscreen-toggle){
+ background:#24616A;
+ color:#F2FAFA;
+}
+html[data-theme="dark"] button:not(.secondary):hover{filter:brightness(1.12)}
+html[data-theme="dark"] button.secondary,
+html[data-theme="dark"] .dates-group .date-reset,
+html[data-theme="dark"] .kmz-actions .kmz-secondary,
+html[data-theme="dark"] .firms-locate-btn{
+ background:#204B52!important;
+ color:#DCEBEC!important;
+ border:1px solid #2D7075!important;
+}
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .fullscreen-toggle,
+html[data-theme="dark"] .icon-action{
+ background:rgba(85,184,176,.12);
+ color:#E6EEF0;
+ border-color:rgba(85,184,176,.38);
+}
+html[data-theme="dark"] .map-legend{
+ background:#183D46;
+ border-color:#24616A;
+}
+html[data-theme="dark"] .legend-toggle{background:#102A32;color:#E6EEF0}
+html[data-theme="dark"] .legend-option{background:#15353D;border-color:#24616A}
+html[data-theme="dark"] .legend-option b{color:#E6EEF0}
+html[data-theme="dark"] .legend-option small,
+html[data-theme="dark"] .legend-head span{color:#A8C4C7}
+html[data-theme="dark"] .map-status{background:#15353D;color:#A8C4C7;border-color:#24616A}
+html[data-theme="dark"] table th,
+html[data-theme="dark"] .report-table th,
+html[data-theme="dark"] .firms-list-table th{
+ background:#1B4650!important;
+ color:#BBD5D6!important;
+ border-color:#2A626A!important;
+}
+html[data-theme="dark"] table td,
+html[data-theme="dark"] .report-table td,
+html[data-theme="dark"] .firms-list-table td{
+ color:#DCEBEC!important;
+ border-color:#24535B!important;
+}
+html[data-theme="dark"] .event-row:nth-child(even),
+html[data-theme="dark"] .listing-row:nth-child(even),
+html[data-theme="dark"] .firms-list-row:nth-child(even){background:#163740!important}
+html[data-theme="dark"] .event-row:hover,
+html[data-theme="dark"] .listing-row:hover,
+html[data-theme="dark"] .firms-list-row:hover{background:#20515A!important}
+html[data-theme="dark"] .event-row.selected-event,
+html[data-theme="dark"] .listing-row.selected-event{
+ background:#244E53!important;
+ border-color:#55B8B0!important;
+ box-shadow:inset 3px 0 #55B8B0!important;
+}
+html[data-theme="dark"] .listing-row{
+ background:#183D46!important;
+ color:#E6EEF0!important;
+ border-color:#285C64!important;
+ box-shadow:0 2px 8px rgba(0,12,16,.12);
+}
+html[data-theme="dark"] .listing-page-btn{color:#B5D0D1}
+html[data-theme="dark"] .listing-page-btn:hover:not(:disabled){background:#20515A;color:#F0FAFA}
+html[data-theme="dark"] .listing-page-btn[aria-current="page"]{background:#24616A;border-color:#55B8B0;color:#fff}
+html[data-theme="dark"] .report-page-button[aria-current="page"]{background:#24616A;border-color:#55B8B0;color:#fff}
+html[data-theme="dark"] .listing-page-size-label select{border-color:#2B6970}
+html[data-theme="dark"] .leaflet-popup-content-wrapper,
+html[data-theme="dark"] .leaflet-popup-tip,
+html[data-theme="dark"] .leaflet-control-layers,
+html[data-theme="dark"] .leaflet-bar a{
+ background:#183D46!important;
+ color:#E6EEF0!important;
+ border-color:#2B6970!important;
+}
+html[data-theme="dark"] .leaflet-control-layers label{color:#DCEBEC!important}
+html[data-theme="dark"] .leaflet-control-layers-separator{border-color:#2B6970!important}
+html[data-theme="dark"] .leaflet-bar a:hover{background:#24616A!important}
+html[data-theme="dark"] .leaflet-control-zoom-in,
+html[data-theme="dark"] .leaflet-control-zoom-out{color:#E6EEF0!important}
+html[data-theme="dark"] .leaflet-control-attribution{
+ background:rgba(16,42,50,.88)!important;
+ color:#B8D0D2!important;
+}
+html[data-theme="dark"] .leaflet-control-attribution a{color:#75D0C7!important}
+/* Densidad equilibrada: separación moderada y lectura cómoda. */
+main,.app-main{line-height:1.45}
+html[data-theme="dark"] .kpi{padding:17px 17px 15px}
+html[data-theme="dark"] .control-group{padding:11px}
+html[data-theme="dark"] .panel h2{padding:14px 16px}
+html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
+</style>
+
+</head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
     <span class="sidebar-topline-label">MÓDULOS</span>
@@ -3552,7 +3782,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     label.textContent=dark?'Modo claro':'Modo oscuro';
     button.querySelector('.theme-icon').textContent=dark?'☀':'☾';
   }
-  applyTheme(saved==='dark'?'dark':'light');
+  applyTheme(saved==='light'?'light':'dark');
   button.addEventListener('click',()=>{
     const next=root.dataset.theme==='dark'?'light':'dark';
     applyTheme(next);
