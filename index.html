@@ -1732,6 +1732,61 @@ html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:
  .listing-pagination{width:100%;justify-content:center}
 }
 
+
+/* Informes operacionales · jerarquía visual, métricas y paginación */
+.report-insight-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:11px;margin:12px 0}
+.report-insight-card{min-width:0;padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--surface-alt)}
+.report-insight-title{margin-bottom:12px;color:var(--ink);font-size:11px;font-weight:850;letter-spacing:.02em}
+.report-bars,.report-ranking{display:grid;gap:9px}
+.report-bar-row,.report-rank-row{display:grid;grid-template-columns:minmax(105px,1fr) minmax(80px,2fr) 30px;align-items:center;gap:9px;font-size:10px;color:var(--muted)}
+.report-bar-label,.report-rank-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.report-bar-track{height:9px;overflow:hidden;border-radius:20px;background:rgba(130,155,155,.17)}
+.report-bar-fill{display:block;height:100%;border-radius:20px;background:#bc9250}
+.report-bar-fill.high{background:#c65b5b}
+.report-bar-fill.medium{background:#d29146}
+.report-bar-fill.low{background:#b7a044}
+.report-bar-value,.report-rank-value{font-weight:850;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.report-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+.report-kpi.total{border-top:3px solid #57898b}
+.report-kpi.inside{border-top:3px solid #43845d}
+.report-table{min-width:1120px}
+.report-table .report-risk-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:850;white-space:nowrap;background:#30444a;color:#dce8e8}
+.report-risk-chip.high{background:#702d35;color:#ffd2d4}
+.report-risk-chip.medium{background:#78451e;color:#ffe0bd}
+.report-risk-chip.low{background:#735c15;color:#ffedaf}
+.report-pagination-footer{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:11px 2px 2px;color:var(--muted);font-size:10px}
+.report-pagination-footer>span{margin-right:auto;font-variant-numeric:tabular-nums}
+.report-pagination-footer label{margin:0}
+.report-pagination-footer select{width:auto;min-width:120px;min-height:32px;padding:5px 27px 5px 9px;font-size:10px}
+.report-pagination{display:flex;align-items:center;gap:4px}
+.report-page-button{display:inline-flex;align-items:center;justify-content:center;width:31px;height:31px;padding:0;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--muted);font-size:11px;font-weight:750}
+.report-page-button:hover:not(:disabled){background:var(--surface-alt);border-color:var(--line);color:var(--ink)}
+.report-page-button[aria-current="page"]{background:#4b291e;border-color:#6e3a25;color:#fff1e8}
+.report-page-button:disabled{opacity:.32;cursor:default}
+.report-firms-distance{font-weight:850;color:#bc9250;white-space:nowrap}
+.report-firms-code{font-weight:850;color:var(--ink);font-variant-numeric:tabular-nums}
+.report-firms-manager{min-width:145px;white-space:normal!important;line-height:1.35}
+.firms-report-table{min-width:1420px}
+.report-firms-row{cursor:pointer}
+.report-firms-row:hover{background:var(--surface-alt)}
+@media(max-width:950px){.report-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.report-insight-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.report-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.report-pagination-footer{justify-content:center}.report-pagination-footer>span{width:100%;margin:0;text-align:left}.report-pagination{width:100%;justify-content:center}.report-pagination-footer label{margin-right:auto}}
+@media print{
+ #riskReportModule[hidden],#firmsReportModule[hidden]{display:none!important}
+ body *{visibility:hidden!important}
+ #riskReportModule:not([hidden]),#riskReportModule:not([hidden]) *,
+ #firmsReportModule:not([hidden]),#firmsReportModule:not([hidden]) *{visibility:visible!important}
+ #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){display:block!important;position:absolute;inset:0;width:100%;max-width:none;padding:0;margin:0}
+ #riskReportModule:not([hidden]) .report-controls,#firmsReportModule:not([hidden]) .report-controls,
+ #riskReportModule:not([hidden]) .report-close,#firmsReportModule:not([hidden]) .report-close,
+ #riskReportModule:not([hidden]) .report-pagination-footer,#firmsReportModule:not([hidden]) .report-pagination-footer{display:none!important}
+ #riskReportModule:not([hidden]) .report-panel,#firmsReportModule:not([hidden]) .report-panel{border:0!important;box-shadow:none!important;padding:0!important}
+ #riskReportModule:not([hidden]) .report-table-wrap,#firmsReportModule:not([hidden]) .report-table-wrap{overflow:visible}
+ #riskReportModule:not([hidden]) .report-table,#firmsReportModule:not([hidden]) .report-table{min-width:0;font-size:7pt}
+ #riskReportModule:not([hidden]) .report-table th,#riskReportModule:not([hidden]) .report-table td,
+ #firmsReportModule:not([hidden]) .report-table th,#firmsReportModule:not([hidden]) .report-table td{padding:4px}
+}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1833,7 +1888,8 @@ html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:
       <details class="actions-dropdown" id="actionsDropdown">
         <summary>Informes <span class="action-chevron" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5.5 7.5 4.5 4.5 4.5-4.5"/></svg></span></summary>
         <div class="actions-dropdown-menu">
-          <button type="button" id="toggleRiskReport" aria-expanded="false">Informe preventivo CONAF</button>
+          <button type="button" id="toggleRiskReport" aria-expanded="false">Informe preventivo CONAF · SIDCO</button>
+          <button type="button" id="toggleFirmsReport" aria-expanded="false">Informe de proximidad NASA FIRMS · 3 km</button>
         </div>
       </details>
     </div>
@@ -1903,11 +1959,11 @@ html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:
 
 <section id="riskReportModule" class="report-module" hidden aria-labelledby="riskReportTitle">
   <div class="report-heading">
-    <div class="report-eyebrow">CENTRO DE MONITOREO · SIDCO / CONAF</div>
+    <div class="report-eyebrow">INFORME OPERACIONAL · SIDCO / CONAF</div>
     <div class="report-heading-row">
       <div>
         <h2 id="riskReportTitle">Informe preventivo de quemas próximas a predios CMPC</h2>
-        <p>Proyección de avisos de quema externos con vigencia en el período seleccionado. Los avisos ubicados dentro de predios CMPC se excluyen del análisis.</p>
+        <p>Seguimiento de avisos de quema externos cuya vigencia coincide con el período analizado. Se excluyen las quemas ubicadas dentro de predios CMPC.</p>
       </div>
       <button type="button" class="secondary report-close" id="closeRiskReport">Cerrar informe</button>
     </div>
@@ -1923,22 +1979,88 @@ html:not([data-theme="dark"]) .listing-page-btn[aria-current="page"]{background:
     </div>
     <div class="report-period" id="reportPeriod">Período del informe: preparando...</div>
     <div class="report-kpis" id="reportKpis"></div>
+    <div class="report-insight-grid">
+      <div class="report-insight-card">
+        <div class="report-insight-title">Distribución por proximidad</div>
+        <div id="reportProximityBars" class="report-bars"></div>
+      </div>
+      <div class="report-insight-card">
+        <div class="report-insight-title">Comunas con más avisos vigentes</div>
+        <div id="reportCommuneRanking" class="report-ranking"></div>
+      </div>
+    </div>
     <div class="report-method">
-      <strong>Criterio de priorización</strong>
-      <span>Se consideran exclusivamente avisos externos, ubicados fuera de los polígonos CMPC (distancia mayor que 0 m). <b class="report-risk-red">Riesgo alto:</b> menos de 1 km. <b class="report-risk-medium">Seguimiento:</b> 1–3 km. <b class="report-risk-low">Preventivo:</b> 3–5 km. Los avisos dentro de predios CMPC (distancia igual a 0 m) se excluyen de todas las cifras y listados.</span>
+      <strong>Metodología</strong>
+      <span>Solo se consideran avisos externos a predios CMPC (distancia mayor que 0 m y hasta 5 km). <b class="report-risk-red">Prioridad alta:</b> menos de 1 km. <b class="report-risk-medium">Seguimiento:</b> 1 a menos de 3 km. <b class="report-risk-low">Preventivo:</b> 3 a 5 km. La vigencia se calcula por superposición entre fecha de inicio–término SIDCO y período seleccionado; se excluyen los avisos dentro de predios.</span>
     </div>
     <div class="report-status" id="reportStatus" role="status" aria-live="polite"></div>
     <div class="report-table-heading">
-      <h3>Avisos externos de riesgo alto</h3>
+      <h3>Avisos externos vigentes en el período</h3>
       <span id="reportHighCount">0 registros</span>
     </div>
     <div class="report-table-wrap">
       <table class="report-table">
-        <thead><tr><th>Vigencia declarada</th><th>Horario</th><th>Quema / aviso SIDCO</th><th>Comuna del aviso</th><th>Predio CMPC más cercano</th><th>Distancia</th><th>Ver mapa</th></tr></thead>
-        <tbody id="reportHighRows"><tr><td colspan="7" class="report-empty">Preparando informe...</td></tr></tbody>
+        <thead><tr><th>Inicio</th><th>Término</th><th>Quema / aviso SIDCO</th><th>Comuna</th><th>Predio CMPC cercano</th><th>Distancia</th><th>Prioridad</th><th>Mapa</th></tr></thead>
+        <tbody id="reportHighRows"><tr><td colspan="8" class="report-empty">Preparando informe...</td></tr></tbody>
       </table>
     </div>
-    <div class="report-disclaimer">Este informe se construye con los avisos SIDCO cargados en el Monitor. Un aviso corresponde a una quema declarada/programada y no confirma por sí solo que exista un incendio ni que la actividad esté autorizada. Las distancias son en línea recta respecto del polígono CMPC más cercano. La vigencia se calcula entre la fecha de inicio y la fecha de término informadas.</div>
+    <div class="report-pagination-footer">
+      <span id="reportPageInfo">Mostrando 0 de 0</span>
+      <label><select id="reportPageSize" aria-label="Registros por página del informe CONAF"><option value="10" selected>10 por página</option><option value="20">20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select></label>
+      <div id="reportPagination" class="report-pagination" aria-label="Paginación del informe CONAF"></div>
+    </div>
+    <div class="report-disclaimer">Fuente: avisos SIDCO cargados en el Monitor. Un aviso es una quema declarada/programada; no confirma por sí solo la presencia de un incendio ni acredita autorización. La distancia se mide en línea recta hasta el polígono CMPC más cercano. Fechas y horas corresponden a la vigencia informada en el aviso.</div>
+  </section>
+</section>
+
+<section id="firmsReportModule" class="report-module" hidden aria-labelledby="firmsReportTitle">
+  <div class="report-heading">
+    <div class="report-eyebrow">INFORME DE PROXIMIDAD · NASA FIRMS</div>
+    <div class="report-heading-row">
+      <div>
+        <h2 id="firmsReportTitle">Detecciones térmicas próximas a predios CMPC</h2>
+        <p>Listado de focos NASA FIRMS situados dentro de predios CMPC o a una distancia máxima de 3 km del polígono CMPC más cercano, con identificación del fundo y su gestor de zona.</p>
+      </div>
+      <button type="button" class="secondary report-close" id="closeFirmsReport">Cerrar informe</button>
+    </div>
+  </div>
+  <section class="panel report-panel">
+    <div class="report-controls firms-report-controls">
+      <label>DESDE<input type="date" id="firmsReportFrom"></label>
+      <label>HASTA<input type="date" id="firmsReportTo"></label>
+      <button type="button" id="refreshFirmsReport">Actualizar informe</button>
+      <button type="button" class="secondary" id="printFirmsReport">Imprimir / Guardar PDF</button>
+      <button type="button" class="secondary" id="exportFirmsReport">Exportar CSV</button>
+    </div>
+    <div class="report-period" id="firmsReportPeriod">Período de adquisición: preparando...</div>
+    <div class="report-kpis" id="firmsReportKpis"></div>
+    <div class="report-insight-grid">
+      <div class="report-insight-card">
+        <div class="report-insight-title">Zonas con más detecciones</div>
+        <div id="firmsManagerRanking" class="report-ranking"></div>
+      </div>
+      <div class="report-insight-card">
+        <div class="report-insight-title">Distribución por satélite</div>
+        <div id="firmsSatelliteBars" class="report-bars"></div>
+      </div>
+    </div>
+    <div class="report-status" id="firmsReportStatus" role="status" aria-live="polite">Preparando cruce espacial con los predios CMPC...</div>
+    <div class="report-table-heading">
+      <h3>Detecciones dentro del umbral de 3 km</h3>
+      <span id="firmsReportCount">0 detecciones</span>
+    </div>
+    <div class="report-table-wrap">
+      <table class="report-table firms-report-table">
+        <thead><tr><th>Detección</th><th>Satélite / sensor</th><th>Predio CMPC más cercano</th><th>Código fundo</th><th>Zona</th><th>Gestor de zona</th><th>Distancia</th><th>FRP</th><th>Confianza</th><th>Mapa</th></tr></thead>
+        <tbody id="firmsReportRows"><tr><td colspan="10" class="report-empty">Calculando distancias...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="report-pagination-footer">
+      <span id="firmsReportPageInfo">Mostrando 0 de 0</span>
+      <label><select id="firmsReportPageSize" aria-label="Detecciones por página del informe NASA"><option value="10" selected>10 por página</option><option value="20">20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select></label>
+      <div id="firmsReportPagination" class="report-pagination" aria-label="Paginación del informe NASA FIRMS"></div>
+    </div>
+    <div class="report-disclaimer">Fuente: NASA FIRMS, producto MODIS/Terra/Aqua según los archivos cargados. La distancia es la mínima desde la coordenada del foco hasta el límite del polígono CMPC más cercano. Una detección térmica satelital es una anomalía térmica y requiere evaluación en terreno; no equivale por sí sola a un incendio confirmado. Gestor asociado según la columna Nom.S.A.Pat. del Selector de Fundo.</div>
   </section>
 </section>
 
@@ -2974,6 +3096,180 @@ setTimeout(()=>map.invalidateSize(),1000)
     $('firmsStatus').textContent='GeoJSON actualizado descargado. Para publicar la actualización a todos, reemplaza firms_chile.geojson en el repositorio privado.';
   });
   loadInitial();
+
+  // Informe NASA FIRMS · detecciones hasta 3 km del polígono CMPC más cercano.
+  let selectorCodesPromise=null;
+  let firmsReportRows=[];
+  let firmsReportPage=0;
+  let firmsReportPageSize=10;
+  let firmsReportFundData=null;
+  async function loadSelectorFundData(){
+    if(!selectorCodesPromise){
+      selectorCodesPromise=(async()=>{
+        const response=await fetch('./selector_fundos_codes.b64',{cache:'force-cache'});
+        if(!response.ok)throw new Error('No se pudo cargar el cruce del Selector de Fundo (HTTP '+response.status+').');
+        const encoded=(await response.text()).replace(/\\s+/g,'');
+        const bytes=Uint8Array.from(atob(encoded),ch=>ch.charCodeAt(0));
+        if(typeof DecompressionStream==='undefined')throw new Error('El navegador no permite descomprimir el cruce de fundos.');
+        const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        return JSON.parse(await new Response(stream).text());
+      })();
+    }
+    return selectorCodesPromise;
+  }
+  function reportFundKey(value){
+    return String(value??'').trim().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').replace(/\\s+/g,' ').trim();
+  }
+  function displayReportDate(value){
+    const m=String(value||'').match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);
+    return m?m[3]+'-'+m[2]+'-'+m[1]:String(value||'');
+  }
+  function getFirmsReportEnrichment(record){
+    const name=reportFundKey(record.predio),zone=reportFundKey(record.zone);
+    const code=firmsReportFundData?.byNameZone?.[name+'|'+zone]||firmsReportFundData?.byUniqueName?.[name]||'';
+    const manager=firmsReportFundData?.managersBySubarea?.[zone]||'';
+    return {code,manager};
+  }
+  function getFirmsReportFiltered(){
+    const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
+    return firmsNearbyRecords.filter(record=>{
+      if(Number(record.distance)>3000)return false;
+      const date=String(record.feature.properties?.acq_date||'');
+      return (!from||date>=from)&&(!to||date<=to);
+    }).map(record=>({...record,...getFirmsReportEnrichment(record)}))
+      .sort((a,b)=>Number(a.distance)-Number(b.distance)||String(b.feature.properties?.acq_date||'').localeCompare(String(a.feature.properties?.acq_date||'')));
+  }
+  function renderFirmsReportBars(items,targetId){
+    const max=Math.max(1,...items.map(x=>x.value));
+    $(targetId).innerHTML=items.length?items.map(item=>'<div class="report-rank-row"><span class="report-rank-label">'+escapeHtml(item.label)+'</span><span class="report-bar-track"><span class="report-bar-fill '+(item.kind||'')+'" style="width:'+Math.max(item.value?2:0,item.value/max*100)+'%"></span></span><b class="report-rank-value">'+item.value+'</b></div>').join(''):'<div class="report-empty">Sin registros para el período.</div>';
+  }
+  function renderFirmsReportPagination(){
+    const totalPages=Math.max(1,Math.ceil(firmsReportRows.length/firmsReportPageSize));
+    firmsReportPage=Math.min(firmsReportPage,totalPages-1);
+    const start=firmsReportPage*firmsReportPageSize,page=firmsReportRows.slice(start,start+firmsReportPageSize);
+    $('firmsReportPageInfo').textContent=firmsReportRows.length?'Mostrando '+(start+1).toLocaleString('es-CL')+'–'+(start+page.length).toLocaleString('es-CL')+' de '+firmsReportRows.length.toLocaleString('es-CL'):'Mostrando 0 de 0';
+    $('firmsReportRows').innerHTML=page.length?page.map((record,index)=>{
+      const p=record.feature.properties||{},c=record.feature.geometry.coordinates;
+      const conf=typeof p.confidence==='number'?p.confidence+'%':String(p.confidence||'No informada');
+      const frp=p.frp_mw==null?'No informada':Number(p.frp_mw).toFixed(2)+' MW';
+      const dist=Number(record.distance)<1000?Math.round(record.distance)+' m':(Number(record.distance)/1000).toFixed(2)+' km';
+      return '<tr>'+
+        '<td><strong>'+escapeHtml(displayReportDate(p.acq_date||''))+'</strong><br><small>'+escapeHtml(timeUTC(p.acq_time_utc))+'</small><br><small>'+escapeHtml(formatFirmsNumber(c[1])+', '+formatFirmsNumber(c[0]))+'</small></td>'+
+        '<td><strong>'+escapeHtml(p.satellite||'No informado')+'</strong><br><small>'+escapeHtml(p.instrument||'')+'</small></td>'+
+        '<td><strong>'+escapeHtml(record.predio||'Predio no identificado')+'</strong></td>'+
+        '<td class="report-firms-code">'+escapeHtml(record.code||'—')+'</td>'+
+        '<td><strong>'+escapeHtml(record.zone||'—')+'</strong></td>'+
+        '<td class="report-firms-manager">'+escapeHtml(record.manager||'Gestor no identificado')+'</td>'+
+        '<td class="report-firms-distance">'+escapeHtml(dist)+'</td>'+
+        '<td>'+escapeHtml(frp)+'</td>'+
+        '<td>'+escapeHtml(conf)+'</td>'+
+        '<td><button class="report-map-button" type="button" data-firms-report-index="'+(start+index)+'">Ver en mapa</button></td></tr>';
+    }).join(''):'<tr><td colspan="10" class="report-empty">No hay detecciones NASA FIRMS dentro de 3 km de predios CMPC para el período seleccionado.</td></tr>';
+    const numbers=Array.from({length:totalPages},(_,i)=>i).filter(i=>i===0||i===totalPages-1||Math.abs(i-firmsReportPage)<=2);
+    let html='<button class="report-page-button" type="button" data-firms-report-page="prev" aria-label="Página anterior" '+(firmsReportPage===0?'disabled':'')+'>‹</button>';
+    let last=-2;numbers.forEach(i=>{if(i-last>1)html+='<span>…</span>';html+='<button class="report-page-button" type="button" data-firms-report-page="'+i+'" '+(i===firmsReportPage?'aria-current="page"':'')+'>'+(i+1)+'</button>';last=i;});
+    html+='<button class="report-page-button" type="button" data-firms-report-page="next" aria-label="Página siguiente" '+(firmsReportPage>=totalPages-1?'disabled':'')+'>›</button>';
+    $('firmsReportPagination').innerHTML=html;
+  }
+  async function renderFirmsReport(){
+    const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
+    if(!from||!to||from>to){
+      firmsReportRows=[];$('firmsReportKpis').innerHTML='';
+      $('firmsReportStatus').textContent=!from||!to?'Selecciona el período de adquisición.':'La fecha inicial no puede ser posterior a la fecha final.';
+      $('firmsReportCount').textContent='0 detecciones';$('firmsReportRows').innerHTML='<tr><td colspan="10" class="report-empty">Corrige o completa el período.</td></tr>';renderFirmsReportPagination();return;
+    }
+    $('firmsReportStatus').textContent='Verificando capa completa de predios y cruce del Selector de Fundo...';
+    try{
+      if((DATA.predios?.features||[]).length<3000){
+        await new Promise(resolve=>{
+          let done=false;
+          const finish=()=>{if(done)return;done=true;window.removeEventListener('cmpc-predios-loaded',finish);resolve();};
+          window.addEventListener('cmpc-predios-loaded',finish,{once:true});
+          window.setTimeout(finish,12000);
+        });
+      }
+      if((DATA.predios?.features||[]).length>=3000)rebuildFirmsNearbyRecords();
+      firmsReportFundData=await loadSelectorFundData();
+      firmsReportRows=getFirmsReportFiltered();
+      firmsReportPage=0;
+      const near=firmsReportRows.filter(r=>Number(r.distance)<1000).length;
+      const oneToThree=firmsReportRows.filter(r=>Number(r.distance)>=1000&&Number(r.distance)<=3000).length;
+      const inside=firmsReportRows.filter(r=>Number(r.distance)===0).length;
+      const terra=firmsReportRows.filter(r=>String(r.feature.properties?.satellite||'').toLowerCase()==='terra').length;
+      const aqua=firmsReportRows.filter(r=>String(r.feature.properties?.satellite||'').toLowerCase()==='aqua').length;
+      const managerMissing=firmsReportRows.filter(r=>!r.manager).length;
+      $('firmsReportKpis').innerHTML=[
+        ['Detecciones ≤ 3 km',firmsReportRows.length,'total'],
+        ['Dentro de predio',inside,'inside'],
+        ['Menos de 1 km',near,'high'],
+        ['Entre 1 y 3 km',oneToThree,'medium'],
+        ['Gestor asociado',firmsReportRows.length-managerMissing,'low']
+      ].map(([label,value,kind])=>'<div class="report-kpi '+kind+'"><strong>'+Number(value).toLocaleString('es-CL')+'</strong><span>'+label+'</span></div>').join('');
+      $('firmsReportPeriod').textContent='Adquisiciones entre '+displayReportDate(from)+' y '+displayReportDate(to)+' · distancia al borde del polígono CMPC · umbral inclusivo de 3.000 m.';
+      $('firmsReportCount').textContent=firmsReportRows.length.toLocaleString('es-CL')+' detecciones';
+      const zoneCounts=new Map();
+      firmsReportRows.forEach(r=>{const k=r.zone||'Zona no informada';zoneCounts.set(k,(zoneCounts.get(k)||0)+1);});
+      renderFirmsReportBars([...zoneCounts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,6).map(([label,value])=>({label,value})),'firmsManagerRanking');
+      renderFirmsReportBars([{label:'Terra · MODIS',value:terra},{label:'Aqua · MODIS',value:aqua}],'firmsSatelliteBars');
+      $('firmsReportStatus').textContent=firmsReportRows.length
+        ? 'Se asociaron '+firmsReportRows.length+' detecciones dentro del umbral. '+(firmsReportRows.length-managerMissing)+' tienen gestor asociado y '+managerMissing+' requieren revisión del cruce de zona. Se asigna un único predio: el más cercano por distancia mínima al polígono.'
+        : 'No hay detecciones dentro de 3 km para el período seleccionado. La capa completa de predios y los datos de NASA FIRMS están cargados.';
+      renderFirmsReportPagination();
+    }catch(error){
+      firmsReportRows=[];$('firmsReportStatus').textContent='No se pudo completar el informe: '+error.message;
+      $('firmsReportRows').innerHTML='<tr><td colspan="10" class="report-empty">No fue posible cargar el cruce de predios y gestores.</td></tr>';
+      renderFirmsReportPagination();
+    }
+  }
+  function exportFirmsReport(){
+    const columns=['fecha','hora_utc','satellite','sensor','predio_mas_cercano','codigo_fundo','zona','gestor_zona','distancia_m','frp_mw','confianza','latitud','longitud'];
+    const quote=value=>'"'+String(value??'').replaceAll('"','""')+'"';
+    const lines=[columns.join(';'),...firmsReportRows.map(r=>{
+      const p=r.feature.properties||{},c=r.feature.geometry.coordinates;
+      return [p.acq_date,timeUTC(p.acq_time_utc),p.satellite,p.instrument,r.predio,r.code,r.zone,r.manager,r.distance,p.frp_mw,p.confidence,c[1],c[0]].map(quote).join(';');
+    })];
+    const url=URL.createObjectURL(new Blob(['\\ufeff'+lines.join('\\r\\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
+    a.href=url;a.download='informe_NASA_FIRMS_predios_CPMC_3km_'+$('firmsReportFrom').value+'_'+$('firmsReportTo').value+'.csv';a.click();URL.revokeObjectURL(url);
+  }
+  function openFirmsReport(){
+    const module=$('firmsReportModule'),button=$('toggleFirmsReport');
+    const isOpen=module.hidden;module.hidden=!isOpen;button.setAttribute('aria-expanded',String(isOpen));
+    $('riskReportModule').hidden=true;$('toggleRiskReport').setAttribute('aria-expanded','false');
+    $('actionsDropdown').open=false;
+    if(isOpen){
+      const range=dateRange();
+      if(!$('firmsReportFrom').value)$('firmsReportFrom').value=range.min;
+      if(!$('firmsReportTo').value)$('firmsReportTo').value=range.max;
+      renderFirmsReport();module.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  }
+  $('toggleFirmsReport').addEventListener('click',openFirmsReport);
+  $('closeFirmsReport').addEventListener('click',()=>{$('firmsReportModule').hidden=true;$('toggleFirmsReport').setAttribute('aria-expanded','false');});
+  $('refreshFirmsReport').addEventListener('click',renderFirmsReport);
+  $('firmsReportFrom').addEventListener('change',renderFirmsReport);
+  $('firmsReportTo').addEventListener('change',renderFirmsReport);
+  $('printFirmsReport').addEventListener('click',()=>window.print());
+  $('exportFirmsReport').addEventListener('click',exportFirmsReport);
+  $('firmsReportPageSize').addEventListener('change',e=>{firmsReportPageSize=Number(e.target.value)||10;firmsReportPage=0;renderFirmsReportPagination();});
+  $('firmsReportPagination').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-firms-report-page]');if(!b)return;
+    const total=Math.max(1,Math.ceil(firmsReportRows.length/firmsReportPageSize)),v=b.dataset.firmsReportPage;
+    firmsReportPage=v==='prev'?Math.max(0,firmsReportPage-1):v==='next'?Math.min(total-1,firmsReportPage+1):Math.max(0,Math.min(total-1,Number(v)||0));
+    renderFirmsReportPagination();
+  });
+  $('firmsReportRows').addEventListener('click',e=>{
+    const button=e.target.closest('[data-firms-report-index]');if(!button)return;
+    const record=firmsReportRows[Number(button.dataset.firmsReportIndex)];if(!record)return;
+    const p=record.feature.properties||{},date=p.acq_date||'',sat=p.satellite||'';
+    $('firmsFrom').value=date;$('firmsTo').value=date;
+    $('firmsSatellite').value=['Aqua','Terra'].includes(sat)?sat:'all';
+    firmsCurrentPage=0;renderLayer();
+    const marker=firmsMarkersByKey.get(record.key);
+    map.flyTo([record.feature.geometry.coordinates[1],record.feature.geometry.coordinates[0]],Math.max(map.getZoom(),12),{duration:1});
+    if(marker)window.setTimeout(()=>marker.openPopup(),650);
+    $('mapPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -3514,142 +3810,117 @@ setTimeout(()=>map.invalidateSize(),1000)
 <script>
 (() => {
  const $=id=>document.getElementById(id);
- const reportModule=$('riskReportModule');
- const reportRows=$('reportHighRows');
- const reportStatus=$('reportStatus');
- const reportKpis=$('reportKpis');
+ const reportModule=$('riskReportModule'),reportRows=$('reportHighRows');
+ const reportStatus=$('reportStatus'),reportKpis=$('reportKpis');
  const fromInput=$('reportFrom'),toInput=$('reportTo');
  const menu=$('actionsDropdown'),toggleButton=$('toggleRiskReport');
- let currentHighRisk=[];
-
- function isoLocal(date){
-  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+ let currentRows=[],currentPage=0,pageSize=10;
+ function isoLocal(date){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');}
+ function dateDisplay(value){
+  const v=normalizeSIDCODate(value);if(!v)return 'Sin fecha';
+  const p=v.split('-');return p[2]+'-'+['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][Number(p[1])-1]+'-'+p[0];
  }
- function displayDate(value){
-  if(!value)return 'Sin fecha';
-  const p=value.split('-');
-  return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:value;
+ function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+ function distance(m){const n=Number(m);return n<1000?Math.round(n)+' m':(n/1000).toFixed(2)+' km';}
+ function priority(m){const n=Number(m);return n<1000?{label:'Alta',kind:'high'}:n<3000?{label:'Seguimiento',kind:'medium'}:{label:'Preventiva',kind:'low'};}
+ function setDefaultDates(){const today=new Date(),end=new Date(today.getFullYear(),today.getMonth(),today.getDate()+4);fromInput.value=isoLocal(today);toInput.value=isoLocal(end);}
+ function renderBars(items){
+  const max=Math.max(1,...items.map(x=>x.value));
+  $('reportProximityBars').innerHTML=items.map(x=>'<div class="report-bar-row"><span class="report-bar-label">'+x.label+'</span><span class="report-bar-track"><span class="report-bar-fill '+x.kind+'" style="width:'+Math.max(x.value?2:0,(x.value/max)*100)+'%"></span></span><b class="report-bar-value">'+x.value+'</b></div>').join('');
  }
- function esc(value){
-  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
- }
- function isExternal(e){
-  const distance=Number(e?.distancia_m);
-  return Number.isFinite(distance)&&distance>0&&distance<=5000;
- }
- function distance(m){
-  const n=Number(m);
-  return n<1000?Math.round(n)+' m':(n/1000).toFixed(2)+' km';
- }
- function setDefaultDates(){
-  const today=new Date();
-  const end=new Date(today.getFullYear(),today.getMonth(),today.getDate()+4);
-  fromInput.value=isoLocal(today);
-  toInput.value=isoLocal(end);
- }
- function renderRiskReport(){
-  const from=fromInput.value,to=toInput.value;
-  if(!from||!to){
-   currentHighRisk=[];reportKpis.innerHTML='';$('reportHighCount').textContent='0 registros';
-   reportStatus.textContent='Selecciona ambas fechas para generar el informe.';
-   reportRows.innerHTML='<tr><td colspan="7" class="report-empty">Falta seleccionar el período.</td></tr>';
-   return;
-  }
-  if(from>to){
-   currentHighRisk=[];reportKpis.innerHTML='';$('reportHighCount').textContent='0 registros';
-   reportStatus.textContent='La fecha inicial no puede ser posterior a la fecha final.';
-   reportRows.innerHTML='<tr><td colspan="7" class="report-empty">Corrige el rango de fechas.</td></tr>';
-   return;
-  }
-  const overlapping=events.filter(e=>eventActiveInWindow(e,from,to));
-  const excludedInside=overlapping.filter(e=>Number(e.distancia_m)===0).length;
-  const all=overlapping.filter(isExternal).sort((a,b)=>normalizeSIDCODate(a.fecha).localeCompare(normalizeSIDCODate(b.fecha))||Number(a.distancia_m)-Number(b.distancia_m));
-  const high=all.filter(e=>Number(e.distancia_m)<1000).sort((a,b)=>Number(a.distancia_m)-Number(b.distancia_m));
-  const medium=all.filter(e=>Number(e.distancia_m)>=1000&&Number(e.distancia_m)<3000);
-  const low=all.filter(e=>Number(e.distancia_m)>=3000&&Number(e.distancia_m)<=5000);
-  currentHighRisk=high;
-  reportKpis.innerHTML=[
-   ['Avisos externos vigentes en el período',all.length,'total'],
-   ['Riesgo alto · menos de 1 km',high.length,'high'],
-   ['Seguimiento · 1 a 3 km',medium.length,'medium'],
-   ['Preventivo · 3 a 5 km',low.length,'low']
-  ].map(([label,value,kind])=>'<div class="report-kpi '+kind+'"><strong>'+value+'</strong><span>'+label+'</span></div>').join('');
-  const days=Math.round((new Date(to+'T12:00:00')-new Date(from+'T12:00:00'))/86400000)+1;
-  $('reportPeriod').textContent='Período del informe: '+displayDate(from)+' al '+displayDate(to)+' · Ventana de '+days+' días.';
-  $('reportHighCount').textContent=high.length+' registros';
-  if(!all.length){
-   reportStatus.textContent='No hay avisos externos con vigencia coincidente en el período seleccionado. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC.';
-  }else{
-   const starts=[...new Set(all.map(e=>normalizeSIDCODate(e.fecha)).filter(Boolean))].sort();
-   const startsInside=all.filter(e=>{const start=normalizeSIDCODate(e.fecha);return start>=from&&start<=to;}).length;
-   const alreadyActive=all.length-startsInside;
-   const latestDates=events.map(e=>normalizeSIDCODate(e.fecha)).filter(Boolean).sort();
-   const latest=latestDates[latestDates.length-1]||'';
-   reportStatus.textContent='Se encontraron '+all.length+' avisos externos con vigencia coincidente: '+startsInside+' comienzan dentro del período y '+alreadyActive+' comenzaron antes y siguen vigentes en parte de la ventana. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC. Fechas de inicio registradas: '+starts.map(displayDate).join(', ')+'. Última fecha de inicio cargada: '+displayDate(latest)+'.';
-  }
-  if(!high.length){
-   reportRows.innerHTML='<tr><td colspan="7" class="report-empty">No se identifican avisos externos de riesgo alto para este período.</td></tr>';
-  }else{
-   reportRows.innerHTML=high.map(e=>'<tr>'+
-    '<td>'+displayDate(normalizeSIDCODate(e.fecha))+' – '+displayDate(normalizeSIDCODate(e.fecha_fin)||normalizeSIDCODate(e.fecha))+'</td>'+
-    '<td>'+esc(e.inicio||'s/i')+' – '+esc(e.termino||'s/i')+'</td>'+
+ function renderPagination(){
+  const totalPages=Math.max(1,Math.ceil(currentRows.length/pageSize));currentPage=Math.min(currentPage,totalPages-1);
+  const start=currentPage*pageSize,page=currentRows.slice(start,start+pageSize);
+  $('reportPageInfo').textContent=currentRows.length?'Mostrando '+(start+1).toLocaleString('es-CL')+'–'+(start+page.length).toLocaleString('es-CL')+' de '+currentRows.length.toLocaleString('es-CL'):'Mostrando 0 de 0';
+  reportRows.innerHTML=page.length?page.map(e=>{
+   const p=priority(e.distancia_m);
+   return '<tr>'+
+    '<td><strong>'+dateDisplay(e.fecha)+'</strong><br><small>'+esc(e.inicio||'Hora no informada')+'</small></td>'+
+    '<td><strong>'+dateDisplay(e.fecha_fin||e.fecha)+'</strong><br><small>'+esc(e.termino||'Hora no informada')+'</small></td>'+
     '<td><strong>'+esc(e.quema||'Quema SIDCO')+'</strong><br><small>Aviso '+esc(e.aviso||'s/i')+'</small></td>'+
     '<td>'+esc(e.comuna||'No informada')+'</td>'+
     '<td>'+esc(e.predio_cercano||'No informado')+'</td>'+
     '<td class="report-distance">'+distance(e.distancia_m)+'</td>'+
-    '<td><button class="report-map-button" type="button" data-map-event="'+esc(e.id)+'">Ver en mapa</button></td>'+
-   '</tr>').join('');
-  }
+    '<td><span class="report-risk-chip '+p.kind+'">'+p.label+'</span></td>'+
+    '<td><button class="report-map-button" type="button" data-map-event="'+esc(e.id)+'">Ver en mapa</button></td></tr>';
+  }).join(''):'<tr><td colspan="8" class="report-empty">No hay avisos externos dentro del radio de 5 km para el período seleccionado.</td></tr>';
+  const numbers=Array.from({length:totalPages},(_,i)=>i).filter(i=>i===0||i===totalPages-1||Math.abs(i-currentPage)<=2);
+  let html='<button class="report-page-button" type="button" data-page="prev" aria-label="Página anterior" '+(currentPage===0?'disabled':'')+'>‹</button>';
+  let last=-2;numbers.forEach(i=>{if(i-last>1)html+='<span>…</span>';html+='<button class="report-page-button" type="button" data-page="'+i+'" '+(i===currentPage?'aria-current="page"':'')+'>'+(i+1)+'</button>';last=i;});
+  html+='<button class="report-page-button" type="button" data-page="next" aria-label="Página siguiente" '+(currentPage>=totalPages-1?'disabled':'')+'>›</button>';
+  $('reportPagination').innerHTML=html;
+ }
+ function renderRiskReport(){
+  const from=fromInput.value,to=toInput.value;
+  if(!from||!to){currentRows=[];reportKpis.innerHTML='';reportStatus.textContent='Selecciona ambas fechas para generar el informe.';$('reportHighCount').textContent='0 avisos';reportRows.innerHTML='<tr><td colspan="8" class="report-empty">Falta seleccionar el período.</td></tr>';renderPagination();return;}
+  if(from>to){currentRows=[];reportKpis.innerHTML='';reportStatus.textContent='La fecha inicial no puede ser posterior a la fecha final.';$('reportHighCount').textContent='0 avisos';reportRows.innerHTML='<tr><td colspan="8" class="report-empty">Corrige el rango de fechas.</td></tr>';renderPagination();return;}
+  const overlapping=events.filter(e=>eventActiveInWindow(e,from,to));
+  const excludedInside=overlapping.filter(e=>Number(e.distancia_m)===0).length;
+  const all=overlapping.filter(e=>Number.isFinite(Number(e.distancia_m))&&Number(e.distancia_m)>0&&Number(e.distancia_m)<=5000)
+   .sort((a,b)=>Number(a.distancia_m)-Number(b.distancia_m)||normalizeSIDCODate(a.fecha).localeCompare(normalizeSIDCODate(b.fecha)));
+  const high=all.filter(e=>Number(e.distancia_m)<1000);
+  const medium=all.filter(e=>Number(e.distancia_m)>=1000&&Number(e.distancia_m)<3000);
+  const low=all.filter(e=>Number(e.distancia_m)>=3000&&Number(e.distancia_m)<=5000);
+  currentRows=all;currentPage=0;
+  reportKpis.innerHTML=[
+   ['Avisos externos vigentes',all.length,'total'],
+   ['Prioridad alta · < 1 km',high.length,'high'],
+   ['Seguimiento · 1–3 km',medium.length,'medium'],
+   ['Preventivo · 3–5 km',low.length,'low'],
+   ['Avisos dentro de predio excluidos',excludedInside,'inside']
+  ].map(([label,value,kind])=>'<div class="report-kpi '+kind+'"><strong>'+value.toLocaleString('es-CL')+'</strong><span>'+label+'</span></div>').join('');
+  const days=Math.round((new Date(to+'T12:00:00')-new Date(from+'T12:00:00'))/86400000)+1;
+  $('reportPeriod').textContent='Período '+dateDisplay(from)+' al '+dateDisplay(to)+' · '+days+' días · datos de avisos SIDCO.';
+  $('reportHighCount').textContent=all.length.toLocaleString('es-CL')+' avisos';
+  renderBars([{label:'Alta · < 1 km',value:high.length,kind:'high'},{label:'Seguimiento · 1–3 km',value:medium.length,kind:'medium'},{label:'Preventivo · 3–5 km',value:low.length,kind:'low'}]);
+  const communeCounts=new Map();
+  all.forEach(e=>{const key=e.comuna||'Sin comuna';communeCounts.set(key,(communeCounts.get(key)||0)+1);});
+  const topCommunes=[...communeCounts.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,5);
+  const maxCommune=Math.max(1,...topCommunes.map(x=>x[1]));
+  $('reportCommuneRanking').innerHTML=topCommunes.length?topCommunes.map(([name,value])=>'<div class="report-rank-row"><span class="report-rank-label">'+esc(name)+'</span><span class="report-bar-track"><span class="report-bar-fill" style="width:'+Math.max(2,value/maxCommune*100)+'%"></span></span><b class="report-rank-value">'+value+'</b></div>').join(''):'<div class="report-empty">Sin avisos para el período.</div>';
+  const starts=all.filter(e=>{const d=normalizeSIDCODate(e.fecha);return d>=from&&d<=to;}).length;
+  const alreadyActive=all.length-starts;
+  reportStatus.textContent=all.length
+   ? 'Se identifican '+all.length+' avisos externos con vigencia coincidente: '+starts+' comienzan dentro del período y '+alreadyActive+' comenzaron antes y continúan vigentes. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC. El listado está ordenado desde la menor distancia al predio.'
+   : 'No se identifican avisos externos con vigencia coincidente y distancia de hasta 5 km. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC.';
+  renderPagination();
  }
  function exportCsv(){
-  const columns=['fecha_inicio','fecha_termino','inicio','termino','quema','aviso','comuna_aviso','predio_cercano','distancia_m','alerta','lat','lon'];
-  const quote=value=>'"'+String(value??'').replaceAll('"','""')+'"';
-  const lines=[columns.join(';'),...currentHighRisk.map(e=>[
-   e.fecha,e.fecha_fin,e.inicio,e.termino,e.quema,e.aviso,e.comuna,e.predio_cercano,e.distancia_m,e.alerta,e.lat,e.lon
-  ].map(quote).join(';'))];
-  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='informe_riesgo_alto_externo_CMPC_'+fromInput.value+'_'+toInput.value+'.csv';
-  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  const cols=['aviso','quema','fecha_inicio','hora_inicio','fecha_termino','hora_termino','comuna','predio_cercano','distancia_m','alerta','latitud','longitud'];
+  const quote=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+  const lines=[cols.join(';'),...currentRows.map(e=>[e.aviso,e.quema,e.fecha,e.inicio,e.fecha_fin,e.termino,e.comuna,e.predio_cercano,e.distancia_m,e.alerta,e.lat,e.lon].map(quote).join(';'))];
+  const url=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
+  a.href=url;a.download='informe_CONAF_quemas_CPMC_'+fromInput.value+'_'+toInput.value+'.csv';a.click();URL.revokeObjectURL(url);
  }
- function closeReport(){
-  reportModule.hidden=true;
-  toggleButton.setAttribute('aria-expanded','false');
- }
- setDefaultDates();
- renderRiskReport();
+ setDefaultDates();renderRiskReport();
  $('refreshReport').addEventListener('click',renderRiskReport);
- fromInput.addEventListener('change',renderRiskReport);
- toInput.addEventListener('change',renderRiskReport);
+ fromInput.addEventListener('change',renderRiskReport);toInput.addEventListener('change',renderRiskReport);
  window.addEventListener('cmpc-live-events-updated',renderRiskReport);
  $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
  $('printReport').addEventListener('click',()=>window.print());
  $('exportReport').addEventListener('click',exportCsv);
- $('closeRiskReport').addEventListener('click',closeReport);
- toggleButton.addEventListener('click',()=>{
-  const open=reportModule.hidden;
-  reportModule.hidden=!open;
-  toggleButton.setAttribute('aria-expanded',String(open));
-  menu.open=false;
-  if(open){
-   renderRiskReport();
-   reportModule.scrollIntoView({behavior:'smooth',block:'start'});
-  }
+ $('closeRiskReport').addEventListener('click',()=>{reportModule.hidden=true;toggleButton.setAttribute('aria-expanded','false');});
+ $('reportPageSize').addEventListener('change',e=>{pageSize=Number(e.target.value)||10;currentPage=0;renderPagination();});
+ $('reportPagination').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-page]');if(!b)return;
+  const pages=Math.max(1,Math.ceil(currentRows.length/pageSize)),v=b.dataset.page;
+  currentPage=v==='prev'?Math.max(0,currentPage-1):v==='next'?Math.min(pages-1,currentPage+1):Math.max(0,Math.min(pages-1,Number(v)||0));
+  renderPagination();
  });
- reportRows.addEventListener('click',event=>{
-  const button=event.target.closest('[data-map-event]');
-  if(!button)return;
-  const e=events.find(item=>String(item.id)===button.dataset.mapEvent);
-  if(!e)return;
+ toggleButton.addEventListener('click',()=>{
+  const open=reportModule.hidden;reportModule.hidden=!open;toggleButton.setAttribute('aria-expanded',String(open));
+  const other=$('firmsReportModule');if(other)other.hidden=true;
+  const otherButton=$('toggleFirmsReport');if(otherButton)otherButton.setAttribute('aria-expanded','false');
+  menu.open=false;
+  if(open){renderRiskReport();reportModule.scrollIntoView({behavior:'smooth',block:'start'});}
+ });
+ reportRows.addEventListener('click',e=>{
+  const button=e.target.closest('[data-map-event]');if(!button)return;
+  const item=events.find(x=>String(x.id)===button.dataset.mapEvent);if(!item)return;
   $('from').value='';$('to').value='';$('commune').value='';$('search').value='';
-  $('radius').value='5000';
-  ['showInside','showRed','showOrange','showYellow'].forEach(id=>{const input=$(id);if(input)input.checked=true;});
-  filter();
-  const idx=visible.findIndex(item=>String(item.id)===String(e.id));
-  if(idx>=0&&markerByEvent[idx]){
-   map.setView([e.lat,e.lon],13);
-   markerByEvent[idx].openPopup();
-  }
+  $('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>{if($(id))$(id).checked=true;});
+  filter();const idx=visible.findIndex(x=>String(x.id)===String(item.id));
+  if(idx>=0&&markerByEvent[idx]){map.setView([item.lat,item.lon],13);markerByEvent[idx].openPopup();}
   $('mapPanel').scrollIntoView({behavior:'smooth',block:'start'});
  });
  window.renderRiskReport=renderRiskReport;
