@@ -1475,30 +1475,36 @@ html[data-theme="dark"] .firms-file-help{color:#8fa9ac}
 .cmpc-range-slot .range-options .legend-check input{width:11px;height:11px;flex-basis:11px}
 .cmpc-range-slot .range-options .dot{width:8px;height:8px;flex-basis:8px}
 .cmpc-layer-section.basemap-section>label{min-height:27px}
-/* Simbología cartográfica sobria: colores equilibrados, relleno visible y contorno limpio */
+/* Marcadores cartográficos: color más firme, borde tonal y halo suave sin aro blanco */
 .burn-dot-marker,.firms-square-marker{background:transparent!important;border:0!important}
 .burn-dot-marker span{
- display:block;width:12px;height:12px;margin:4px;
- border:2px solid var(--dot-color);border-radius:50%;
- background:color-mix(in srgb,var(--dot-color) 76%,white);
- box-shadow:0 0 0 1.5px rgba(246,249,247,.96),0 1px 3px rgba(13,36,42,.30)
+ display:block;width:13px;height:13px;margin:3.5px;
+ border:1.5px solid color-mix(in srgb,var(--dot-color) 72%,#263A3C);
+ border-radius:50%;
+ background:color-mix(in srgb,var(--dot-color) 88%,white);
+ box-shadow:0 0 4px color-mix(in srgb,var(--dot-color) 30%,transparent),0 1px 2px rgba(8,24,29,.28);
 }
 .burn-dot-marker.cmpc-burn-dot span{
  width:14px;height:14px;margin:3px;
- border:2px solid #43845D;border-radius:50%;
- background:#A9CBAF;
- box-shadow:0 0 0 1.5px rgba(246,249,247,.96),0 1px 3px rgba(13,36,42,.30)
+ border:1.5px solid #286C47;
+ border-radius:50%;
+ background:#65A978;
+ box-shadow:0 0 4px rgba(74,151,99,.30),0 1px 2px rgba(8,24,29,.28);
 }
 .firms-square-marker span{
- display:block;width:12px;height:12px;margin:3px;
- border:2px solid #806A9C;border-radius:2px;
- background:#BDAFCE;
- box-shadow:0 0 0 1.5px rgba(246,249,247,.96),0 1px 3px rgba(13,36,42,.30)
+ display:block;width:12px;height:12px;margin:4px;
+ border:1.5px solid #674C89;border-radius:2px;
+ background:#A68BC4;
+ box-shadow:0 0 4px rgba(134,103,171,.32),0 1px 2px rgba(8,24,29,.28);
 }
-html[data-theme="dark"] .burn-dot-marker span,
-html[data-theme="dark"] .burn-dot-marker.cmpc-burn-dot span,
+html[data-theme="dark"] .burn-dot-marker span{
+ box-shadow:0 0 5px color-mix(in srgb,var(--dot-color) 35%,transparent),0 1px 3px rgba(0,0,0,.35)
+}
+html[data-theme="dark"] .burn-dot-marker.cmpc-burn-dot span{
+ box-shadow:0 0 5px rgba(74,151,99,.34),0 1px 3px rgba(0,0,0,.35)
+}
 html[data-theme="dark"] .firms-square-marker span{
- box-shadow:0 0 0 1.5px rgba(17,36,43,.96),0 1px 3px rgba(0,0,0,.45)
+ box-shadow:0 0 5px rgba(134,103,171,.38),0 1px 3px rgba(0,0,0,.35)
 }
 html[data-theme="dark"] .pill.CMPC{background:#294535!important;color:#C7E0CB!important}
 html[data-theme="dark"] .inside-row{background:#20382A!important}
@@ -2053,7 +2059,7 @@ const fmtDist=m=>m<1000?Math.round(m)+' m':(m/1000).toFixed(2)+' km';
 function popup(e){
  const feature=(DATA.predios?.features||[]).find(f=>String(f.properties?.predio||'').trim().toUpperCase()===String(e.predio_cercano||'').trim().toUpperCase());
  const fields=feature?predioMapFields(feature):{code:'',commune:''};
- return `<b style="color:${isInside(e)?'#7c3aed':colors[e.alerta]}">${category(e)}</b><br><b>${e.alerta}</b> · ${escapePopupText(e.quema||'Quema SIDCO')}<br>Fecha: ${escapePopupText(e.fecha)}<br>Comuna del aviso: ${escapePopupText(e.comuna||'No informada')}<br>Predio CMPC: ${escapePopupText(e.predio_cercano||'No informado')}<br>Código de predio: <b>${escapePopupText(fields.code||'No disponible en la capa actual')}</b><br>Comuna del predio: <b>${escapePopupText(fields.commune||'No informada en la capa actual')}</b><br>Distancia: <b>${fmtDist(e.distancia_m)}</b><br>Orientación: ${escapePopupText(e.orientacion)}${e.rumbo_grados!==null?' ('+e.rumbo_grados+'°)':''}<br>Aviso: ${escapePopupText(e.aviso||'s/i')}`;
+ return `<b style="color:${isInside(e)?'#43845D':colors[e.alerta]}">${category(e)}</b><br><b>${e.alerta}</b> · ${escapePopupText(e.quema||'Quema SIDCO')}<br>Fecha: ${escapePopupText(e.fecha)}<br>Comuna del aviso: ${escapePopupText(e.comuna||'No informada')}<br>Predio CMPC: ${escapePopupText(e.predio_cercano||'No informado')}<br>Código de predio: <b>${escapePopupText(fields.code||'No disponible en la capa actual')}</b><br>Comuna del predio: <b>${escapePopupText(fields.commune||'No informada en la capa actual')}</b><br>Distancia: <b>${fmtDist(e.distancia_m)}</b><br>Orientación: ${escapePopupText(e.orientacion)}${e.rumbo_grados!==null?' ('+e.rumbo_grados+'°)':''}<br>Aviso: ${escapePopupText(e.aviso||'s/i')}`;
 }
 function filter(){
  const from=document.getElementById('from').value,to=document.getElementById('to').value,commune=document.getElementById('commune').value,search=document.getElementById('search').value.toLowerCase(),radius=+document.getElementById('radius').value;
@@ -2062,7 +2068,7 @@ function filter(){
  markerByEvent=[];
  visible.forEach((e,index)=>{
   const inside=isInside(e);
-  const markerColor=inside?'#24d47a':(colors[e.alerta]||'#f2b93b');
+  const markerColor=inside?'#43845D':(colors[e.alerta]||'#f2b93b');
   const dotIcon=L.divIcon({
    className:inside?'burn-dot-marker cmpc-burn-dot':'burn-dot-marker',
    html:'<span style="--dot-color:'+markerColor+'"></span>',
