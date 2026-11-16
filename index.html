@@ -2372,7 +2372,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
       <label>DESDE<input type="date" id="firmsReportFrom"></label>
       <label>HASTA<input type="date" id="firmsReportTo"></label>
       <label>KM DESDE<input type="number" id="firmsReportMinKm" min="0" max="3" step="0.5" value="0"></label>
-      <label>KM HASTA<input type="number" id="firmsReportMaxKm" min="0" max="3" step="0.5" value="3"></label>
+      <label>KM HASTA<input type="number" id="firmsReportMaxKm" min="0" max="5" step="0.5" value="5"></label>
       <button type="button" id="refreshFirmsReport">Actualizar informe</button>
       <button type="button" class="secondary" id="printFirmsReport">Imprimir / Guardar PDF</button>
       <button type="button" class="secondary" id="exportFirmsReport">Exportar CSV</button>
@@ -2542,7 +2542,7 @@ const defaultPeriod=()=>{
   return {from:shift(-2),to:shift(2)};
 };
 // Primera vista: solo avisos a 1 km o menos.
-document.getElementById('radius').value='1000';
+document.getElementById('radius').value='5000';
 document.getElementById('showInside').checked=false;
 document.getElementById('showOrange').checked=false;
 document.getElementById('showYellow').checked=false;
@@ -2835,6 +2835,9 @@ function renderBurnList(){
 function filter(){
  const from=document.getElementById('from').value,to=document.getElementById('to').value;
  const commune=document.getElementById('commune').value,search=document.getElementById('search').value.toLowerCase(),radius=+document.getElementById('radius').value;
+ const radiusKm=radius/1000;
+ ['reportMaxKm','firmsReportMaxKm'].forEach(id=>{const input=document.getElementById(id);if(input){input.max=String(radiusKm);input.value=String(radiusKm);}});
+ const firmsIntro=document.querySelector('.firms-list-intro');if(firmsIntro)firmsIntro.textContent='Solo detecciones ubicadas dentro de predios CMPC o a un máximo de '+radiusKm+' km del predio CMPC más cercano.';
  window.dispatchEvent(new CustomEvent('cmpc-global-filter',{detail:{from,to,commune,search,radius,showInside:document.getElementById('showInside').checked,showRed:document.getElementById('showRed').checked,showOrange:document.getElementById('showOrange').checked,showYellow:document.getElementById('showYellow').checked}}));
  visible=events.filter(e=>((!from&&!to)||eventActiveInWindow(e,from,to))&&(!commune||e.comuna===commune)&&Number(e.distancia_m)<=radius&&((isInside(e)&&document.getElementById('showInside').checked)||(!isInside(e)&&e.alerta==='ROJA'&&document.getElementById('showRed').checked)||(!isInside(e)&&e.alerta==='NARANJA'&&document.getElementById('showOrange').checked)||(!isInside(e)&&e.alerta==='AMARILLA'&&document.getElementById('showYellow').checked))&&(!search||(e.predio_cercano+' '+e.aviso+' '+e.quema).toLowerCase().includes(search)));
  markers.clearLayers();
@@ -3419,6 +3422,8 @@ setTimeout(()=>map.invalidateSize(),1000)
   let globalMonitorFilters={from:'',to:'',commune:'',search:'',radius:5000};
   window.addEventListener('cmpc-global-filter',event=>{
     globalMonitorFilters={...globalMonitorFilters,...(event.detail||{})};
+     const reportMax=$('firmsReportMaxKm');if(reportMax){reportMax.max=String(Number(globalMonitorFilters.radius||5000)/1000);reportMax.value=reportMax.max;}
+     if(!$('firmsReportModule').hidden)renderFirmsReport();
     $('firmsFrom').value=globalMonitorFilters.from||'';
     $('firmsTo').value=globalMonitorFilters.to||'';
     firmsCurrentPage=0;
@@ -3534,7 +3539,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   function getFirmsReportFiltered(){
     const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
     const minKm=Number($('firmsReportMinKm').value),maxKm=Number($('firmsReportMaxKm').value);
-    if(!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm<0||maxKm>3||minKm>=maxKm)return [];
+    if(!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm<0||maxKm>Number(globalMonitorFilters.radius||5000)/1000||minKm>=maxKm)return [];
     $('riskReportSubtitle').textContent='Avisos SIDCO externos vigentes en el período y ubicados entre '+minKm+' y '+maxKm+' km de predios CMPC.';
   const minMeters=minKm*1000,maxMeters=maxKm*1000;
     return firmsNearbyRecords.filter(record=>{
@@ -3579,9 +3584,9 @@ setTimeout(()=>map.invalidateSize(),1000)
   async function renderFirmsReport(){
     const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
     const minKm=Number($('firmsReportMinKm').value),maxKm=Number($('firmsReportMaxKm').value);
-    if(minKm<0||maxKm>3||!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm>=maxKm){
+    if(minKm<0||maxKm>Number(globalMonitorFilters.radius||5000)/1000||!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm>=maxKm){
       firmsReportRows=[];$('firmsReportKpis').innerHTML='';
-      $('firmsReportStatus').textContent='Define un rango válido entre 0 y 3 km; el máximo debe ser mayor que el mínimo.';
+      $('firmsReportStatus').textContent='Define un rango válido entre 0 y '+(Number(globalMonitorFilters.radius||5000)/1000)+' km; el máximo debe ser mayor que el mínimo.';
       $('firmsReportCount').textContent='0 detecciones';$('firmsReportRows').innerHTML='<tr><td colspan="10" class="report-empty">Corrige el rango de kilómetros.</td></tr>';renderFirmsReportPagination();return;
     }
     if(!from||!to||from>to){
@@ -4323,6 +4328,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  $('refreshReport').addEventListener('click',renderRiskReport);
  fromInput.addEventListener('change',renderRiskReport);toInput.addEventListener('change',renderRiskReport);$('reportMinKm').addEventListener('change',renderRiskReport);$('reportMaxKm').addEventListener('change',renderRiskReport);
  window.addEventListener('cmpc-live-events-updated',renderRiskReport);
+  window.addEventListener('cmpc-global-filter',event=>{const km=Number(event.detail?.radius||5000)/1000;const max=$('reportMaxKm');if(max){max.max=String(km);max.value=String(km);}if(!$('riskReportModule').hidden)renderRiskReport();});
  $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
  $('printReport').addEventListener('click',()=>{
   const previous=pageSize;pageSize=Math.max(1,currentRows.length);currentPage=0;renderPagination();
