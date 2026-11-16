@@ -3139,6 +3139,28 @@ setTimeout(()=>map.invalidateSize(),1000)
           <footer class="support-pdf-preview-foot"><span>Documento del informe. La URL del sitio no se incorpora al PDF.</span><button type="button" id="supportPdfPreviewDownload">Descargar PDF</button></footer>
         </section>`;
       document.body.appendChild(modal);
+      if(!document.getElementById('supportPdfPreviewStyles')){
+        const previewStyle=document.createElement('style');
+        previewStyle.id='supportPdfPreviewStyles';
+        previewStyle.textContent=`
+          .support-pdf-preview[hidden]{display:none!important}
+          .support-pdf-preview{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px}
+          .support-pdf-preview-backdrop{position:absolute;inset:0;background:rgba(7,18,20,.78);backdrop-filter:blur(4px)}
+          .support-pdf-preview-dialog{position:relative;display:flex;flex-direction:column;width:min(1180px,96vw);height:min(94vh,1050px);background:#f3f6f6;border:1px solid #cbd9da;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.38)}
+          .support-pdf-preview-head,.support-pdf-preview-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:#fff;color:#20383b}
+          .support-pdf-preview-head{border-bottom:1px solid #d8e2e2}
+          .support-pdf-preview-head>div{flex:1 1 auto;min-width:0}
+          .support-pdf-preview-head strong{display:block;font-size:14px}
+          .support-pdf-preview-head small{display:block;margin-top:3px;color:#718589;font-size:11px;overflow-wrap:anywhere}
+          .support-pdf-preview-head button{display:inline-flex!important;flex:0 0 120px!important;width:120px!important;min-width:120px!important;max-width:120px!important;justify-content:center!important;white-space:nowrap!important;cursor:pointer!important;pointer-events:auto!important}
+          .support-pdf-preview-frame{display:block;flex:1 1 auto;width:100%;min-height:0;border:0;background:#e8eeee}
+          .support-pdf-preview-foot{border-top:1px solid #d8e2e2;font-size:11px;color:#657b7f}
+          .support-pdf-preview-foot span{flex:1 1 auto;min-width:0}
+          .support-pdf-preview-foot button{flex:0 0 auto;width:auto!important;min-width:160px!important}
+          @media(max-width:650px){.support-pdf-preview{padding:5px}.support-pdf-preview-dialog{width:100%;height:97vh;border-radius:9px}.support-pdf-preview-foot{align-items:stretch;flex-direction:column}.support-pdf-preview-foot button{width:100%!important}}
+        `;
+        document.head.appendChild(previewStyle);
+      }
       const close=()=>{modal.hidden=true;};
       modal.querySelector('#supportPdfPreviewClose').addEventListener('click',close);
       modal.querySelector('.support-pdf-preview-backdrop').addEventListener('click',close);
