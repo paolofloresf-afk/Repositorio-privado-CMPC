@@ -3202,9 +3202,15 @@ setTimeout(()=>map.invalidateSize(),1000)
     const record=firmsVisibleList[Number(index)];
     if(!record)return;
     const c=record.feature.geometry.coordinates;
-    map.flyTo([c[1],c[0]],Math.max(map.getZoom(),12),{duration:1});
-    const marker=firmsMarkersByKey.get(record.key);
-    if(marker)window.setTimeout(()=>marker.openPopup(),650);
+    const mapPanel=document.getElementById('mapPanel');
+    // Lleva primero al usuario desde el listado NASA hasta el mapa.
+    if(mapPanel)mapPanel.scrollIntoView({behavior:'smooth',block:'start'});
+    window.setTimeout(()=>{
+      map.invalidateSize({pan:false});
+      map.flyTo([c[1],c[0]],Math.max(map.getZoom(),12),{duration:1});
+      const marker=firmsMarkersByKey.get(record.key);
+      if(marker)window.setTimeout(()=>marker.openPopup(),700);
+    },350);
   }
   $('firmsTbody').addEventListener('click',event=>{
     const target=event.target.closest('[data-firms-record]');
