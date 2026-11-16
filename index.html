@@ -2294,6 +2294,8 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
     <div class="report-controls">
       <label>DESDE<input type="date" id="reportFrom"></label>
       <label>HASTA<input type="date" id="reportTo"></label>
+      <label>KM DESDE<input type="number" id="reportMinKm" min="0" max="5" step="0.5" value="0"></label>
+      <label>KM HASTA<input type="number" id="reportMaxKm" min="0" max="5" step="0.5" value="5"></label>
       <button type="button" id="refreshReport">Actualizar informe</button>
       <button type="button" class="secondary" id="nextFiveDays">Próximos 5 días</button>
       <button type="button" class="secondary" id="printReport">Imprimir / Guardar PDF</button>
@@ -2351,6 +2353,8 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
     <div class="report-controls firms-report-controls">
       <label>DESDE<input type="date" id="firmsReportFrom"></label>
       <label>HASTA<input type="date" id="firmsReportTo"></label>
+      <label>KM DESDE<input type="number" id="firmsReportMinKm" min="0" max="3" step="0.5" value="0"></label>
+      <label>KM HASTA<input type="number" id="firmsReportMaxKm" min="0" max="3" step="0.5" value="3"></label>
       <button type="button" id="refreshFirmsReport">Actualizar informe</button>
       <button type="button" class="secondary" id="printFirmsReport">Imprimir / Guardar PDF</button>
       <button type="button" class="secondary" id="exportFirmsReport">Exportar CSV</button>
@@ -3512,8 +3516,11 @@ setTimeout(()=>map.invalidateSize(),1000)
   }
   function getFirmsReportFiltered(){
     const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
+    const minKm=Number($('firmsReportMinKm').value),maxKm=Number($('firmsReportMaxKm').value);
+    if(!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm<0||maxKm>3||minKm>=maxKm)return [];
+    const minMeters=minKm*1000,maxMeters=maxKm*1000;
     return firmsNearbyRecords.filter(record=>{
-      if(Number(record.distance)<=0||Number(record.distance)>3000)return false;
+      if(Number(record.distance)<=0||Number(record.distance)<minMeters||Number(record.distance)>maxMeters)return false;
       const date=String(record.feature.properties?.acq_date||'');
       return (!from||date>=from)&&(!to||date<=to);
     }).map(record=>({...record,...getFirmsReportEnrichment(record)}))
@@ -3553,6 +3560,12 @@ setTimeout(()=>map.invalidateSize(),1000)
   }
   async function renderFirmsReport(){
     const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
+    const minKm=Number($('firmsReportMinKm').value),maxKm=Number($('firmsReportMaxKm').value);
+    if(minKm<0||maxKm>3||!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm>=maxKm){
+      firmsReportRows=[];$('firmsReportKpis').innerHTML='';
+      $('firmsReportStatus').textContent='Define un rango válido entre 0 y 3 km; el máximo debe ser mayor que el mínimo.';
+      $('firmsReportCount').textContent='0 detecciones';$('firmsReportRows').innerHTML='<tr><td colspan="10" class="report-empty">Corrige el rango de kilómetros.</td></tr>';renderFirmsReportPagination();return;
+    }
     if(!from||!to||from>to){
       firmsReportRows=[];$('firmsReportKpis').innerHTML='';
       $('firmsReportStatus').textContent=!from||!to?'Selecciona el período de adquisición.':'La fecha inicial no puede ser posterior a la fecha final.';
@@ -3579,13 +3592,13 @@ setTimeout(()=>map.invalidateSize(),1000)
       const aqua=firmsReportRows.filter(r=>String(r.feature.properties?.satellite||'').toLowerCase()==='aqua').length;
       const managerMissing=firmsReportRows.filter(r=>!r.manager).length;
       $('firmsReportKpis').innerHTML=[
-        ['Detecciones ≤ 3 km',firmsReportRows.length,'total'],
+        ['Detecciones · '+minKm+'–'+maxKm+' km',firmsReportRows.length,'total'],
         ['Dentro de predio',inside,'inside'],
         ['Menos de 1 km',near,'high'],
         ['Entre 1 y 3 km',oneToThree,'medium'],
         ['Gestor asociado',firmsReportRows.length-managerMissing,'low']
       ].map(([label,value,kind])=>'<div class="report-kpi '+kind+'"><strong>'+Number(value).toLocaleString('es-CL')+'</strong><span>'+label+'</span></div>').join('');
-      $('firmsReportPeriod').textContent='Adquisiciones entre '+displayReportDate(from)+' y '+displayReportDate(to)+' · distancia al borde del polígono CMPC · umbral inclusivo de 3.000 m.';
+      $('firmsReportPeriod').textContent='Adquisiciones entre '+displayReportDate(from)+' y '+displayReportDate(to)+' · distancia al borde del polígono CMPC · distancia '+minKm+'–'+maxKm+' km.';
       $('firmsReportCount').textContent=firmsReportRows.length.toLocaleString('es-CL')+' detecciones';
       const zoneCounts=new Map();
       firmsReportRows.forEach(r=>{const k=r.zone||'Zona no informada';zoneCounts.set(k,(zoneCounts.get(k)||0)+1);});
@@ -3593,7 +3606,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       renderFirmsReportBars([{label:'Terra · MODIS',value:terra},{label:'Aqua · MODIS',value:aqua}],'firmsSatelliteBars');
       $('firmsReportStatus').textContent=firmsReportRows.length
         ? 'Se asociaron '+firmsReportRows.length+' detecciones dentro del umbral. '+(firmsReportRows.length-managerMissing)+' tienen gestor asociado y '+managerMissing+' requieren revisión del cruce de zona. Se asigna un único predio: el más cercano por distancia mínima al polígono.'
-        : 'No hay detecciones dentro de 3 km para el período seleccionado. La capa completa de predios y los datos de NASA FIRMS están cargados.';
+        : 'No hay detecciones dentro del rango de '+minKm+'–'+maxKm+' km para el período seleccionado. La capa completa de predios y los datos de NASA FIRMS están cargados.';
       renderFirmsReportPagination();
     }catch(error){
       firmsReportRows=[];$('firmsReportStatus').textContent='No se pudo completar el informe: '+error.message;
@@ -3627,7 +3640,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   $('closeFirmsReport').addEventListener('click',()=>{$('firmsReportModule').hidden=true;$('toggleFirmsReport').setAttribute('aria-expanded','false');});
   $('refreshFirmsReport').addEventListener('click',renderFirmsReport);
   $('firmsReportFrom').addEventListener('change',renderFirmsReport);
-  $('firmsReportTo').addEventListener('change',renderFirmsReport);
+  $('firmsReportTo').addEventListener('change',renderFirmsReport);$('firmsReportMinKm').addEventListener('change',renderFirmsReport);$('firmsReportMaxKm').addEventListener('change',renderFirmsReport);
   $('printFirmsReport').addEventListener('click',()=>{
     const previous=firmsReportPageSize;firmsReportPageSize=Math.max(1,firmsReportRows.length);firmsReportPage=0;renderFirmsReportPagination();
     const restore=()=>{firmsReportPageSize=previous;firmsReportPage=0;renderFirmsReportPagination();window.removeEventListener('afterprint',restore);};
@@ -4239,16 +4252,19 @@ setTimeout(()=>map.invalidateSize(),1000)
   const from=fromInput.value,to=toInput.value;
   if(!from||!to){currentRows=[];reportKpis.innerHTML='';reportStatus.textContent='Selecciona ambas fechas para generar el informe.';$('reportHighCount').textContent='0 avisos';reportRows.innerHTML='<tr><td colspan="8" class="report-empty">Falta seleccionar el período.</td></tr>';renderPagination();return;}
   if(from>to){currentRows=[];reportKpis.innerHTML='';reportStatus.textContent='La fecha inicial no puede ser posterior a la fecha final.';$('reportHighCount').textContent='0 avisos';reportRows.innerHTML='<tr><td colspan="8" class="report-empty">Corrige el rango de fechas.</td></tr>';renderPagination();return;}
+  const minKm=Number($('reportMinKm').value),maxKm=Number($('reportMaxKm').value);
+  if(!Number.isFinite(minKm)||!Number.isFinite(maxKm)||minKm<0||maxKm>5||minKm>=maxKm){currentRows=[];reportKpis.innerHTML='';reportStatus.textContent='Define un rango válido entre 0 y 5 km; el máximo debe ser mayor que el mínimo.';$('reportHighCount').textContent='0 avisos';reportRows.innerHTML='<tr><td colspan="8" class="report-empty">Corrige el rango de kilómetros.</td></tr>';renderPagination();return;}
+  const minMeters=minKm*1000,maxMeters=maxKm*1000;
   const overlapping=events.filter(e=>eventActiveInWindow(e,from,to));
   const excludedInside=overlapping.filter(e=>Number(e.distancia_m)===0).length;
-  const all=overlapping.filter(e=>Number.isFinite(Number(e.distancia_m))&&Number(e.distancia_m)>0&&Number(e.distancia_m)<=5000)
+  const all=overlapping.filter(e=>Number.isFinite(Number(e.distancia_m))&&Number(e.distancia_m)>0&&Number(e.distancia_m)>=minMeters&&Number(e.distancia_m)<=maxMeters)
    .sort((a,b)=>Number(a.distancia_m)-Number(b.distancia_m)||normalizeSIDCODate(a.fecha).localeCompare(normalizeSIDCODate(b.fecha)));
   const high=all.filter(e=>Number(e.distancia_m)<1000);
   const medium=all.filter(e=>Number(e.distancia_m)>=1000&&Number(e.distancia_m)<3000);
   const low=all.filter(e=>Number(e.distancia_m)>=3000&&Number(e.distancia_m)<=5000);
   currentRows=all;currentPage=0;
   reportKpis.innerHTML=[
-   ['Avisos externos vigentes',all.length,'total'],
+   ['Avisos externos · '+minKm+'–'+maxKm+' km',all.length,'total'],
    ['Prioridad alta · < 1 km',high.length,'high'],
    ['Seguimiento · 1–3 km',medium.length,'medium'],
    ['Preventivo · 3–5 km',low.length,'low'],
@@ -4279,7 +4295,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  }
  setDefaultDates();renderRiskReport();
  $('refreshReport').addEventListener('click',renderRiskReport);
- fromInput.addEventListener('change',renderRiskReport);toInput.addEventListener('change',renderRiskReport);
+ fromInput.addEventListener('change',renderRiskReport);toInput.addEventListener('change',renderRiskReport);$('reportMinKm').addEventListener('change',renderRiskReport);$('reportMaxKm').addEventListener('change',renderRiskReport);
  window.addEventListener('cmpc-live-events-updated',renderRiskReport);
  $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
  $('printReport').addEventListener('click',()=>{
