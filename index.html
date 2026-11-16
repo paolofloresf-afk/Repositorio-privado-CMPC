@@ -2192,7 +2192,6 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 <div class="kpi"><strong class="red" id="kRed">155</strong><span>Alerta roja · menos de 1 km</span></div>
 <div class="kpi"><strong class="orange" id="kOrange">138</strong><span>Alerta naranja · 1 a 3 km</span></div>
 <div class="kpi"><strong class="yellow" id="kYellow">79</strong><span>Alerta amarilla · 3 a 5 km</span></div>
-<div class="kpi"><strong style="color:#43845D" id="kInside">0</strong><span>Quemas declaradas dentro de predios CMPC</span></div>
 </div>
 
 <section class="top-date-panel unified-controls">
@@ -2855,7 +2854,6 @@ function filter(){
  document.getElementById('kRed').textContent=visible.filter(e=>e.alerta==='ROJA').length;
  document.getElementById('kOrange').textContent=visible.filter(e=>e.alerta==='NARANJA').length;
  document.getElementById('kYellow').textContent=visible.filter(e=>e.alerta==='AMARILLA').length;
- document.getElementById('kInside').textContent=visible.filter(isInside).length;
  renderBurnList();
  updateNearbyPredioHighlights();
 }
