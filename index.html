@@ -1125,14 +1125,6 @@ html[data-theme="dark"] .coordinate-message.error{color:#FFB8B8}
 .report-heading h2{font-size:clamp(21px,2.2vw,28px);letter-spacing:-.025em;margin:0 0 6px;color:var(--ink)}
 .report-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.6;max-width:900px}
 .report-close{width:auto;white-space:nowrap;padding:8px 12px;font-size:10px}
-.report-preflight-menu{min-width:310px!important;max-width:390px;padding:12px!important;display:grid;gap:12px}
-.report-preflight-group{display:grid;gap:8px;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-alt)}
-.report-preflight-group>strong{font-size:11px;color:var(--ink)}
-.report-preflight-fields{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.report-preflight-fields label{display:grid;gap:4px;font-size:9px;font-weight:800;color:var(--muted)}
-.report-preflight-fields input{width:100%;min-width:0;padding:7px 6px;font-size:11px}
-.report-preflight-group>button{width:100%;margin:0}
-
 .report-panel{padding:17px!important}
 .report-controls{display:grid;grid-template-columns:1fr 1fr repeat(4,auto);align-items:end;gap:9px}
 .report-controls label{display:grid;gap:5px;margin:0;font-size:10px;font-weight:850;color:var(--muted)}
@@ -2200,27 +2192,9 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
       </details>
       <details class="actions-dropdown" id="actionsDropdown">
         <summary>Informes <span class="action-chevron" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5.5 7.5 4.5 4.5 4.5-4.5"/></svg></span></summary>
-        <div class="actions-dropdown-menu report-preflight-menu">
-          <div class="report-preflight-group">
-            <strong>Informe preventivo · SIDCO / CONAF</strong>
-            <div class="report-preflight-fields">
-              <label>Desde<input type="date" id="preRiskFrom"></label>
-              <label>Hasta<input type="date" id="preRiskTo"></label>
-              <label>Km desde<input type="number" id="preRiskMinKm" min="0" max="5" step="0.5" value="0"></label>
-              <label>Km hasta<input type="number" id="preRiskMaxKm" min="0" max="5" step="0.5" value="5"></label>
-            </div>
-            <button type="button" id="toggleRiskReport" aria-expanded="false">Generar informe SIDCO</button>
-          </div>
-          <div class="report-preflight-group">
-            <strong>Informe de proximidad · NASA FIRMS</strong>
-            <div class="report-preflight-fields">
-              <label>Desde<input type="date" id="preFirmsFrom"></label>
-              <label>Hasta<input type="date" id="preFirmsTo"></label>
-              <label>Km desde<input type="number" id="preFirmsMinKm" min="0" max="3" step="0.5" value="0"></label>
-              <label>Km hasta<input type="number" id="preFirmsMaxKm" min="0" max="3" step="0.5" value="3"></label>
-            </div>
-            <button type="button" id="toggleFirmsReport" aria-expanded="false">Generar informe NASA FIRMS</button>
-          </div>
+        <div class="actions-dropdown-menu">
+          <button type="button" id="toggleRiskReport" aria-expanded="false">Informe preventivo CONAF · SIDCO</button>
+          <button type="button" id="toggleFirmsReport" aria-expanded="false">Informe de proximidad NASA FIRMS · 3 km</button>
         </div>
       </details>
     </div>
@@ -3643,20 +3617,10 @@ setTimeout(()=>map.invalidateSize(),1000)
       const range=dateRange();
       if(!$('firmsReportFrom').value)$('firmsReportFrom').value=range.min;
       if(!$('firmsReportTo').value)$('firmsReportTo').value=range.max;
-      renderFirmsReport();module.scrollIntoView({behavior:'smooth',block:'start'});
+      module.scrollIntoView({behavior:'smooth',block:'start'});
     }
   }
-  $('toggleFirmsReport').addEventListener('click',()=>{
-    const from=$('preFirmsFrom'),to=$('preFirmsTo'),range=dateRange();
-    if(!from.value)from.value=range.min;if(!to.value)to.value=range.max;
-    const min=Number($('preFirmsMinKm').value),max=Number($('preFirmsMaxKm').value);
-    if(!from.value||!to.value||from.value>to.value||!Number.isFinite(min)||!Number.isFinite(max)||min<0||max>3||min>=max){$('preFirmsMaxKm').focus();return;}
-    $('firmsReportFrom').value=from.value;$('firmsReportTo').value=to.value;
-    $('firmsReportMinKm').value=min;$('firmsReportMaxKm').value=max;
-    const module=$('firmsReportModule');module.hidden=false;$('toggleFirmsReport').setAttribute('aria-expanded','true');
-    $('riskReportModule').hidden=true;$('toggleRiskReport').setAttribute('aria-expanded','false');
-    $('actionsDropdown').open=false;renderFirmsReport();module.scrollIntoView({behavior:'smooth',block:'start'});
-  });
+  $('toggleFirmsReport').addEventListener('click',openFirmsReport);
   $('closeFirmsReport').addEventListener('click',()=>{$('firmsReportModule').hidden=true;$('toggleFirmsReport').setAttribute('aria-expanded','false');});
   $('refreshFirmsReport').addEventListener('click',renderFirmsReport);
   $('firmsReportFrom').addEventListener('change',renderFirmsReport);
@@ -4315,14 +4279,11 @@ setTimeout(()=>map.invalidateSize(),1000)
  }
  setDefaultDates();renderRiskReport();
  $('toggleRiskReport').addEventListener('click',()=>{
-  const from=$('preRiskFrom'),to=$('preRiskTo'),range=dateRange();
-  if(!from.value)from.value=range.min;if(!to.value)to.value=range.max;
-  const min=Number($('preRiskMinKm').value),max=Number($('preRiskMaxKm').value);
-  if(!from.value||!to.value||from.value>to.value||!Number.isFinite(min)||!Number.isFinite(max)||min<0||max>5||min>=max){from.reportValidity?.();$('preRiskMaxKm').focus();return;}
-  fromInput.value=from.value;toInput.value=to.value;$('reportMinKm').value=min;$('reportMaxKm').value=max;
-  const module=$('riskReportModule');module.hidden=false;$('toggleRiskReport').setAttribute('aria-expanded','true');
+  const module=$('riskReportModule'),open=module.hidden;
+  module.hidden=!open;$('toggleRiskReport').setAttribute('aria-expanded',String(open));
   $('firmsReportModule').hidden=true;$('toggleFirmsReport').setAttribute('aria-expanded','false');
-  $('actionsDropdown').open=false;renderRiskReport();module.scrollIntoView({behavior:'smooth',block:'start'});
+  menu.open=false;
+  if(open){if(!fromInput.value||!toInput.value)setDefaultDates();module.scrollIntoView({behavior:'smooth',block:'start'});}
  });
  $('refreshReport').addEventListener('click',renderRiskReport);
  fromInput.addEventListener('change',renderRiskReport);toInput.addEventListener('change',renderRiskReport);$('reportMinKm').addEventListener('change',renderRiskReport);$('reportMaxKm').addEventListener('change',renderRiskReport);
