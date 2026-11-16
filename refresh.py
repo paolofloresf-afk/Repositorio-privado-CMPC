@@ -7,7 +7,7 @@ from shapely.geometry import Point,shape
 from shapely.ops import transform,nearest_points
 from shapely.strtree import STRtree
 from pyproj import Transformer
-ROOT=Path(__file__).resolve().parents[1]; DATA=ROOT/"data"; OUT=DATA/"events.json"; MAX_DISTANCE=5000
+ROOT=Path(__file__).resolve().parent; DATA=ROOT; OUT=DATA/"events.json"; MAX_DISTANCE=5000
 def lname(t): return t.rsplit("}",1)[-1].split(":")[-1]
 def txt(el,n):
  for x in el.iter():
