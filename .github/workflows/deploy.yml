@@ -1,9 +1,7 @@
 name: Actualizar y publicar Monitor CMPC
 
 on:
-  schedule:
-    # Cada 15 minutos, evitando el cambio exacto de hora para reducir retrasos.
-    - cron: "7,22,37,52 * * * *"
+  # Primera validación manual. Activaremos la programación tras validar SIDCO y Cloudflare.
   workflow_dispatch:
 
 permissions:
@@ -55,8 +53,13 @@ jobs:
           cp index.html events.json dist/
 
       - name: Publicar dashboard en Cloudflare Pages
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=monitor-cmpc-cloud --branch=main
+
+      - name: Avisar si falta configurar Cloudflare
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN == '' || secrets.CLOUDFLARE_ACCOUNT_ID == '' }}
+        run: echo "SIDCO fue procesado; la publicación queda pendiente de configurar los secretos de Cloudflare."
