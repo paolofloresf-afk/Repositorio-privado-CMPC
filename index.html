@@ -2598,7 +2598,8 @@ setTimeout(()=>map.invalidateSize(),1000)
       const da=String(a.feature.properties?.acq_date||''),db=String(b.feature.properties?.acq_date||'');
       return db.localeCompare(da)||String(b.feature.properties?.acq_time_utc||'').localeCompare(String(a.feature.properties?.acq_time_utc||''));
     });
-    renderFirmsList();
+    firmsCurrentPage=0;
+    renderFirmsListFromCurrentFilters();
   }
   function formatFirmsNumber(value,digits=5){
     const n=Number(value);
@@ -2718,7 +2719,6 @@ setTimeout(()=>map.invalidateSize(),1000)
     }
   }
   window.addEventListener('cmpc-predios-loaded',rebuildFirmsNearbyRecords);
-  $('firmsPagePrev').addEventListener;
   if((DATA.predios?.features||[]).length>=3000)rebuildFirmsNearbyRecords();
 
   $('firmsFile').addEventListener('change',()=>{
