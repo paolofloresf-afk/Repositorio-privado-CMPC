@@ -725,6 +725,116 @@ html[data-theme="dark"] .kmz-status.progress{background:#203b2a;color:#c2e1c7}
 html[data-theme="dark"] .sidebar-collapse-toggle{background:#203a27;color:#cce2ce;border-color:#3b5940}
 html[data-theme="dark"] .footer{color:#9fb2a1}
 
+
+/* Ajuste final: el verde de Rangos de alerta (#17291b) pasa a ser la base de todo el modo oscuro */
+html[data-theme="dark"]{
+  --bg:#101b12!important;
+  --surface:#17291b!important;
+  --surface-alt:#17291b!important;
+  --line:#38533c!important;
+  --ink:#e6efe7!important;
+  --muted:#a8b9aa!important;
+  --soft-text:#a8b9aa!important;
+  --accent:#83b98a!important;
+  --accent-soft:#223b28!important;
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] .app-main,
+html[data-theme="dark"] main#mainContent{
+  background:#101b12!important;
+  color:#e6efe7!important;
+}
+html[data-theme="dark"] header{
+  background:linear-gradient(115deg,#0e1b11 0%,#14251a 55%,#1b3020 100%)!important;
+  border-color:#38533c!important;
+}
+html[data-theme="dark"] .app-sidebar{
+  background:#142419!important;
+  border-color:#38533c!important;
+}
+html[data-theme="dark"] .kpi,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .top-date-panel,
+html[data-theme="dark"] .unified-controls,
+html[data-theme="dark"] .kmz-import-panel,
+html[data-theme="dark"] .control-group,
+html[data-theme="dark"] .legend-option,
+html[data-theme="dark"] .kmz-dropzone,
+html[data-theme="dark"] .range-group{
+  background:#17291b!important;
+  color:#e6efe7!important;
+  border-color:#38533c!important;
+}
+html[data-theme="dark"] .range-group{
+  box-shadow:0 5px 19px rgba(0,0,0,.3)!important;
+}
+html[data-theme="dark"] .sidebar-module-card{
+  background:#17291b!important;
+  border-color:#38533c!important;
+}
+html[data-theme="dark"] .sidebar-link.active,
+html[data-theme="dark"] .sidebar-link:hover,
+html[data-theme="dark"] .event-row:hover,
+html[data-theme="dark"] .event-row.selected-event{
+  background:#223b28!important;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea{
+  background:#122117!important;
+  color:#e6efe7!important;
+  border-color:#45634a!important;
+}
+html[data-theme="dark"] table th{
+  background:#203b26!important;
+  color:#dce9de!important;
+}
+html[data-theme="dark"] table td{
+  background:transparent!important;
+  color:#e0ebe1!important;
+  border-color:#304a34!important;
+}
+html[data-theme="dark"] .map-status,
+html[data-theme="dark"] .kmz-status{
+  background:#17291b!important;
+  color:#c8d9ca!important;
+  border-color:#38533c!important;
+}
+html[data-theme="dark"] .leaflet-control-layers,
+html[data-theme="dark"] .leaflet-bar a,
+html[data-theme="dark"] .leaflet-popup-content-wrapper,
+html[data-theme="dark"] .leaflet-popup-tip{
+  background:#17291b!important;
+  color:#e6efe7!important;
+  border-color:#45634a!important;
+}
+html[data-theme="dark"] .leaflet-control-layers label,
+html[data-theme="dark"] .control-title,
+html[data-theme="dark"] .field-label,
+html[data-theme="dark"] .legend-check{
+  color:#c5d8c7!important;
+}
+html[data-theme="dark"] .unified-heading b,
+html[data-theme="dark"] .panel h2,
+html[data-theme="dark"] .kmz-import-head h2,
+html[data-theme="dark"] .legend-option b{
+  color:#e6efe7!important;
+}
+html[data-theme="dark"] .unified-heading span,
+html[data-theme="dark"] .range-description,
+html[data-theme="dark"] .note,
+html[data-theme="dark"] .footer,
+html[data-theme="dark"] .kmz-import-head p{
+  color:#a8b9aa!important;
+}
+html[data-theme="dark"] .inside-row{background:#29233a!important}
+html[data-theme="dark"] .sidebar-module-mark,
+html[data-theme="dark"] .sidebar-collapse-toggle{
+  background:#223b28!important;
+  color:#cce2ce!important;
+  border-color:#45634a!important;
+}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
