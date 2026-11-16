@@ -1408,7 +1408,7 @@ html[data-theme="dark"] .report-map-button{background:#245257!important;border-c
     </div>
     <div class="report-table-wrap">
       <table class="report-table">
-        <thead><tr><th>Fecha</th><th>Horario</th><th>Quema / aviso SIDCO</th><th>Comuna del aviso</th><th>Predio CMPC más cercano</th><th>Distancia</th><th>Ver mapa</th></tr></thead>
+        <thead><tr><th>Vigencia declarada</th><th>Horario</th><th>Quema / aviso SIDCO</th><th>Comuna del aviso</th><th>Predio CMPC más cercano</th><th>Distancia</th><th>Ver mapa</th></tr></thead>
         <tbody id="reportHighRows"><tr><td colspan="7">Preparando informe...</td></tr></tbody>
       </table>
     </div>
@@ -2098,7 +2098,7 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
   const toggle=document.getElementById('sidebarToggle');
   if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Abrir panel lateral');}
   if(name==='monitor')window.setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize({pan:false});},100);
-  if(name==='report'&&typeof renderRiskReport==='function')renderRiskReport();
+  if(name==='report'&&typeof window.renderRiskReport==='function')window.renderRiskReport();
  }
  modules.monitor.link.addEventListener('click',event=>{event.preventDefault();selectModule('monitor');});
  modules.coordinates.link.addEventListener('click',event=>{event.preventDefault();selectModule('coordinates');});
@@ -2174,14 +2174,16 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
   }else{
    const starts=[...new Set(all.map(e=>parseSIDCODate(e.fecha)))].sort();
    const startText=starts.map(displayDate).join(', ');
+   const startsInside=all.filter(e=>parseSIDCODate(e.fecha)>=from&&parseSIDCODate(e.fecha)<=to).length;
+   const alreadyActive=all.length-startsInside;
    const latest=events.map(e=>parseSIDCODate(e.fecha)).filter(Boolean).sort().at(-1);
-   status.textContent='Se encontraron '+all.length+' avisos con vigencia coincidente. Fechas de inicio disponibles en este conjunto: '+startText+'. Última fecha de inicio cargada: '+displayDate(latest)+'.';
+   status.textContent='Se encontraron '+all.length+' avisos con vigencia coincidente: '+startsInside+' comienzan dentro del período y '+alreadyActive+' comenzaron antes y siguen vigentes en parte de la ventana. Fechas de inicio registradas: '+startText+'. Última fecha de inicio cargada: '+displayDate(latest)+'.';
   }
   if(!high.length){
    rows.innerHTML='<tr><td colspan="7" class="report-empty">No se identifican avisos de riesgo alto para este período.</td></tr>';
   }else{
    rows.innerHTML=high.map(e=>'<tr>'+
-    '<td>'+displayDate(parseSIDCODate(e.fecha))+'</td>'+
+    '<td>'+displayDate(parseSIDCODate(e.fecha))+' – '+displayDate(parseSIDCODate(e.fecha_fin)||parseSIDCODate(e.fecha))+'</td>'+
     '<td>'+esc(e.inicio||'s/i')+' – '+esc(e.termino||'s/i')+'</td>'+
     '<td><strong>'+esc(e.quema||'Quema SIDCO')+'</strong><br><small>Aviso '+esc(e.aviso||'s/i')+'</small></td>'+
     '<td>'+esc(e.comuna||'No informada')+'</td>'+
