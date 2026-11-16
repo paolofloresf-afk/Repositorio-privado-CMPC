@@ -112,6 +112,27 @@ td{padding:9px 8px;border-bottom:1px solid #edf1f5}.event-row{cursor:pointer}.ev
 .weather-disclaimer{font-size:10px;color:#7a8997;line-height:1.45;margin-top:10px}
 @media(max-width:1000px){.weather-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.weather-forecast{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:600px){.weather-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.weather-forecast{grid-template-columns:repeat(2,minmax(0,1fr))}.weather-controls,.weather-controls label,.weather-controls select,.weather-controls button{width:100%}}
+
+.kmz-import-panel{background:#fff;border:1px solid #dbe4ec;border-radius:12px;box-shadow:0 2px 8px #17395d0b;margin-bottom:14px;padding:15px 17px}
+.kmz-import-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.kmz-import-head h2{font-size:15px;color:#17395d;margin:0 0 4px}
+.kmz-import-head p{font-size:11px;color:#6b7e91;margin:0}
+.kmz-manual-badge{font-size:10px;font-weight:800;color:#765016;background:#fff4d7;border:1px solid #f2dfab;border-radius:20px;padding:5px 9px;white-space:nowrap}
+.kmz-dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;border:2px dashed #9bb7c9;background:#f7fafc;border-radius:10px;padding:17px;cursor:pointer;transition:.15s}
+.kmz-dropzone.dragover{border-color:#1683a3;background:#eaf7fb}
+.kmz-dropzone input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.kmz-upload-icon{display:grid;place-items:center;width:31px;height:31px;border-radius:50%;background:#e4f3f8;color:#176b87;font-size:22px;font-weight:700}
+.kmz-dropzone strong{font-size:12px;color:#17395d}.kmz-file-hint{font-size:10px;color:#718397}
+.kmz-file-name{font-size:11px;font-weight:700;color:#176b87;max-width:100%;overflow-wrap:anywhere}
+.kmz-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.kmz-actions button{width:auto;padding:9px 13px;font-size:11px}
+.kmz-actions button:disabled{opacity:.45;cursor:not-allowed}
+.kmz-actions .kmz-secondary{background:#e8eff5;color:#24445f}
+.kmz-status{margin-top:10px;padding:9px 11px;background:#f2f6fa;border-radius:7px;color:#536b81;font-size:11px;line-height:1.45}
+.kmz-status.success{background:#eaf7ef;color:#17643b}.kmz-status.error{background:#fff0ef;color:#a32c26}.kmz-status.progress{background:#eaf4fb;color:#215b83}
+.kmz-note{margin-top:8px;color:#788897;font-size:10px;line-height:1.45}
+@media(max-width:600px){.kmz-actions{display:grid;grid-template-columns:1fr}.kmz-actions button{width:100%}}
+
 </style></head><body>
 <header><h1>Monitor de quemas próximas a predios CMPC</h1><p>SIDCO · Noviembre 2026 · Cruce geoespacial con Fundos CMPC · Corte de datos: archivo actualizado al 15-11-2026 21:15</p></header>
 <main>
@@ -155,6 +176,29 @@ td{padding:9px 8px;border-bottom:1px solid #edf1f5}.event-row{cursor:pointer}.ev
   </div>
 </section>
 
+
+<section class="kmz-import-panel" id="kmzImportPanel">
+  <div class="kmz-import-head">
+    <div>
+      <h2>Actualizar avisos desde archivo KMZ</h2>
+      <p>Carga el KMZ descargado de SIDCO. El sistema leerá sus avisos, los cruzará con los predios CMPC y actualizará el mapa.</p>
+    </div>
+    <span class="kmz-manual-badge">Carga manual</span>
+  </div>
+  <label class="kmz-dropzone" id="kmzDropzone" for="kmzFile">
+    <input type="file" id="kmzFile" accept=".kmz,.kml,application/vnd.google-earth.kmz,application/vnd.google-earth.kml+xml">
+    <span class="kmz-upload-icon">↑</span>
+    <strong>Selecciona o arrastra aquí tu archivo KMZ</strong>
+    <span class="kmz-file-hint">Formatos admitidos: .KMZ y .KML</span>
+    <span class="kmz-file-name" id="kmzFileName">Ningún archivo seleccionado</span>
+  </label>
+  <div class="kmz-actions">
+    <button type="button" id="processKmz" disabled>Procesar KMZ y actualizar mapa</button>
+    <button type="button" id="downloadProcessed" class="kmz-secondary" disabled>Descargar events.json actualizado</button>
+  </div>
+  <div class="kmz-status" id="kmzStatus" role="status" aria-live="polite">Selecciona el KMZ más reciente que descargaste desde SIDCO.</div>
+  <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div>
+</section>
 <section class="weather-panel" aria-label="Monitoreo meteorológico CMPC">
   <div class="weather-head">
     <div><h2>Monitoreo meteorológico CMPC</h2><p>Condiciones actuales estimadas por modelo y pronóstico horario para el sector de un aviso SIDCO.</p></div>
@@ -347,4 +391,269 @@ map.fitBounds([[-56.0,-76.0],[-17.0,-66.0]],{padding:[12,12]});setTimeout(()=>ma
 })();
 </script>
 
-</body></html>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const input = $('kmzFile'), drop = $('kmzDropzone'), processBtn = $('processKmz');
+  const exportBtn = $('downloadProcessed'), status = $('kmzStatus');
+  let selectedFile = null, processedPayload = null, allPredios = null;
+
+  const monthMap = {ene:'01',feb:'02',mar:'03',abr:'04',may:'05',jun:'06',jul:'07',ago:'08',sep:'09',oct:'10',nov:'11',dic:'12'};
+  const safeText = value => String(value == null ? '' : value).trim();
+  function localName(el){ return (el.localName || el.nodeName || '').split(':').pop(); }
+  function descendants(el,name){
+    return Array.from(el.getElementsByTagName('*')).filter(x => localName(x)===name);
+  }
+  function normalizeDate(value){
+    const v=safeText(value);
+    if(!v) return '';
+    if(/^\d{4}-\d{2}-\d{2}/.test(v)) return v.slice(0,10);
+    const m=v.match(/^(\d{1,2})[-/\s]([a-záéíóúñ]{3})[-/\s](\d{4})/i);
+    if(m){
+      const mon=monthMap[m[2].toLowerCase()];
+      if(mon) return m[3]+'-'+mon+'-'+m[1].padStart(2,'0');
+    }
+    const d=new Date(v);
+    return Number.isNaN(d.getTime()) ? '' : d.toISOString().slice(0,10);
+  }
+  async function readKml(file){
+    let xmlText='';
+    if(file.name.toLowerCase().endsWith('.kmz')){
+      if(!window.JSZip) throw new Error('No se pudo cargar el lector KMZ. Comprueba tu conexión a Internet y vuelve a intentar.');
+      const zip=await JSZip.loadAsync(file);
+      const kmlName=Object.keys(zip.files).find(n=>n.toLowerCase().endsWith('.kml')&&!zip.files[n].dir);
+      if(!kmlName) throw new Error('El KMZ no contiene ningún archivo KML.');
+      xmlText=await zip.files[kmlName].async('text');
+    }else{
+      xmlText=await file.text();
+    }
+    const doc=new DOMParser().parseFromString(xmlText,'application/xml');
+    if(doc.getElementsByTagName('parsererror').length) throw new Error('El KML contiene un error de estructura XML.');
+    return doc;
+  }
+  function parseKmlEvents(doc){
+    const placemarks=descendants(doc,'Placemark');
+    const unique=new Map();
+    let invalid=0;
+    for(const pm of placemarks){
+      const d={};
+      for(const node of descendants(pm,'SimpleData')){
+        const key=safeText(node.getAttribute('name')).toLowerCase();
+        if(key) d[key]=safeText(node.textContent);
+      }
+      let lat=Number(d.lat), lon=Number(d.lon);
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)||!d.lat||!d.lon){
+        const point=descendants(pm,'Point')[0];
+        const coord=point?descendants(point,'coordinates')[0]:null;
+        if(coord){
+          const values=safeText(coord.textContent).split(',').map(Number);
+          lon=values[0]; lat=values[1];
+        }
+      }
+      const fecha=normalizeDate(d.avqu_fechainicio);
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)||lat < -56||lat > -17||lon < -77||lon > -66||!fecha){invalid++;continue;}
+      const aviso=d.avqu_numeroaviso||'';
+      const id=d.id||('kmz-'+[fecha,aviso,lat,lon].join('-'));
+      // Solo se conservan atributos operativos. Se excluyen nombres y teléfonos de personas.
+      unique.set(id,{
+        id:id, aviso:aviso, fecha:fecha,
+        quema:d.pred_nombre||safeText(descendants(pm,'name')[0]?.textContent)||'Quema SIDCO',
+        comuna:d.comu_nombre||d.comuna||'',
+        lat:lat, lon:lon,
+        inicio:d.avqu_horainicio||'', termino:d.avqu_horafin||'',
+        fecha_fin:normalizeDate(d.avqu_fechafin),
+        sup_agricola_ha:d.avqu_supquemaagricola||'',
+        sup_forestal_ha:d.avqu_supquemaforestal||''
+      });
+    }
+    return {events:Array.from(unique.values()),placemarks:placemarks.length,invalid:invalid};
+  }
+  function walkCoordinates(coords, callback){
+    if(!Array.isArray(coords)) return;
+    if(coords.length>=2 && typeof coords[0]==='number' && typeof coords[1]==='number'){
+      callback(coords[0],coords[1]); return;
+    }
+    for(const child of coords) walkCoordinates(child,callback);
+  }
+  function boundsOf(feature){
+    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+    walkCoordinates(feature.geometry.coordinates,(x,y)=>{
+      minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
+    });
+    return {minX,minY,maxX,maxY};
+  }
+  function ringContains(lon,lat,ring){
+    let inside=false;
+    for(let i=0,j=ring.length-1;i<ring.length;j=i++){
+      const xi=ring[i][0],yi=ring[i][1],xj=ring[j][0],yj=ring[j][1];
+      const crosses=((yi>lat)!==(yj>lat)) && (lon < (xj-xi)*(lat-yi)/((yj-yi)||1e-15)+xi);
+      if(crosses) inside=!inside;
+    }
+    return inside;
+  }
+  function polygonContains(lon,lat,poly){
+    if(!poly||!poly.length||!ringContains(lon,lat,poly[0])) return false;
+    for(let i=1;i<poly.length;i++) if(ringContains(lon,lat,poly[i])) return false;
+    return true;
+  }
+  function geometryContains(lon,lat,geometry){
+    if(geometry.type==='Polygon') return polygonContains(lon,lat,geometry.coordinates);
+    if(geometry.type==='MultiPolygon') return geometry.coordinates.some(poly=>polygonContains(lon,lat,poly));
+    return false;
+  }
+  function nearestBoundary(lon,lat,geometry){
+    const rad=Math.PI/180, R=6371008.8, cosLat=Math.cos(lat*rad);
+    let best=Infinity, nearest=null;
+    const point=[0,0];
+    function inspectRing(ring){
+      if(!Array.isArray(ring)||ring.length<2) return;
+      for(let i=0;i<ring.length;i++){
+        const a=ring[i], b=ring[(i+1)%ring.length];
+        const ax=R*cosLat*(a[0]-lon)*rad, ay=R*(a[1]-lat)*rad;
+        const bx=R*cosLat*(b[0]-lon)*rad, by=R*(b[1]-lat)*rad;
+        const dx=bx-ax,dy=by-ay,den=dx*dx+dy*dy;
+        if(den===0) continue;
+        const t=Math.max(0,Math.min(1,-(ax*dx+ay*dy)/den));
+        const x=ax+t*dx,y=ay+t*dy,dist=Math.hypot(x,y);
+        if(dist<best){best=dist;nearest={lon:lon+x/(R*cosLat)/rad,lat:lat+y/R/rad};}
+      }
+    }
+    function inspectPolygon(poly){ for(const ring of poly||[]) inspectRing(ring); }
+    if(geometry.type==='Polygon') inspectPolygon(geometry.coordinates);
+    else if(geometry.type==='MultiPolygon') geometry.coordinates.forEach(inspectPolygon);
+    return {distance:best,point:nearest};
+  }
+  function bearing(from,to){
+    const rad=Math.PI/180,lat1=from.lat*rad,lat2=to.lat*rad,dlon=(to.lon-from.lon)*rad;
+    const y=Math.sin(dlon)*Math.cos(lat2);
+    const x=Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(dlon);
+    return (Math.atan2(y,x)/rad+360)%360;
+  }
+  function compass(deg){
+    return ['N','NE','E','SE','S','SO','O','NO'][Math.round(deg/45)%8];
+  }
+  async function loadPredios(){
+    if(allPredios) return allPredios;
+    status.textContent='Cargando polígonos CMPC para realizar el cruce espacial…';
+    const response=await fetch('./predios.geojson?v=1',{cache:'force-cache'});
+    if(!response.ok) throw new Error('No se pudo cargar predios.geojson (HTTP '+response.status+'). El sitio debe estar publicado junto con ese archivo.');
+    const data=await response.json();
+    if(!data.features||!data.features.length) throw new Error('El archivo predios.geojson no contiene polígonos.');
+    allPredios=data.features.filter(f=>f.geometry&&(f.geometry.type==='Polygon'||f.geometry.type==='MultiPolygon')).map(f=>({feature:f,bounds:boundsOf(f)}));
+    return allPredios;
+  }
+  function crossWithPredios(rawEvents,predios){
+    const output=[],matched=new Map(),latPad=5000/110574+0.003;
+    const R=6371008.8,rad=Math.PI/180;
+    for(let i=0;i<rawEvents.length;i++){
+      const e=rawEvents[i],lonPad=5000/(111320*Math.max(Math.cos(e.lat*rad),0.25))+0.003;
+      let best=Infinity,bestPredio=null,bestPoint=null,inside=false;
+      for(const item of predios){
+        const b=item.bounds;
+        if(e.lon < b.minX-lonPad || e.lon > b.maxX+lonPad || e.lat < b.minY-latPad || e.lat > b.maxY+latPad) continue;
+        if(geometryContains(e.lon,e.lat,item.feature.geometry)){
+          best=0;bestPredio=item.feature;inside=true;break;
+        }
+        const near=nearestBoundary(e.lon,e.lat,item.feature.geometry);
+        if(near.distance<best){best=near.distance;bestPredio=item.feature;bestPoint=near.point;}
+      }
+      if(bestPredio&&best<=5000){
+        const deg=inside?null:bearing(bestPoint,{lon:e.lon,lat:e.lat});
+        const alerta=best<1000?'ROJA':best<3000?'NARANJA':'AMARILLA';
+        const prop=bestPredio.properties||{};
+        output.push(Object.assign({},e,{
+          predio_cercano:prop.predio||'Predio CMPC',
+          zona_admin:prop.zona||'',
+          distancia_m:Math.round(best*10)/10,
+          distancia_km:Math.round(best/10)/100,
+          orientacion:inside?'Dentro':compass(deg),
+          rumbo_grados:deg===null?null:Math.round(deg),
+          alerta:alerta
+        }));
+        matched.set(bestPredio.properties?.predio+'|'+bestPredio.properties?.zona,bestPredio);
+      }
+      if(i%100===0){
+        status.textContent='Cruzando avisos con predios CMPC: '+Math.min(i+1,rawEvents.length)+' de '+rawEvents.length+'…';
+      }
+    }
+    return {events:output,predios:Array.from(matched.values())};
+  }
+  function updateCommunes(){
+    const select=$('commune'),chosen=select.value;
+    select.innerHTML='<option value="">Todas las comunas</option>';
+    Array.from(new Set(events.map(e=>e.comuna).filter(Boolean))).sort().forEach(c=>{
+      const option=document.createElement('option');option.value=c;option.textContent=c;select.appendChild(option);
+    });
+    if(Array.from(select.options).some(o=>o.value===chosen)) select.value=chosen;
+  }
+  function applyImportedData(payload){
+    events=payload.events;
+    const dates=events.map(e=>e.fecha).filter(Boolean).sort();
+    $('from').value=dates[0]||'';$('to').value=dates[dates.length-1]||'';
+    updateCommunes();
+    predLayer.clearLayers();
+    predLayer.addData(payload.predios);
+    if(!$('showPredios').checked) predLayer.remove();
+    filter();
+    processedPayload=payload;
+    exportBtn.disabled=false;
+    window.dispatchEvent(new Event('cmpc-live-events-updated'));
+    $('sidcoStatus').textContent='KMZ cargado en este navegador: '+new Date(payload.generated_at).toLocaleString('es-CL');
+  }
+  input.addEventListener('change',()=>{
+    selectedFile=input.files&&input.files[0]?input.files[0]:null;
+    $('kmzFileName').textContent=selectedFile?selectedFile.name+' · '+(selectedFile.size/1024/1024).toFixed(2)+' MB':'Ningún archivo seleccionado';
+    processBtn.disabled=!selectedFile;
+    status.className='kmz-status';
+    status.textContent=selectedFile?'Archivo listo. Presiona “Procesar KMZ y actualizar mapa”.':'Selecciona el KMZ más reciente que descargaste desde SIDCO.';
+  });
+  ['dragenter','dragover'].forEach(name=>drop.addEventListener(name,ev=>{
+    ev.preventDefault();drop.classList.add('dragover');
+  }));
+  ['dragleave','drop'].forEach(name=>drop.addEventListener(name,ev=>{
+    ev.preventDefault();drop.classList.remove('dragover');
+  }));
+  drop.addEventListener('drop',ev=>{
+    const file=ev.dataTransfer.files&&ev.dataTransfer.files[0];
+    if(file){selectedFile=file;input.files=ev.dataTransfer.files;input.dispatchEvent(new Event('change'));}
+  });
+  processBtn.addEventListener('click',async()=>{
+    if(!selectedFile)return;
+    processBtn.disabled=true;exportBtn.disabled=true;status.className='kmz-status progress';
+    try{
+      status.textContent='Leyendo archivo KMZ…';
+      const doc=await readKml(selectedFile);
+      const parsed=parseKmlEvents(doc);
+      if(!parsed.events.length) throw new Error('El archivo contiene '+parsed.placemarks+' registros, pero no se identificaron avisos con fecha y coordenadas válidas.');
+      status.textContent='Se identificaron '+parsed.events.length+' avisos. Cargando polígonos CMPC…';
+      const predios=await loadPredios();
+      const crossed=crossWithPredios(parsed.events,predios);
+      if(!crossed.events.length) throw new Error('Se leyeron '+parsed.events.length+' avisos, pero ninguno quedó a 5 km o menos de los predios CMPC.');
+      const payload={
+        generated_at:new Date().toISOString(),
+        source:'Archivo KMZ SIDCO cargado manualmente',
+        source_file:selectedFile.name,
+        imported_count:parsed.events.length,
+        invalid_count:parsed.invalid,
+        event_count:crossed.events.length,
+        events:crossed.events,
+        predios:{type:'FeatureCollection',features:crossed.predios}
+      };
+      applyImportedData(payload);
+      status.className='kmz-status success';
+      status.textContent='Proceso correcto: '+parsed.events.length+' avisos leídos; '+crossed.events.length+' avisos quedaron a 5 km o menos de predios CMPC; '+crossed.predios.length+' predios relacionados; '+crossed.events.filter(e=>e.distancia_m===0).length+' avisos dentro de predios. Se omitieron '+parsed.invalid+' registros inválidos.';
+    }catch(err){
+      status.className='kmz-status error';
+      status.textContent='No se pudo procesar el KMZ: '+err.message;
+    }finally{processBtn.disabled=false;}
+  });
+  exportBtn.addEventListener('click',()=>{
+    if(!processedPayload)return;
+    const blob=new Blob([JSON.stringify(processedPayload)],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='events.json';document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+})();
+</script></body></html>
