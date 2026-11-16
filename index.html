@@ -1414,7 +1414,7 @@ html:not([data-theme="dark"]) .actions-dropdown-menu button{
 .data-import-grid>.kmz-import-panel{min-width:0;height:100%;margin:0}
 .firms-import-panel{border-color:#c9e3e3;background:linear-gradient(180deg,#fff 0%,#f8fcfc 100%)}
 .firms-badge{background:#e1f4f2;border-color:#c7e9e6;color:#146d70}
-.firms-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
+.firms-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
 .firms-stats>div{min-width:0;padding:10px 9px;border:1px solid #d9e9e9;border-radius:9px;background:#f4f9f9}
 .firms-stats strong{display:block;color:#176e72;font-size:22px;line-height:1.1;margin-bottom:4px}
 .firms-stats span{font-size:9px;color:#647f81;font-weight:750}
@@ -1645,9 +1645,10 @@ html[data-theme="dark"] .firms-dropzone:hover,html[data-theme="dark"] .firms-dro
     <div><strong id="firmsTotal">—</strong><span>Detecciones Chile</span></div>
     <div><strong id="firmsTerra">—</strong><span>Terra</span></div>
     <div><strong id="firmsAqua">—</strong><span>Aqua</span></div>
+    <div><strong id="firmsOther">—</strong><span>Otros</span></div>
   </div>
   <label class="kmz-dropzone firms-dropzone" id="firmsDropzone" for="firmsFile">
-    <input type="file" id="firmsFile" accept=".zip,.csv,.geojson,.json,application/zip,text/csv,application/json">
+    <input type="file" id="firmsFile" accept=".zip,.shp,.dbf,.shx,.prj,.cpg,.csv,.geojson,.json,application/zip,text/csv,application/json" multiple>
     <span class="kmz-upload-icon firms-upload-icon">＋</span>
     <strong>Selecciona el archivo NASA FIRMS</strong>
     <span class="kmz-file-hint">ZIP Shapefile, CSV o GeoJSON</span>
@@ -1945,6 +1946,256 @@ setTimeout(()=>map.invalidateSize(),1000)
 })();
 </script>
 
+<script src="https://unpkg.com/shpjs@6.2.0/dist/shp.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const FIRMS_CHILE_RINGS = [
+    [[-68.6340102,-52.6363705],[-68.63335,-54.8695],[-66.95992,-54.89681],[-67.29103,-55.30124],[-68.14863,-55.61183],[-69.2321,-55.49906],[-69.95809,-55.19843],[-71.00568,-55.05383],[-72.2639,-54.49514],[-73.2852,-53.95752],[-74.66253,-52.83749],[-73.8381,-53.04743],[-72.43418,-53.7154],[-71.10773,-54.07433],[-70.59178,-53.61583],[-70.26748,-52.93123],[-69.34565,-52.5183],[-68.6340102,-52.6363705]],
+    [[-69.59042,-17.58001],[-69.10025,-18.26013],[-68.96682,-18.98168],[-68.44223,-19.40507],[-68.75717,-20.37266],[-68.21991,-21.49435],[-67.82818,-22.87292],[-67.10667,-22.73592],[-66.98523,-22.98635],[-67.32844,-24.0253],[-68.41765,-24.51855],[-68.386,-26.18502],[-68.5948,-26.50691],[-68.29554,-26.89934],[-69.00123,-27.52121],[-69.65613,-28.45914],[-70.01355,-29.36792],[-69.91901,-30.33634],[-70.53507,-31.36501],[-70.0744,-33.09121],[-69.81478,-33.27389],[-69.81731,-34.19357],[-70.38805,-35.16969],[-70.36477,-36.00509],[-71.12188,-36.65812],[-71.11863,-37.57683],[-70.81466,-38.553],[-71.41352,-38.91602],[-71.68076,-39.80816],[-71.91573,-40.83234],[-71.7468,-42.05139],[-72.1489,-42.25489],[-71.91542,-43.40856],[-71.46406,-43.78761],[-71.79362,-44.20717],[-71.3298,-44.40752],[-71.22278,-44.78424],[-71.65932,-44.97369],[-71.55201,-45.56073],[-71.91726,-46.88484],[-72.44736,-47.73853],[-72.33116,-48.24424],[-72.64825,-48.87862],[-73.41544,-49.31844],[-73.32805,-50.37879],[-72.97575,-50.74145],[-72.30997,-50.67701],[-72.3294,-51.42596],[-71.9148,-52.00902],[-69.49836,-52.14276],[-68.57155,-52.29944],[-69.46128,-52.29195],[-69.94278,-52.53793],[-70.8451,-52.8992],[-71.00633,-53.83325],[-71.42979,-53.85645],[-72.55794,-53.53141],[-73.70276,-52.83507],[-74.94676,-52.26275],[-75.26003,-51.62935],[-74.97663,-51.0434],[-75.47975,-50.37837],[-75.60802,-48.67377],[-75.18277,-47.71192],[-74.12658,-46.93925],[-75.6444,-46.64764],[-74.69215,-45.76398],[-74.35171,-44.10304],[-73.24036,-44.45496],[-72.7178,-42.38336],[-73.3889,-42.11753],[-73.70134,-43.36578],[-74.33194,-43.22496],[-74.01796,-41.79481],[-73.6771,-39.94221],[-73.21759,-39.25869],[-73.50556,-38.28288],[-73.58806,-37.15628],[-73.16672,-37.12378],[-72.55314,-35.50884],[-71.86173,-33.90909],[-71.43845,-32.4189],[-71.66872,-30.92064],[-71.37008,-30.09568],[-71.48989,-28.86144],[-70.90512,-27.64038],[-70.72495,-25.70592],[-70.40397,-23.629],[-70.09125,-21.39332],[-70.16442,-19.75647],[-70.37257,-18.34798],[-69.85844,-18.09269],[-69.59042,-17.58001]]
+  ];
+
+  function inRing(x,y,ring){
+    let inside=false;
+    for(let i=0,j=ring.length-1;i<ring.length;j=i++){
+      const xi=ring[i][0], yi=ring[i][1], xj=ring[j][0], yj=ring[j][1];
+      const crosses=((yi>y)!==(yj>y)) && (x<(xj-xi)*(y-yi)/(yj-yi+1e-30)+xi);
+      if(crosses)inside=!inside;
+    }
+    return inside;
+  }
+  function inChile(lon,lat){
+    if(!Number.isFinite(lon)||!Number.isFinite(lat))return false;
+    if(FIRMS_CHILE_RINGS.some(ring=>inRing(lon,lat,ring)))return true;
+    const islands=[[-109.35,-27.12,.10,.08],[-78.85,-33.64,.08,.06],[-80.78,-33.76,.07,.06],[-80.10,-26.29,.05,.04],[-79.87,-26.35,.05,.04],[-105.40,-26.46,.03,.03]];
+    return islands.some(v=>Math.pow((lon-v[0])/v[2],2)+Math.pow((lat-v[1])/v[3],2)<=1);
+  }
+  function getField(obj,names){
+    const keys=Object.keys(obj||{});
+    for(const name of names){
+      const key=keys.find(k=>k.toLowerCase()===name.toLowerCase());
+      if(key!==undefined&&obj[key]!==null&&obj[key]!==undefined&&obj[key]!=='')return obj[key];
+    }
+    return '';
+  }
+  function asNumber(v){
+    if(v===null||v===undefined||v==='')return null;
+    const n=Number(String(v).replace(',','.'));
+    return Number.isFinite(n)?n:null;
+  }
+  function asDate(v){
+    const s=String(v||'').trim();
+    if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+    const m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    return m ? m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0') : s.slice(0,10);
+  }
+  function flattenFeatures(data){
+    if(Array.isArray(data))return data.flatMap(flattenFeatures);
+    if(data&&data.type==='FeatureCollection'&&Array.isArray(data.features))return data.features;
+    if(data&&data.type==='Feature')return [data];
+    return [];
+  }
+  function normalizeFeature(feature){
+    const p=feature&&feature.properties||{};
+    let lon=null,lat=null;
+    if(feature&&feature.geometry&&feature.geometry.type==='Point'){
+      lon=asNumber(feature.geometry.coordinates[0]);
+      lat=asNumber(feature.geometry.coordinates[1]);
+    }
+    if(lon===null)lon=asNumber(getField(p,['longitude','lon','long','x']));
+    if(lat===null)lat=asNumber(getField(p,['latitude','lat','y']));
+    if(lon===null||lat===null||!inChile(lon,lat))return null;
+    const confidence=getField(p,['confidence','conf','frp_confidence']);
+    const time=String(getField(p,['acq_time','acq_time_utc','time','time_utc'])||'').replace(/[^0-9]/g,'').padStart(4,'0').slice(-4);
+    return {
+      type:'Feature',
+      properties:{
+        acq_date:asDate(getField(p,['acq_date','date','acquisition_date','datetime'])),
+        acq_time_utc:time,
+        satellite:String(getField(p,['satellite','sat','platform'])||'No informado').trim(),
+        instrument:String(getField(p,['instrument','sensor'])||'No informado').trim(),
+        confidence:confidence===''?'No informada':(asNumber(confidence)===null?String(confidence):asNumber(confidence)),
+        brightness_k:asNumber(getField(p,['brightness','brightness_k','bright_ti4','bright_ti5','bright_t31'])),
+        frp_mw:asNumber(getField(p,['frp','frp_mw'])),
+        daynight:String(getField(p,['daynight','day_night'])||'').trim().toUpperCase(),
+        version:String(getField(p,['version','collection'])||'').trim()
+      },
+      geometry:{type:'Point',coordinates:[lon,lat]}
+    };
+  }
+  function parseCSV(source){
+    const rows=[];let row=[],cell='',quoted=false;
+    for(let i=0;i<source.length;i++){
+      const ch=source[i];
+      if(ch==='"'){
+        if(quoted&&source[i+1]==='"'){cell+='"';i++;}
+        else quoted=!quoted;
+      }else if(ch===','&&!quoted){row.push(cell);cell='';}
+      else if((ch==='\n'||ch==='\r')&&!quoted){
+        if(ch==='\r'&&source[i+1]==='\n')i++;
+        row.push(cell);cell='';
+        if(row.some(v=>String(v).trim()!==''))rows.push(row);
+        row=[];
+      }else cell+=ch;
+    }
+    row.push(cell);if(row.some(v=>String(v).trim()!==''))rows.push(row);
+    if(rows.length<2)return [];
+    const headers=rows[0].map(h=>String(h).replace(/^\uFEFF/,'').trim());
+    return rows.slice(1).map(values=>{
+      const properties={};headers.forEach((h,i)=>properties[h]=values[i]??'');
+      return {type:'Feature',properties,geometry:null};
+    });
+  }
+  function escapeHtml(v){
+    return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  function keyFor(f){
+    const p=f.properties||{},c=f.geometry.coordinates;
+    return [p.acq_date,p.acq_time_utc,p.satellite,Number(c[0]).toFixed(5),Number(c[1]).toFixed(5)].join('|');
+  }
+  function timeUTC(v){
+    const s=String(v||'').padStart(4,'0');
+    return s.length===4?s.slice(0,2)+':'+s.slice(2)+' UTC':'No informada';
+  }
+  function popupContent(f){
+    const p=f.properties||{};
+    const confidence=typeof p.confidence==='number'?p.confidence+'%':escapeHtml(p.confidence||'No informada');
+    return '<div style="min-width:190px"><b style="color:#087c82">NASA FIRMS · detección térmica</b><br>'+
+      '<b>'+escapeHtml(p.satellite||'Satélite no informado')+'</b> · '+escapeHtml(p.instrument||'')+'<br>'+
+      'Fecha: '+escapeHtml(p.acq_date||'No informada')+'<br>'+
+      'Hora: '+timeUTC(p.acq_time_utc)+'<br>'+
+      'Confianza: <b>'+confidence+'</b><br>'+
+      'Brillo: '+(p.brightness_k==null?'No informado':Number(p.brightness_k).toFixed(2)+' K')+'<br>'+
+      'FRP: <b>'+(p.frp_mw==null?'No informado':Number(p.frp_mw).toFixed(2)+' MW')+'</b><br>'+
+      'Día/noche: '+(p.daynight==='D'?'Día':p.daynight==='N'?'Noche':'No informado')+'</div>';
+  }
+
+  const firmsLayer=L.layerGroup().addTo(map);
+  const firmsPane=map.createPane('firmsPane');
+  firmsPane.style.zIndex='670';
+  firmsPane.style.pointerEvents='auto';
+  layerControl.addOverlay(firmsLayer,'NASA FIRMS · detecciones Chile');
+  let firmsFeatures=[];
+  let selectedFirmsFiles=[];
+
+  function dateRange(){
+    const dates=firmsFeatures.map(f=>f.properties.acq_date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
+    return {min:dates[0]||'',max:dates[dates.length-1]||''};
+  }
+  function renderLayer(){
+    const from=$('firmsFrom').value,to=$('firmsTo').value,satellite=$('firmsSatellite').value;
+    const visible=firmsFeatures.filter(f=>{
+      const p=f.properties||{},d=p.acq_date||'',sat=p.satellite||'';
+      const dateOk=(!from||!d||d>=from)&&(!to||!d||d<=to);
+      const satOk=satellite==='all'||(satellite==='other'?!['Aqua','Terra'].includes(sat):sat===satellite);
+      return dateOk&&satOk;
+    });
+    firmsLayer.clearLayers();
+    visible.forEach(f=>{
+      const c=f.geometry.coordinates;
+      const marker=L.circleMarker([c[1],c[0]],{pane:'firmsPane',radius:5.5,color:'#07323a',weight:1.4,fillColor:'#21cfc6',fillOpacity:.96,opacity:1});
+      marker.bindPopup(popupContent(f));marker.addTo(firmsLayer);
+    });
+    const terra=firmsFeatures.filter(f=>String(f.properties.satellite).toLowerCase()==='terra').length;
+    const aqua=firmsFeatures.filter(f=>String(f.properties.satellite).toLowerCase()==='aqua').length;
+    $('firmsTotal').textContent=firmsFeatures.length.toLocaleString('es-CL');
+    $('firmsTerra').textContent=terra.toLocaleString('es-CL');
+    $('firmsAqua').textContent=aqua.toLocaleString('es-CL');
+    $('firmsOther').textContent=(firmsFeatures.length-terra-aqua).toLocaleString('es-CL');
+    $('firmsStatus').textContent='NASA FIRMS: '+visible.length.toLocaleString('es-CL')+' detecciones visibles; '+firmsFeatures.length.toLocaleString('es-CL')+' acumuladas en Chile. Los puntos se dibujan sobre los predios.';
+    $('downloadFirms').disabled=!firmsFeatures.length;
+  }
+  function setDateRange(){
+    const r=dateRange();
+    if(r.min)$('firmsFrom').value=r.min;
+    if(r.max)$('firmsTo').value=r.max;
+  }
+  async function loadInitial(){
+    try{
+      const r=await fetch('./firms_chile.geojson?v='+Date.now(),{cache:'no-store'});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const data=await r.json();
+      firmsFeatures=flattenFeatures(data).map(normalizeFeature).filter(Boolean);
+      setDateRange();renderLayer();
+      const d=dateRange();
+      $('firmsStatus').textContent='Capa inicial cargada: '+firmsFeatures.length.toLocaleString('es-CL')+' detecciones filtradas para Chile ('+d.min+' a '+d.max+').';
+    }catch(err){
+      $('firmsStatus').textContent='No se pudo cargar firms_chile.geojson: '+err.message;
+      console.error('NASA FIRMS',err);
+    }
+  }
+  $('firmsFile').addEventListener('change',()=>{
+    selectedFirmsFiles=Array.from($('firmsFile').files||[]);
+    $('firmsFileName').textContent=selectedFirmsFiles.length?selectedFirmsFiles.map(f=>f.name).join(', '):'Ningún archivo seleccionado';
+    $('processFirms').disabled=!selectedFirmsFiles.length;
+  });
+  $('processFirms').addEventListener('click',async()=>{
+    if(!selectedFirmsFiles.length)return;
+    const button=$('processFirms');
+    button.disabled=true;button.textContent='Procesando…';
+    $('firmsStatus').textContent='Leyendo archivos y filtrando detecciones dentro de Chile…';
+    try{
+      const files=selectedFirmsFiles;
+      const zip=files.find(f=>f.name.toLowerCase().endsWith('.zip'));
+      let parsed=[];
+      if(zip){
+        if(typeof window.shp!=='function')throw new Error('No se pudo cargar el lector de Shapefile. Recarga el Monitor.');
+        parsed=flattenFeatures(await window.shp(zip));
+      }else{
+        const shpFile=files.find(f=>f.name.toLowerCase().endsWith('.shp'));
+        const csvFile=files.find(f=>f.name.toLowerCase().endsWith('.csv'));
+        const geoFile=files.find(f=>f.name.toLowerCase().endsWith('.geojson')||f.name.toLowerCase().endsWith('.json'));
+        if(shpFile){
+          if(typeof window.shp!=='function')throw new Error('No se pudo cargar el lector de Shapefile. Recarga el Monitor.');
+          const object={shp:await shpFile.arrayBuffer()};
+          const dbf=files.find(f=>f.name.toLowerCase().endsWith('.dbf'));
+          const prj=files.find(f=>f.name.toLowerCase().endsWith('.prj'));
+          const cpg=files.find(f=>f.name.toLowerCase().endsWith('.cpg'));
+          if(dbf)object.dbf=await dbf.arrayBuffer();
+          if(prj)object.prj=await prj.text();
+          if(cpg)object.cpg=await cpg.text();
+          parsed=flattenFeatures(await window.shp(object));
+        }else if(csvFile){
+          parsed=parseCSV(await csvFile.text());
+        }else if(geoFile){
+          parsed=flattenFeatures(JSON.parse(await geoFile.text()));
+        }else{
+          throw new Error('Selecciona un ZIP, un SHP con sus archivos DBF/PRJ, un CSV o un GeoJSON.');
+        }
+      }
+      const cleaned=parsed.map(normalizeFeature).filter(Boolean);
+      if(!cleaned.length)throw new Error('No se encontraron detecciones dentro de Chile. Comprueba que el archivo tenga coordenadas WGS84 y columnas de latitud/longitud.');
+      const dropped=Math.max(0,parsed.length-cleaned.length);
+      const before=firmsFeatures.length;
+      if($('firmsReplace').checked){
+        firmsFeatures=cleaned;
+      }else{
+        const merged=new Map(firmsFeatures.map(f=>[keyFor(f),f]));
+        cleaned.forEach(f=>merged.set(keyFor(f),f));
+        firmsFeatures=Array.from(merged.values());
+      }
+      setDateRange();renderLayer();
+      const added=$('firmsReplace').checked?cleaned.length:firmsFeatures.length-before;
+      $('firmsStatus').textContent='Actualización correcta: '+parsed.length.toLocaleString('es-CL')+' registros leídos; '+cleaned.length.toLocaleString('es-CL')+' dentro de Chile; '+dropped.toLocaleString('es-CL')+' fuera del territorio o no válidos; '+added.toLocaleString('es-CL')+' nuevos. Total acumulado: '+firmsFeatures.length.toLocaleString('es-CL')+'.';
+    }catch(err){
+      $('firmsStatus').textContent='No se pudo procesar el archivo: '+err.message;
+      console.error('NASA FIRMS',err);
+    }finally{
+      button.disabled=!selectedFirmsFiles.length;
+      button.textContent='Procesar y actualizar mapa';
+    }
+  });
+  ['firmsFrom','firmsTo','firmsSatellite'].forEach(id=>$(id).addEventListener('change',renderLayer));
+  $('downloadFirms').addEventListener('click',()=>{
+    const data={type:'FeatureCollection',name:'NASA FIRMS Chile',features:firmsFeatures};
+    const blob=new Blob([JSON.stringify(data)],{type:'application/geo+json;charset=utf-8'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='firms_chile.geojson';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    $('firmsStatus').textContent='GeoJSON actualizado descargado. Para publicar la actualización a todos, reemplaza firms_chile.geojson en el repositorio privado.';
+  });
+  loadInitial();
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script>
 (() => {
