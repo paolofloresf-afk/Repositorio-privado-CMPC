@@ -3012,167 +3012,178 @@ setTimeout(()=>map.invalidateSize(),1000)
 
 <script src="https://unpkg.com/shpjs@6.2.0/dist/shp.min.js"></script>
 <script>
-/* PDF de informes: exporta solo el módulo seleccionado y abre una vista previa controlada. */
+/* Generación PDF nativa: documento independiente, sin heredar estilos del Monitor. */
 (() => {
-  let libraryPromise=null;
-  function loadPdfLibrary(){
-    if(window.html2pdf)return Promise.resolve(window.html2pdf);
-    if(!libraryPromise)libraryPromise=new Promise((resolve,reject)=>{
-      const script=document.createElement('script');
-      script.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.async=true;script.crossOrigin='anonymous';script.referrerPolicy='no-referrer';
-      script.onload=()=>window.html2pdf?resolve(window.html2pdf):reject(new Error('La librería PDF no quedó disponible.'));
-      script.onerror=()=>reject(new Error('No se pudo cargar el generador PDF. Comprueba la conexión e inténtalo otra vez.'));
+  let pdfLibPromise=null;
+  function loadScript(src,test){
+    return new Promise((resolve,reject)=>{
+      if(test()){resolve();return;}
+      const existing=[...document.scripts].find(x=>x.src===src);
+      if(existing){existing.addEventListener('load',()=>test()?resolve():reject(new Error('No se pudo inicializar el componente PDF.')),{once:true});existing.addEventListener('error',()=>reject(new Error('No se pudo cargar el componente PDF.')),{once:true});return;}
+      const script=document.createElement('script');script.src=src;script.async=true;script.crossOrigin='anonymous';script.referrerPolicy='no-referrer';
+      script.onload=()=>test()?resolve():reject(new Error('El componente PDF no quedó disponible.'));
+      script.onerror=()=>reject(new Error('No se pudo cargar el componente PDF. Comprueba tu conexión.'));
       document.head.appendChild(script);
     });
-    return libraryPromise;
   }
-
+  async function loadPdf(){
+    if(!pdfLibPromise)pdfLibPromise=(async()=>{
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js',()=>!!window.jspdf?.jsPDF);
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js',()=>!!window.jspdf?.jsPDF);
+      return window.jspdf.jsPDF;
+    })().catch(error=>{pdfLibPromise=null;throw error;});
+    return pdfLibPromise;
+  }
+  const cleanText=node=>(node?.innerText||node?.textContent||'').replace(/\s+/g,' ').trim();
+  function collectReport(source,isFirms){
+    const title=cleanText(source.querySelector('.report-heading h2'))||'Informe de monitoreo territorial';
+    const subtitle=cleanText(source.querySelector('.report-heading p'));
+    const eyebrow=cleanText(source.querySelector('.report-eyebrow'));
+    const period=cleanText(source.querySelector('.report-period'));
+    const kpis=[...source.querySelectorAll('.report-kpi')].map(card=>({
+      value:cleanText(card.querySelector('strong')),
+      label:cleanText(card.querySelector('span'))
+    })).filter(k=>k.value||k.label);
+    const headers=[...source.querySelectorAll('.report-table thead th')].map(cleanText).filter((h,i)=>!/^mapa$/i.test(h));
+    const body=[...source.querySelectorAll('.report-table tbody tr')].map(row=>
+      [...row.cells].filter((cell,i)=>!/^mapa$/i.test(headers[i]||'')&&!cell.querySelector('.report-map-button'))
+        .map(cleanText)
+    ).filter(row=>row.some(Boolean)&&!row.some(cell=>/preparando informe|calculando distancias/i.test(cell)));
+    const disclaimer=cleanText(source.querySelector('.report-disclaimer'));
+    const methods=[...source.querySelectorAll('.report-method')].map(cleanText).filter(Boolean);
+    const insights=[...source.querySelectorAll('.report-insight-card')].map(card=>({
+      title:cleanText(card.querySelector('.report-insight-title')),
+      content:cleanText(card)
+    })).filter(x=>x.content);
+    return {title,subtitle,eyebrow,period,kpis,headers,body,disclaimer,methods,insights,isFirms};
+  }
+  function addWrapped(doc,text,x,y,maxWidth,fontSize,color,opts={}){
+    doc.setFont('helvetica',opts.bold?'bold':'normal');doc.setFontSize(fontSize);doc.setTextColor(...color);
+    const lines=doc.splitTextToSize(String(text||''),maxWidth);
+    doc.text(lines,x,y,{lineHeightFactor:opts.lineHeight||1.25});
+    return y+lines.length*fontSize*.3528*(opts.lineHeight||1.25);
+  }
   async function download(moduleId,filename,orientation){
     const source=document.getElementById(moduleId);
     if(!source||source.hidden)throw new Error('Abre el informe antes de generar el PDF.');
-    await loadPdfLibrary();
-    if(document.fonts?.ready)await document.fonts.ready;
-
     const isFirms=moduleId==='firmsReportModule';
-    const pageOrientation=orientation==='landscape'?'landscape':'portrait';
-    const width=pageOrientation==='landscape'?1047:718;
-    const clone=source.cloneNode(true);
-    clone.id=moduleId;
-    clone.removeAttribute('hidden');
-    clone.classList.add('support-pdf-export',isFirms?'pdf-firms':'pdf-sidco');
-    clone.style.setProperty('display','block','important');
-    clone.style.setProperty('position','static','important');
-    clone.style.setProperty('width',width+'px','important');
-    clone.style.setProperty('min-width',width+'px','important');
-    clone.style.setProperty('max-width','none','important');
-    clone.style.setProperty('flex','0 0 '+width+'px','important');
-    clone.style.setProperty('float','none','important');
-    clone.style.setProperty('transform','none','important');
-    clone.querySelectorAll('[id]').forEach(node=>node.removeAttribute('id'));
-    clone.querySelectorAll('.report-controls,.report-insight-grid,.report-method,.report-status,.report-close,.report-pagination-footer,.report-map-button').forEach(node=>node.remove());
-    clone.querySelectorAll('.report-table thead tr,.report-table tbody tr').forEach(row=>{
-      const last=row.lastElementChild;
-      if(last && (/^mapa$/i.test((last.textContent||'').trim()) || last.querySelector('button.report-map-button')))last.remove();
+    const data=collectReport(source,isFirms);
+    if(!data.headers.length||!data.body.length)throw new Error('El informe no contiene registros para exportar.');
+    const JsPDF=await loadPdf();
+    const landscape=orientation==='landscape';
+    const doc=new JsPDF({orientation:landscape?'landscape':'portrait',unit:'mm',format:'a4',compress:true});
+    const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight();
+    const margin=10,contentW=pageW-margin*2;
+    const ink=[31,57,61],muted=[91,117,121],teal=[36,91,96],line=[211,225,226],pale=[241,247,247];
+    let y=14;
+
+    // Encabezado institucional independiente del sitio web.
+    doc.setFillColor(...teal);doc.rect(margin,10,2,24,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...teal);
+    doc.text(data.eyebrow.toUpperCase(),margin+6,y);
+    y+=7;
+    doc.setFont('helvetica','bold');doc.setFontSize(isFirms?19:18);doc.setTextColor(...ink);
+    const titleLines=doc.splitTextToSize(data.title,contentW-43);
+    doc.text(titleLines,margin+6,y);
+    const titleHeight=titleLines.length*7;
+    doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(...teal);
+    doc.text('CMPC',pageW-margin,18,{align:'right'});
+    doc.setFont('helvetica','normal');doc.setFontSize(5.8);doc.setTextColor(...muted);
+    doc.text('MONITOREO TERRITORIAL · CHILE',pageW-margin,22,{align:'right'});
+    y+=titleHeight+2;
+    y=addWrapped(doc,data.subtitle,margin+6,y,contentW-12,8,[86,111,115],{lineHeight:1.25})+3;
+    doc.setDrawColor(...line);doc.setLineWidth(.35);doc.line(margin,y,pageW-margin,y);y+=6;
+
+    // Período y filtros aplicados.
+    doc.setFillColor(...pale);doc.setDrawColor(...line);doc.roundedRect(margin,y,contentW,10,1.5,1.5,'FD');
+    doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(...muted);
+    doc.text(data.period||'Período no especificado',margin+4,y+6.3);y+=15;
+
+    // Indicadores KPI, dimensionados de acuerdo con el ancho real de la página.
+    if(data.kpis.length){
+      const gap=3,cols=Math.min(data.kpis.length,landscape?5:4),cardW=(contentW-gap*(cols-1))/cols,cardH=17;
+      data.kpis.forEach((k,i)=>{
+        const col=i%cols,row=Math.floor(i/cols),x=margin+col*(cardW+gap),cy=y+row*(cardH+3);
+        doc.setFillColor(248,251,251);doc.setDrawColor(...line);doc.roundedRect(x,cy,cardW,cardH,1.5,1.5,'FD');
+        doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(...ink);
+        doc.text(doc.splitTextToSize(k.value||'—',cardW-5).slice(0,1),x+3,cy+6.5);
+        doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(...muted);
+        doc.text(doc.splitTextToSize(k.label||'',cardW-5).slice(0,2),x+3,cy+10.5);
+      });
+      y+=Math.ceil(data.kpis.length/cols)*(cardH+3)+2;
+    }
+
+    // Síntesis breve de metodología / análisis que forma parte del propio informe.
+    [...data.methods,...data.insights.map(x=>x.content)].filter(Boolean).forEach((text,index)=>{
+      const label=index<data.methods.length?'METODOLOGÍA':(data.insights[index-data.methods.length]?.title||'ANÁLISIS').toUpperCase();
+      doc.setFont('helvetica','bold');doc.setFontSize(6.7);doc.setTextColor(...teal);doc.text(label,margin,y);y+=3.3;
+      y=addWrapped(doc,text,margin,y,contentW,6.4,muted,{lineHeight:1.2})+3;
     });
 
-    const wrapper=document.createElement('div');
-    wrapper.className='support-pdf-export-wrap';
-    wrapper.style.cssText='position:fixed;left:-20000px;top:0;display:block;width:'+width+'px;min-width:'+width+'px;max-width:none;height:auto;background:#fff;z-index:-1;overflow:visible;pointer-events:none;';
-    const style=document.createElement('style');
-    style.textContent=`
-      .support-pdf-export-wrap,.support-pdf-export-wrap *{box-sizing:border-box!important}
-      .support-pdf-export{display:block!important;visibility:visible!important;position:static!important;width:${width}px!important;min-width:0!important;max-width:none!important;margin:0!important;padding:0!important;background:#fff!important;color:#20383b!important;font-family:Arial,Helvetica,sans-serif!important;line-height:1.35!important}
-      .support-pdf-export .report-heading{display:block!important;width:100%!important;margin:0 0 16px!important;padding:0 0 12px!important;background:#fff!important;border:0!important;border-bottom:2px solid #2c7d80!important}
-      .support-pdf-export .report-eyebrow{display:block!important;margin:0 0 7px!important;color:#2c7d80!important;font-size:9px!important;font-weight:800!important;letter-spacing:.14em!important}
-      .support-pdf-export .report-heading-row{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:16px!important;width:100%!important}
-      .support-pdf-export .report-heading-row>div:first-child{flex:1 1 auto!important;min-width:0!important;max-width:none!important}
-      .support-pdf-export .report-heading h2{margin:0 0 6px!important;color:#20383b!important;font-size:${isFirms?22:21}px!important;line-height:1.2!important;font-weight:800!important}
-      .support-pdf-export .report-heading p{margin:0!important;color:#60777a!important;font-size:9px!important;line-height:1.4!important}
-      .support-pdf-export .report-brand{display:flex!important;flex:0 0 150px!important;max-width:150px!important;flex-direction:column!important;align-items:flex-end!important;justify-content:flex-start!important;gap:4px!important;margin:0!important;padding:0!important;text-align:right!important}
-      .support-pdf-export .report-brand img{display:block!important;width:82px!important;height:38px!important;object-fit:contain!important}
-      .support-pdf-export .report-brand span{display:block!important;max-width:150px!important;color:#587276!important;font-size:6.5px!important;line-height:1.25!important}
-      .support-pdf-export .report-panel{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;color:#20383b!important;overflow:visible!important}
-      .support-pdf-export .report-period{display:block!important;width:100%!important;margin:0 0 10px!important;padding:8px 10px!important;border:1px solid #d6e2e2!important;border-radius:6px!important;background:#f3f8f8!important;color:#45666a!important;font-size:8px!important}
-      .support-pdf-export .report-kpis{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important;width:100%!important;margin:0 0 13px!important}
-      .support-pdf-export .report-kpi{display:flex!important;flex-direction:column!important;justify-content:center!important;min-width:0!important;padding:8px!important;border:1px solid #d6e2e2!important;border-radius:7px!important;background:#f8fbfb!important;break-inside:avoid!important}
-      .support-pdf-export .report-kpi strong{display:block!important;color:#20383b!important;font-size:18px!important;line-height:1.1!important}
-      .support-pdf-export .report-kpi span{display:block!important;margin-top:4px!important;color:#587276!important;font-size:7px!important;line-height:1.25!important}
-      .support-pdf-export .report-table-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;width:100%!important;margin:12px 0 7px!important}
-      .support-pdf-export .report-table-heading h3{margin:0!important;color:#20383b!important;font-size:10px!important;font-weight:800!important}
-      .support-pdf-export .report-table-heading span{color:#688084!important;font-size:8px!important}
-      .support-pdf-export .report-table-wrap{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;max-height:none!important;overflow:visible!important;border:1px solid #d5e2e2!important;border-radius:6px!important}
-      .support-pdf-export .report-table{display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin:0!important;font-size:${isFirms?6.8:7.4}px!important}
-      .support-pdf-export .report-table th{position:static!important;padding:5px 4px!important;background:#eaf0f0!important;color:#25484a!important;font-size:${isFirms?6.5:7}px!important;font-weight:800!important;line-height:1.2!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;border-bottom:1px solid #d5e2e2!important}
-      .support-pdf-export .report-table td{padding:4px!important;color:#29454a!important;font-size:${isFirms?6.5:7}px!important;line-height:1.25!important;white-space:normal!important;overflow-wrap:anywhere!important;vertical-align:middle!important;border-bottom:1px solid #e1e9e9!important}
-      .support-pdf-export.pdf-sidco .report-table th:nth-child(1){width:13%!important}
-      .support-pdf-export.pdf-sidco .report-table th:nth-child(2){width:13%!important}
-      .support-pdf-export.pdf-sidco .report-table th:nth-child(3){width:21%!important}
-      .support-pdf-export.pdf-sidco .report-table th:nth-child(4){width:11%!important}
-      .support-pdf-export.pdf-sidco .report-table th:nth-child(5){width:20%!important}
-      .support-pdf-export.pdf-sidco .report-table th:nth-child(6){width:9%!important}
-      .support-pdf-export.pdf-sidco .report-table th:nth-child(7){width:13%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(1){width:9%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(2){width:9%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(3){width:13%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(4){width:8%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(5){width:12%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(6){width:12%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(7){width:14%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(8){width:8%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(9){width:7%!important}
-      .support-pdf-export.pdf-firms .report-table th:nth-child(10){width:8%!important}
-      .support-pdf-export .report-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
-      .support-pdf-export .report-risk-chip{display:inline-flex!important;padding:3px 6px!important;border-radius:20px!important;font-size:6.5px!important;font-weight:800!important;white-space:nowrap!important}
-      .support-pdf-export .report-disclaimer{display:block!important;margin:10px 0 0!important;padding:8px 0 0!important;border-top:1px solid #d5e2e2!important;color:#688084!important;font-size:7px!important;line-height:1.35!important}
-      .support-pdf-export .report-table th:last-child,.support-pdf-export .report-table td:last-child{border-right:0!important}
-      .support-pdf-preview[hidden]{display:none!important}
-      .support-pdf-preview{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px}
-      .support-pdf-preview-backdrop{position:absolute;inset:0;background:rgba(7,18,20,.78);backdrop-filter:blur(4px)}
-      .support-pdf-preview-dialog{position:relative;display:flex;flex-direction:column;width:min(1180px,96vw);height:min(94vh,1050px);background:#f3f6f6;border:1px solid #cbd9da;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.38)}
-      .support-pdf-preview-head,.support-pdf-preview-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:#fff;color:#20383b}
-      .support-pdf-preview-head{border-bottom:1px solid #d8e2e2}
-      .support-pdf-preview-head>div{flex:1 1 auto;min-width:0}
-      .support-pdf-preview-head strong{display:block;font-size:14px}
-      .support-pdf-preview-head small{display:block;margin-top:3px;color:#718589;font-size:11px;overflow-wrap:anywhere}
-      .support-pdf-preview-head button{display:inline-flex!important;flex:0 0 120px!important;width:120px!important;min-width:120px!important;max-width:120px!important;justify-content:center!important;white-space:nowrap!important;cursor:pointer!important;pointer-events:auto!important}
-      .support-pdf-preview-frame{display:block;flex:1 1 auto;width:100%;min-height:0;border:0;background:#e8eeee}
-      .support-pdf-preview-foot{border-top:1px solid #d8e2e2;font-size:11px;color:#657b7f}
-      .support-pdf-preview-foot span{flex:1 1 auto;min-width:0}
-      .support-pdf-preview-foot button{flex:0 0 auto;width:auto!important;min-width:160px!important}
-      @media(max-width:650px){.support-pdf-preview{padding:5px}.support-pdf-preview-dialog{width:100%;height:97vh;border-radius:9px}.support-pdf-preview-foot{align-items:stretch;flex-direction:column}.support-pdf-preview-foot button{width:100%!important}}
-    `;
-    wrapper.append(style,clone);
-    document.body.appendChild(wrapper);
-    // Neutraliza restricciones heredadas del diseño de la aplicación y obliga a que
-    // cada bloque del informe ocupe el ancho completo de la hoja PDF.
-    clone.style.width=width+'px';
-    clone.style.minWidth=width+'px';
-    clone.style.maxWidth='none';
-    const panel=clone.querySelector('.report-panel');
-    const tableWrap=clone.querySelector('.report-table-wrap');
-    const table=clone.querySelector('.report-table');
-    [panel,tableWrap,table].filter(Boolean).forEach(node=>{
-      node.style.setProperty('display',node===table?'table':'block','important');
-      node.style.setProperty('width','100%','important');
-      node.style.setProperty('min-width','0','important');
-      node.style.setProperty('max-width','100%','important');
-      node.style.setProperty('margin-left','0','important');
-      node.style.setProperty('margin-right','0','important');
-      node.style.setProperty('float','none','important');
-      node.style.setProperty('transform','none','important');
-    });
-    clone.querySelectorAll('.report-heading,.report-period,.report-kpis,.report-table-heading,.report-disclaimer').forEach(node=>{
-      node.style.setProperty('width','100%','important');
-      node.style.setProperty('max-width','100%','important');
-      node.style.setProperty('margin-left','0','important');
-      node.style.setProperty('margin-right','0','important');
-    });
+    doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...ink);
+    const tableTitle=cleanText(source.querySelector('.report-table-heading h3'))||'Detalle de registros';
+    doc.text(tableTitle,margin,y+2);y+=7;
+    const count=cleanText(source.querySelector('.report-table-heading span'));
+    if(count){doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...muted);doc.text(count,pageW-margin,y-5,{align:'right'});}
 
-    try{
-      const logo=clone.querySelector('.report-brand img');
-      if(logo&&!logo.complete)await Promise.race([new Promise(resolve=>logo.addEventListener('load',resolve,{once:true})),new Promise(resolve=>setTimeout(resolve,3000))]);
-      const pdf=await window.html2pdf().set({
-        margin:[8,10,13,10],
-        filename,
-        image:{type:'jpeg',quality:.98},
-        html2canvas:{scale:2,useCORS:true,allowTaint:false,backgroundColor:'#ffffff',logging:false,windowWidth:width,windowHeight:Math.max(1000,clone.scrollHeight+100),scrollX:0,scrollY:0},
-        jsPDF:{unit:'mm',format:'a4',orientation:pageOrientation},
-        pagebreak:{mode:['css','legacy'],avoid:['tr','.report-kpi','.report-period']}
-      }).from(clone).toPdf().get('pdf');
-      const total=pdf.internal.getNumberOfPages();
-      for(let page=1;page<=total;page++){
-        pdf.setPage(page);
-        const pageWidth=pdf.internal.pageSize.getWidth(),pageHeight=pdf.internal.pageSize.getHeight();
-        pdf.setDrawColor(218,229,229);pdf.setLineWidth(.25);pdf.line(10,pageHeight-9,pageWidth-10,pageHeight-9);
-        pdf.setFont('helvetica','normal');pdf.setFontSize(7);pdf.setTextColor(104,128,132);
-        pdf.text('SUPPORT · MONITOREO TERRITORIAL',10,pageHeight-4.5);
-        pdf.text('Página '+page+' de '+total,pageWidth-10,pageHeight-4.5,{align:'right'});
+    const colCount=data.headers.length;
+    const baseFont=isFirms?5.8:7.1;
+    const columnStyles={};
+    if(isFirms){
+      const widths=landscape?[24,20,42,18,31,31,35,18,15,18]:[];
+      widths.forEach((w,i)=>columnStyles[i]={cellWidth:w});
+    }else{
+      const widths=landscape?[23,23,50,25,42,18,25]:[19,19,43,23,42,19,25];
+      widths.forEach((w,i)=>columnStyles[i]={cellWidth:w});
+    }
+    const tableStart=Math.max(y+1,55);
+    doc.autoTable({
+      startY:tableStart,
+      head:[data.headers],
+      body:data.body,
+      theme:'grid',
+      margin:{left:margin,right:margin,top:17,bottom:16},
+      tableWidth:'auto',
+      showHead:'everyPage',
+      rowPageBreak:'avoid',
+      pageBreak:'auto',
+      styles:{font:'helvetica',fontSize:baseFont,cellPadding:isFirms?1.5:2.0,overflow:'linebreak',valign:'middle',textColor:ink,lineColor:line,lineWidth:.15,minCellHeight:6},
+      headStyles:{fillColor:[232,240,240],textColor:[37,72,74],fontStyle:'bold',fontSize:baseFont-0.2,halign:'left',valign:'middle',cellPadding:2},
+      alternateRowStyles:{fillColor:[249,251,251]},
+      columnStyles,
+      didParseCell:function(ctx){
+        if(ctx.section==='body'){
+          const val=String(ctx.cell.raw||'').toLowerCase();
+          if(/alta|prioridad alta/.test(val)){ctx.cell.styles.textColor=[151,52,62];ctx.cell.styles.fontStyle='bold';}
+          else if(/seguimiento|media/.test(val)){ctx.cell.styles.textColor=[142,91,39];}
+          else if(/preventivo|baja/.test(val)){ctx.cell.styles.textColor=[130,111,43];}
+        }
+      },
+      didDrawPage:function(ctx){
+        const page=doc.internal.getCurrentPageInfo().pageNumber;
+        if(page>1){
+          doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...teal);
+          doc.text(data.title,pageW-margin,9,{align:'right',maxWidth:contentW});
+          doc.setDrawColor(...line);doc.line(margin,12,pageW-margin,12);
+        }
+        doc.setDrawColor(...line);doc.setLineWidth(.25);doc.line(margin,pageH-10,pageW-margin,pageH-10);
+        doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(...muted);
+        doc.text('SUPPORT · MONITOREO TERRITORIAL',margin,pageH-5.5);
+        doc.text('Página '+page,pageW-margin,pageH-5.5,{align:'right'});
       }
-      showPreview(pdf.output('blob'),filename);
-    }finally{wrapper.remove();}
+    });
+    // Nota de fuente al final del documento, sin añadir contenido del Monitor.
+    if(data.disclaimer){
+      let noteY=doc.lastAutoTable.finalY+5;
+      const noteLines=doc.splitTextToSize(data.disclaimer,contentW);
+      const noteH=noteLines.length*2.8+5;
+      if(noteY+noteH>pageH-14){doc.addPage();noteY=20;}
+      doc.setDrawColor(...line);doc.line(margin,noteY,pageW-margin,noteY);
+      doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(...muted);
+      doc.text(noteLines,margin,noteY+4,{lineHeightFactor:1.2});
+    }
+    showPreview(doc.output('blob'),filename);
   }
-
   function showPreview(blob,filename){
     let modal=document.getElementById('supportPdfPreview');
     if(!modal){
@@ -3180,51 +3191,37 @@ setTimeout(()=>map.invalidateSize(),1000)
       modal.innerHTML=`
         <div class="support-pdf-preview-backdrop" data-preview-close></div>
         <section class="support-pdf-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="supportPdfPreviewTitle">
-          <header class="support-pdf-preview-head">
-            <div><strong id="supportPdfPreviewTitle">Vista previa del informe</strong><small id="supportPdfPreviewName"></small></div>
-            <button type="button" class="secondary" id="supportPdfPreviewClose">Cerrar</button>
-          </header>
+          <header class="support-pdf-preview-head"><div><strong id="supportPdfPreviewTitle">Vista previa del informe</strong><small id="supportPdfPreviewName"></small></div><button type="button" class="secondary" id="supportPdfPreviewClose">Cerrar</button></header>
           <iframe title="Vista previa del documento PDF" class="support-pdf-preview-frame"></iframe>
-          <footer class="support-pdf-preview-foot"><span>Documento del informe. La URL del sitio no se incorpora al PDF.</span><button type="button" id="supportPdfPreviewDownload">Descargar PDF</button></footer>
+          <footer class="support-pdf-preview-foot"><span>Vista previa del informe. El PDF no incluye la URL del sitio.</span><button type="button" id="supportPdfPreviewDownload">Descargar PDF</button></footer>
         </section>`;
       document.body.appendChild(modal);
-      if(!document.getElementById('supportPdfPreviewStyles')){
-        const previewStyle=document.createElement('style');
-        previewStyle.id='supportPdfPreviewStyles';
-        previewStyle.textContent=`
-          .support-pdf-preview[hidden]{display:none!important}
-          .support-pdf-preview{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px}
-          .support-pdf-preview-backdrop{position:absolute;inset:0;background:rgba(7,18,20,.78);backdrop-filter:blur(4px)}
-          .support-pdf-preview-dialog{position:relative;display:flex;flex-direction:column;width:min(1180px,96vw);height:min(94vh,1050px);background:#f3f6f6;border:1px solid #cbd9da;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.38)}
-          .support-pdf-preview-head,.support-pdf-preview-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:#fff;color:#20383b}
-          .support-pdf-preview-head{border-bottom:1px solid #d8e2e2}
-          .support-pdf-preview-head>div{flex:1 1 auto;min-width:0}
-          .support-pdf-preview-head strong{display:block;font-size:14px}
-          .support-pdf-preview-head small{display:block;margin-top:3px;color:#718589;font-size:11px;overflow-wrap:anywhere}
-          .support-pdf-preview-head button{display:inline-flex!important;flex:0 0 120px!important;width:120px!important;min-width:120px!important;max-width:120px!important;justify-content:center!important;white-space:nowrap!important;cursor:pointer!important;pointer-events:auto!important}
-          .support-pdf-preview-frame{display:block;flex:1 1 auto;width:100%;min-height:0;border:0;background:#e8eeee}
-          .support-pdf-preview-foot{border-top:1px solid #d8e2e2;font-size:11px;color:#657b7f}
-          .support-pdf-preview-foot span{flex:1 1 auto;min-width:0}
-          .support-pdf-preview-foot button{flex:0 0 auto;width:auto!important;min-width:160px!important}
-          @media(max-width:650px){.support-pdf-preview{padding:5px}.support-pdf-preview-dialog{width:100%;height:97vh;border-radius:9px}.support-pdf-preview-foot{align-items:stretch;flex-direction:column}.support-pdf-preview-foot button{width:100%!important}}
-        `;
-        document.head.appendChild(previewStyle);
-      }
+      const style=document.createElement('style');style.textContent=`
+        .support-pdf-preview[hidden]{display:none!important}.support-pdf-preview{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px}
+        .support-pdf-preview-backdrop{position:absolute;inset:0;background:rgba(7,18,20,.78);backdrop-filter:blur(4px)}
+        .support-pdf-preview-dialog{position:relative;display:flex;flex-direction:column;width:min(1180px,96vw);height:min(94vh,1050px);background:#f3f6f6;border:1px solid #cbd9da;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.38)}
+        .support-pdf-preview-head,.support-pdf-preview-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:#fff;color:#20383b}
+        .support-pdf-preview-head{border-bottom:1px solid #d8e2e2}.support-pdf-preview-head>div{flex:1;min-width:0}
+        .support-pdf-preview-head strong{display:block;font-size:14px}.support-pdf-preview-head small{display:block;margin-top:3px;color:#718589;font-size:11px;overflow-wrap:anywhere}
+        .support-pdf-preview-head button{flex:0 0 120px!important;width:120px!important;min-width:120px!important;max-width:120px!important;white-space:nowrap!important;cursor:pointer!important}
+        .support-pdf-preview-frame{display:block;flex:1;width:100%;min-height:0;border:0;background:#e8eeee}
+        .support-pdf-preview-foot{border-top:1px solid #d8e2e2;font-size:11px;color:#657b7f}.support-pdf-preview-foot span{flex:1;min-width:0}
+        .support-pdf-preview-foot button{flex:0 0 auto;width:auto!important;min-width:160px!important}
+        @media(max-width:650px){.support-pdf-preview{padding:5px}.support-pdf-preview-dialog{width:100%;height:97vh;border-radius:9px}.support-pdf-preview-foot{align-items:stretch;flex-direction:column}.support-pdf-preview-foot button{width:100%!important}}
+      `;document.head.appendChild(style);
       const close=()=>{modal.hidden=true;};
       modal.querySelector('#supportPdfPreviewClose').addEventListener('click',close);
       modal.querySelector('.support-pdf-preview-backdrop').addEventListener('click',close);
       document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modal.hidden)close();});
       modal.querySelector('#supportPdfPreviewDownload').addEventListener('click',()=>{
         if(!modal._pdfUrl||!modal._pdfName)return;
-        const link=document.createElement('a');link.href=modal._pdfUrl;link.download=modal._pdfName;
-        document.body.appendChild(link);link.click();link.remove();
+        const link=document.createElement('a');link.href=modal._pdfUrl;link.download=modal._pdfName;document.body.appendChild(link);link.click();link.remove();
       });
     }
     if(modal._pdfUrl)URL.revokeObjectURL(modal._pdfUrl);
     modal._pdfName=filename;modal._pdfUrl=URL.createObjectURL(blob);
     modal.querySelector('iframe').src=modal._pdfUrl+'#toolbar=1&navpanes=0&view=FitH';
-    modal.querySelector('#supportPdfPreviewName').textContent=filename;
-    modal.hidden=false;
+    modal.querySelector('#supportPdfPreviewName').textContent=filename;modal.hidden=false;
   }
   window.SupportReportPdf={download};
 })();</script>
