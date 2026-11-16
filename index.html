@@ -2707,7 +2707,7 @@ function filter(){
  });
  burnListRecords=visible.map((event,index)=>({event,index})).filter(item=>!isInside(item.event));
  burnListPage=0;
- document.getElementById('count').textContent=externalBurnRows.length;
+ document.getElementById('count').textContent=burnListRecords.length;
  document.getElementById('kTotal').textContent=visible.length;
  document.getElementById('kRed').textContent=visible.filter(e=>e.alerta==='ROJA').length;
  document.getElementById('kOrange').textContent=visible.filter(e=>e.alerta==='NARANJA').length;
