@@ -3,7 +3,7 @@
 <title>Monitor CMPC | Alertas territoriales</title>
 <meta name="description" content="Monitor territorial de avisos SIDCO próximos a predios CMPC.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='64 44 112 102'%3E%3Cpath d='M77 85 C72 94 68 108 69 119 C72 126 80 131 88 133 C91 122 94 108 97 96 C90 91 84 88 77 85 Z' fill='%231D8649'/%3E%3Cpath d='M125 49 C111 61 100 91 91 131 C90 135 99 138 108 139 C119 113 133 87 145 65 C140 58 133 53 125 49 Z' fill='%233DAE2B'/%3E%3Cpath d='M160 54 C147 65 127 98 111 139 C128 137 145 130 157 115 C169 101 173 78 165 62 C164 59 162 56 160 54 Z' fill='%2393D500'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230B2634'/%3E%3Crect x='13' y='13' width='38' height='38' rx='3' fill='none' stroke='%23D5DDE0' stroke-width='3'/%3E%3Cpath d='M25.5 13v38M38.5 13v38M13 25.5h38M13 38.5h38' stroke='%23D5DDE0' stroke-width='2' opacity='.62'/%3E%3Crect x='26' y='26' width='12' height='12' fill='%23D5DDE0'/%3E%3C/svg%3E">
 <style>
 :root{--navy:#0b1c32;--blue:#17395d;--cyan:#68c7df;--bg:#eef3f8;--ink:#17283d;--muted:#62758a}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -382,23 +382,17 @@ html[data-theme="dark"] .kmz-dropzone{border-color:#456b4b;background:#14251a}
 html[data-theme="dark"] .kmz-dropzone:hover,html[data-theme="dark"] .kmz-dropzone.dragover{background:#1b3422;border-color:#78a97e}
 @media(max-width:650px){header{padding:18px}.header-copy{gap:12px}.header-copy h1{font-size:20px}.brand-symbol{width:23px;height:23px}}
 
-/* Identidad visual del Monitor: símbolo de hojas verdes */
-.header-copy{display:flex;align-items:center;gap:18px;flex-wrap:nowrap}
-.header-leaf-logo{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px}
-.header-leaf-logo svg{display:block;width:40px;height:40px;filter:drop-shadow(0 2px 6px rgba(88,170,91,.22))}
+/* Encabezado sin logotipo visible; identidad gráfica solo en la pestaña */
+.header-copy{display:flex;align-items:center;gap:0;flex-wrap:nowrap}
 .header-copy h1{margin:0!important;max-width:760px;font-size:clamp(19px,2vw,26px);line-height:1.23;font-weight:640;letter-spacing:-.035em}
 @media(max-width:700px){
  .header-inner{align-items:center;flex-direction:row}
- .header-copy{width:auto;flex:1;min-width:0;align-items:center;gap:11px}
- .header-leaf-logo{flex-basis:38px;width:38px;height:38px}
- .header-leaf-logo svg{width:35px;height:35px}
+ .header-copy{width:auto;flex:1;min-width:0;align-items:center;gap:0}
  .header-copy h1{font-size:18px}
  .theme-toggle{align-self:center}
 }
 @media(max-width:420px){
- .header-copy{gap:8px}
- .header-leaf-logo{flex-basis:33px;width:33px;height:33px}
- .header-leaf-logo svg{width:31px;height:31px}
+ .header-copy{gap:0}
  .header-copy h1{font-size:16px}
 }
 
@@ -1684,13 +1678,6 @@ html:not([data-theme="dark"]) .actions-group .actions-dropdown-menu button:hover
 <header>
   <div class="header-inner">
     <div class="header-copy">
-      <div class="header-leaf-logo" aria-label="Símbolo de hojas CMPC">
-        <svg viewBox="64 44 112 102" role="img" focusable="false" aria-hidden="true">
-          <path d="M77 85 C72 94 68 108 69 119 C72 126 80 131 88 133 C91 122 94 108 97 96 C90 91 84 88 77 85 Z" fill="#1D8649"/>
-          <path d="M125 49 C111 61 100 91 91 131 C90 135 99 138 108 139 C119 113 133 87 145 65 C140 58 133 53 125 49 Z" fill="#3DAE2B"/>
-          <path d="M160 54 C147 65 127 98 111 139 C128 137 145 130 157 115 C169 101 173 78 165 62 C164 59 162 56 160 54 Z" fill="#93D500"/>
-        </svg>
-      </div>
       <h1 id="pageTitle">Monitor de quemas próximas a predios CMPC</h1>
       
     </div>
