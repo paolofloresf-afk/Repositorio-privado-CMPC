@@ -410,7 +410,106 @@ html[data-theme="dark"] .logo-attribution{color:#9aaf9d}
  .cmpc-logo{width:72px;height:41px}
  .header-copy h1{font-size:16px}
 }
-</style></head><body>
+
+/* Estructura de aplicación: panel lateral para módulos presentes y futuros */
+body{min-height:100vh}
+.app-sidebar{
+ position:fixed;inset:0 auto 0 0;z-index:1200;width:258px;
+ display:flex;flex-direction:column;padding:22px 16px 16px;
+ background:linear-gradient(180deg,#fdfefd 0%,#f5f8f5 100%);
+ border-right:1px solid #dce8dd;box-shadow:5px 0 24px rgba(27,60,38,.035);
+}
+.app-main{min-width:0;margin-left:258px;min-height:100vh}
+.sidebar-brand{padding:4px 8px 23px;border-bottom:1px solid #e5ede5}
+.sidebar-logo-panel{display:inline-flex;align-items:center;justify-content:center;width:124px;height:66px;padding:4px 8px;background:#fff;border:1px solid #e6ede7;border-radius:10px}
+.sidebar-logo-panel img{display:block;width:106px;height:59px;object-fit:contain}
+.sidebar-brand-caption{margin-top:12px;font-size:9px;font-weight:800;letter-spacing:.14em;color:#78917b}
+.sidebar-nav{padding-top:22px}
+.sidebar-section-label{margin:0 8px 10px;font-size:9px;letter-spacing:.15em;font-weight:800;color:#8a9b8c}
+.sidebar-link{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:9px;color:#536b58;text-decoration:none;font-size:11px;font-weight:650;transition:background .15s,color .15s}
+.sidebar-link svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:0 0 17px}
+.sidebar-link:hover{background:#edf4ed;color:#315c3a}
+.sidebar-link.active{background:#e8f2e8;color:#27613a;box-shadow:inset 3px 0 #4d9259}
+.sidebar-workspace{padding-top:29px}
+.sidebar-module-card{display:flex;align-items:flex-start;gap:10px;margin:0 2px;padding:12px 10px;border:1px dashed #cbdccb;border-radius:10px;background:rgba(255,255,255,.62)}
+.sidebar-module-mark{width:25px;height:25px;display:grid;place-items:center;flex:0 0 25px;border-radius:7px;background:#e8f2e8;color:#4e8a57;font-size:18px;line-height:1}
+.sidebar-module-card strong{display:block;font-size:10px;color:#48634d;font-weight:700;margin:1px 0 5px}
+.sidebar-module-card p{margin:0;color:#849487;font-size:9px;line-height:1.55}
+.sidebar-footer{display:flex;align-items:center;gap:8px;margin-top:auto;padding:13px 8px 4px;border-top:1px solid #e5ede5;color:#8c9b8e;font-size:8px;letter-spacing:.1em;font-weight:750}
+.sidebar-footer-dot{width:6px;height:6px;border-radius:50%;background:#69a878;box-shadow:0 0 0 3px rgba(105,168,120,.12)}
+.header-inner{max-width:none;width:100%;padding:0}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:0 0 auto}
+.theme-toggle,.fullscreen-toggle{min-height:39px;min-width:0;padding:9px 12px}
+.fullscreen-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.fullscreen-icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.icon-action{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;padding:8px;border:1px solid rgba(224,244,224,.28);border-radius:9px;color:#f1f8f1;background:rgba(239,249,239,.1)}
+.icon-action svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.sidebar-toggle{display:none}
+main#mainContent{max-width:none;width:100%;margin:0;padding:22px clamp(14px,2vw,28px) 30px}
+.sidebar-backdrop{display:none}
+html[data-theme="dark"] .app-sidebar{background:linear-gradient(180deg,#142219 0%,#101b14 100%);border-color:#2a4330;box-shadow:5px 0 24px rgba(0,0,0,.18)}
+html[data-theme="dark"] .sidebar-brand{border-color:#2a4330}
+html[data-theme="dark"] .sidebar-brand-caption,html[data-theme="dark"] .sidebar-section-label{color:#8fa892}
+html[data-theme="dark"] .sidebar-link{color:#b2c5b4}
+html[data-theme="dark"] .sidebar-link:hover{background:#1b3422;color:#e1eee2}
+html[data-theme="dark"] .sidebar-link.active{background:#203c28;color:#c4e4c7;box-shadow:inset 3px 0 #77b77f}
+html[data-theme="dark"] .sidebar-module-card{background:#17291c;border-color:#3b5940}
+html[data-theme="dark"] .sidebar-module-card strong{color:#c5ddc8}
+html[data-theme="dark"] .sidebar-module-card p{color:#95aa98}
+html[data-theme="dark"] .sidebar-module-mark{background:#23412a;color:#9ac79f}
+html[data-theme="dark"] .sidebar-footer{border-color:#2a4330;color:#8da391}
+html[data-theme="dark"] .sidebar-footer-dot{background:#7bb788}
+@media(max-width:900px){
+ .app-sidebar{width:260px;transform:translateX(-105%);transition:transform .22s ease;box-shadow:12px 0 36px rgba(12,35,20,.18)}
+ body.sidebar-open .app-sidebar{transform:translateX(0)}
+ .app-main{margin-left:0}
+ .sidebar-toggle{display:inline-flex}
+ .sidebar-backdrop{position:fixed;inset:0;z-index:1190;background:rgba(8,20,12,.38);backdrop-filter:blur(2px)}
+ body.sidebar-open .sidebar-backdrop{display:block}
+ header{position:relative;z-index:10}
+}
+@media(max-width:600px){
+ .header-inner{flex-direction:row;align-items:center;gap:10px}
+ .header-copy{width:auto;flex:1;min-width:0}
+ .header-actions{gap:6px;flex-wrap:wrap}
+ .theme-toggle,.fullscreen-toggle{padding:8px 9px;font-size:0;min-width:37px;width:37px;height:37px}
+ .theme-toggle .theme-icon{font-size:16px}
+ .fullscreen-toggle #fullscreenLabel{display:none}
+ .fullscreen-icon{width:17px;height:17px}
+ main#mainContent{padding:15px 10px 22px}
+}
+</style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo-panel">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo-cmpc.svg" alt="CMPC" width="100" height="56">
+    </div>
+    <div class="sidebar-brand-caption">CENTRO DE MONITOREO</div>
+  </div>
+  <nav class="sidebar-nav" aria-label="Módulos principales">
+    <div class="sidebar-section-label">GENERAL</div>
+    <a class="sidebar-link active" href="#mainContent" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>
+      <span>Monitor de quemas</span>
+    </a>
+  </nav>
+  <div class="sidebar-workspace">
+    <div class="sidebar-section-label">ESPACIO DE TRABAJO</div>
+    <div class="sidebar-module-card">
+      <span class="sidebar-module-mark" aria-hidden="true">＋</span>
+      <div>
+        <strong>Más módulos</strong>
+        <p>Este espacio está preparado para incorporar nuevas herramientas, análisis y reportes.</p>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <span class="sidebar-footer-dot"></span>
+    MONITOREO TERRITORIAL · SIDCO
+  </div>
+</aside>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<div class="app-main" id="appMain">
+
 <header>
   <div class="header-inner">
     <div class="header-copy">
@@ -423,12 +522,21 @@ html[data-theme="dark"] .logo-attribution{color:#9aaf9d}
       <h1>Monitor de quemas próximas a predios CMPC</h1>
       
     </div>
+    <div class="header-actions">
+      <button type="button" id="sidebarToggle" class="icon-action sidebar-toggle" aria-label="Abrir panel lateral" aria-expanded="false" aria-controls="appSidebar" title="Abrir panel lateral">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
     <button type="button" id="themeToggle" class="theme-toggle" aria-label="Cambiar a modo oscuro" aria-pressed="false">
       <span class="theme-icon" aria-hidden="true">☾</span><span id="themeLabel">Modo oscuro</span>
     </button>
+      <button type="button" id="fullscreenToggle" class="theme-toggle fullscreen-toggle" aria-label="Activar pantalla completa" title="Pantalla completa">
+        <svg class="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        <span id="fullscreenLabel">Pantalla completa</span>
+      </button>
+    </div>
   </div>
 </header>
-<main>
+<main id="mainContent">
 <div class="kpis">
 <div class="kpi"><strong id="kTotal">372</strong><span>Quemas a 5 km o menos</span></div>
 <div class="kpi"><strong class="red" id="kRed">155</strong><span>Alerta roja · menos de 1 km</span></div>
@@ -498,6 +606,7 @@ html[data-theme="dark"] .logo-attribution{color:#9aaf9d}
 </div>
 <div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.<div class="logo-attribution">Logotipo CMPC: <a href="https://commons.wikimedia.org/wiki/File:Logo-cmpc.svg" target="_blank" rel="noopener">archivo de CMPC en Wikimedia Commons</a> · Licencia CC BY-SA 4.0.</div></div>
 </main>
+</div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/esri-leaflet@3.0.15/dist/esri-leaflet.js"></script>
 <script>
@@ -918,6 +1027,54 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
     applyTheme(next);
     localStorage.setItem('cmpc-theme',next);
   });
+})();
+</script>
+
+<script>
+(() => {
+ const fullButton=document.getElementById('fullscreenToggle');
+ const fullLabel=document.getElementById('fullscreenLabel');
+ const fullIcon=document.querySelector('.fullscreen-icon');
+ const sidebarButton=document.getElementById('sidebarToggle');
+ const sidebarBackdrop=document.getElementById('sidebarBackdrop');
+ const sidebar=document.getElementById('appSidebar');
+ const syncFullscreen=()=>{
+  const active=!!document.fullscreenElement;
+  if(fullLabel)fullLabel.textContent=active?'Salir de pantalla completa':'Pantalla completa';
+  if(fullButton){
+   fullButton.setAttribute('aria-label',active?'Salir de pantalla completa':'Activar pantalla completa');
+   fullButton.setAttribute('title',active?'Salir de pantalla completa':'Pantalla completa');
+   fullButton.setAttribute('aria-pressed',String(active));
+  }
+  if(fullIcon)fullIcon.innerHTML=active
+   ?'<path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"/>'
+   :'<path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/>';
+ };
+ if(fullButton){
+  fullButton.addEventListener('click',async()=>{
+   try{
+    if(document.fullscreenElement)await document.exitFullscreen();
+    else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();
+    else {fullLabel.textContent='No disponible';}
+   }catch(error){fullButton.title='Pantalla completa no disponible en este navegador';}
+  });
+  document.addEventListener('fullscreenchange',syncFullscreen);
+  syncFullscreen();
+ }
+ const closeSidebar=()=>{
+  document.body.classList.remove('sidebar-open');
+  if(sidebarButton){sidebarButton.setAttribute('aria-expanded','false');sidebarButton.setAttribute('aria-label','Abrir panel lateral');}
+ };
+ if(sidebarButton){
+  sidebarButton.addEventListener('click',()=>{
+   const open=document.body.classList.toggle('sidebar-open');
+   sidebarButton.setAttribute('aria-expanded',String(open));
+   sidebarButton.setAttribute('aria-label',open?'Cerrar panel lateral':'Abrir panel lateral');
+  });
+ }
+ if(sidebarBackdrop)sidebarBackdrop.addEventListener('click',closeSidebar);
+ if(sidebar)sidebar.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeSidebar));
+ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeSidebar();});
 })();
 </script>
 </body></html>
