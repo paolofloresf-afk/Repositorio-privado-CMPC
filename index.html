@@ -572,6 +572,34 @@ html[data-theme="dark"] .map-panel.map-expanded{border-color:#456c4c;box-shadow:
  #map{height:440px;min-height:440px}
  .map-panel.map-expanded #map{height:calc(100vh - 185px)!important;min-height:380px}
 }
+
+/* Rangos de alerta separados de las capas geográficas */
+.range-group{display:flex;flex-direction:column;gap:7px;background:linear-gradient(145deg,#f7faf7,#f2f7f2);border-color:#dfeadf}
+.range-group .control-title{margin:0;color:#54725a;letter-spacing:.12em}
+.range-description{margin:0 0 2px;color:#829184;font-size:9px;line-height:1.45}
+.range-options{display:grid;grid-template-columns:1fr;gap:2px}
+.range-options .legend-check{display:flex;align-items:center;gap:8px;margin:0;padding:5px 2px;font-size:10px;color:#4f6855}
+.range-options .dot{width:11px;height:11px;flex:0 0 11px}
+.range-options .legend-check input{margin:0;accent-color:#39794a}
+.leaflet-control-layers{min-width:145px}
+.leaflet-control-layers label{margin:0;font-size:11px;color:#455d4a}
+.leaflet-control-layers-selector{accent-color:#347d4c}
+.leaflet-control-layers-separator{border-top:1px solid #e5ece5}
+html[data-theme="dark"] .range-group{background:linear-gradient(145deg,#172a1c,#16251a);border-color:#344d38}
+html[data-theme="dark"] .range-group .control-title{color:#b8d2bb}
+html[data-theme="dark"] .range-description{color:#93a995}
+html[data-theme="dark"] .range-options .legend-check{color:#c3d4c5}
+html[data-theme="dark"] .leaflet-control-layers label{color:#d4e3d5}
+html[data-theme="dark"] .leaflet-control-layers-separator{border-color:#3b5140}
+@media(min-width:1051px){
+ .unified-grid{grid-template-columns:1.02fr 1.08fr 1.22fr .76fr}
+}
+@media(max-width:1050px){
+ .range-options{grid-template-columns:1fr 1fr;column-gap:10px}
+}
+@media(max-width:600px){
+ .range-options{grid-template-columns:1fr}
+}
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -644,7 +672,7 @@ html[data-theme="dark"] .map-panel.map-expanded{border-color:#456c4c;box-shadow:
 </div>
 
 <section class="top-date-panel unified-controls">
-  <div class="unified-heading"><b>FILTROS Y LEYENDA DEL MONITOREO</b><span>Configura el período, acota los avisos y controla qué capas se muestran en el mapa.</span></div>
+  <div class="unified-heading"><b>FILTROS Y LEYENDA DEL MONITOREO</b><span>Ajusta el período y la búsqueda, y selecciona los rangos que deseas revisar. Las capas base y los predios se administran desde el mapa.</span></div>
   <div class="unified-grid">
     <div class="control-group dates-group">
       <div class="control-title">PERÍODO DE QUEMAS</div>
@@ -659,13 +687,15 @@ html[data-theme="dark"] .map-panel.map-expanded{border-color:#456c4c;box-shadow:
       <label class="field-label">Predio / aviso<input id="search" placeholder="Buscar predio, aviso o tipo de quema..."></label>
       <label class="field-label">Radio máximo<select id="radius"><option value="1000">1 km</option><option value="3000">3 km</option><option value="5000" selected>5 km</option></select></label>
     </div>
-    <div class="control-group legend-group-top">
-      <div class="control-title">LEYENDA Y CAPAS VISIBLES</div>
-      <label class="legend-check"><input type="checkbox" id="showInside" checked><i class="dot violet"></i><span>Quema dentro de predio CMPC</span></label>
-      <label class="legend-check"><input type="checkbox" id="showRed" checked><i class="dot red"></i><span>Alerta roja · menos de 1 km</span></label>
-      <label class="legend-check"><input type="checkbox" id="showOrange" checked><i class="dot orange"></i><span>Alerta naranja · 1–3 km</span></label>
-      <label class="legend-check"><input type="checkbox" id="showYellow" checked><i class="dot yellow"></i><span>Alerta amarilla · 3–5 km</span></label>
-      <label class="legend-check"><input type="checkbox" id="showPredios" checked><i class="square"></i><span>Predios CMPC</span></label>
+    <div class="control-group range-group">
+      <div class="control-title">RANGOS DE ALERTA</div>
+      <p class="range-description">Selecciona las categorías que deseas visualizar en el mapa y en el listado.</p>
+      <div class="range-options">
+        <label class="legend-check"><input type="checkbox" id="showInside" checked><i class="dot violet"></i><span>Dentro de predio CMPC · 0 km</span></label>
+        <label class="legend-check"><input type="checkbox" id="showRed" checked><i class="dot red"></i><span>Roja · menos de 1 km</span></label>
+        <label class="legend-check"><input type="checkbox" id="showOrange" checked><i class="dot orange"></i><span>Naranja · 1 a 3 km</span></label>
+        <label class="legend-check"><input type="checkbox" id="showYellow" checked><i class="dot yellow"></i><span>Amarilla · 3 a 5 km</span></label>
+      </div>
     </div>
     <div class="control-group actions-group">
       <div class="control-title">ACCIONES</div>
@@ -685,7 +715,7 @@ html[data-theme="dark"] .map-panel.map-expanded{border-color:#456c4c;box-shadow:
       <span id="mapExpandLabel">Ampliar mapa</span>
     </button>
   </div>
-  <div id="map"></div><div id="mapBaseStatus" class="map-status">Base cartográfica: imagen satelital Esri. Puedes cambiar a topográfico o calles desde el selector de capas.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div>
+  <div id="map"></div><div id="mapBaseStatus" class="map-status">Base satelital activa. Desde el selector de capas puedes cambiar a topográfico y mostrar u ocultar los predios CMPC.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div>
 </section>
 <section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 
@@ -730,12 +760,6 @@ const satelliteBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/ser
 const topoBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{
   maxZoom:18,attribution:'Tiles &copy; Esri — Sources: Esri, USGS, NOAA'
 });
-const chileBase=L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
-  subdomains:'abcd',maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO'
-});
-const osmBase=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-  maxZoom:19,attribution:'&copy; OpenStreetMap contributors'
-});
 let satelliteFallbackUsed=false;
 satelliteBase.on('tileerror',()=>{
   if(!satelliteFallbackUsed && map.hasLayer(satelliteBase)){
@@ -743,10 +767,9 @@ satelliteBase.on('tileerror',()=>{
     map.removeLayer(satelliteBase);
     topoBase.addTo(map);
     const msg=document.getElementById('mapBaseStatus');
-    if(msg)msg.textContent='La imagen satelital no respondió; se activó el mapa topográfico como respaldo. Puedes cambiar la base desde el selector.';
+    if(msg)msg.textContent='La imagen satelital no respondió; se activó el mapa topográfico como respaldo. Puedes cambiar entre ambas bases desde el selector.';
   }
 });
-L.control.layers({'Chile · Satelital':satelliteBase,'Topográfico Esri':topoBase,'Calles y localidades':chileBase,'OpenStreetMap':osmBase},null,{collapsed:true,position:'topright'}).addTo(map);
 L.control.scale({metric:true,imperial:false}).addTo(map);
 let selectedPredioLayer=null;
 // Los filtros y la leyenda se encuentran agrupados en el panel superior.
@@ -769,7 +792,12 @@ const predLayer=L.geoJSON(DATA.predios,{
     });
   }
 }).addTo(map);
-document.getElementById('showPredios').addEventListener('change',e=>{if(e.target.checked){if(!map.hasLayer(predLayer))predLayer.addTo(map)}else if(map.hasLayer(predLayer)){map.removeLayer(predLayer)}});
+// Solo dos mapas base y una capa superpuesta de predios CMPC.
+L.control.layers(
+  {'Satelital':satelliteBase,'Topográfico':topoBase},
+  {'Predios CMPC':predLayer},
+  {collapsed:true,position:'topright'}
+).addTo(map);
 let markers=L.layerGroup().addTo(map), visible=[], markerByEvent=[];
 const colors={ROJA:'#d62828',NARANJA:'#f28c28',AMARILLA:'#e2b72c',CMPC:'#7c3aed'};
 const isInside=e=>Number(e.distancia_m)===0;
@@ -820,7 +848,7 @@ document.getElementById('clearDates').addEventListener('click',()=>{
   filter();
 });
 
-document.getElementById('reset').onclick=()=>{document.getElementById('from').value=defaultPeriod().from;document.getElementById('to').value=defaultPeriod().to;document.getElementById('commune').value='';document.getElementById('search').value='';document.getElementById('radius').value='5000';['showInside','showRed','showOrange','showYellow','showPredios'].forEach(id=>document.getElementById(id).checked=true);if(!map.hasLayer(predLayer))predLayer.addTo(map);filter()};
+document.getElementById('reset').onclick=()=>{document.getElementById('from').value=defaultPeriod().from;document.getElementById('to').value=defaultPeriod().to;document.getElementById('commune').value='';document.getElementById('search').value='';document.getElementById('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id).checked=true);if(!map.hasLayer(predLayer))predLayer.addTo(map);filter()};
 document.getElementById('csv').onclick=()=>{const cols=['fecha','alerta','comuna','quema','aviso','predio_cercano','distancia_m','distancia_km','orientacion','lat','lon'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv=[cols.join(';'),...visible.map(e=>cols.map(c=>q(e[c])).join(';'))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='alertas_quemas_CPMC_noviembre_2026.csv';a.click();URL.revokeObjectURL(a.href)};
 filter();
 map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.setMaxBounds(chileBounds);setTimeout(()=>map.invalidateSize(),250);setTimeout(()=>map.invalidateSize(),1000)
@@ -1050,7 +1078,6 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
     updateCommunes();
     predLayer.clearLayers();
     predLayer.addData(payload.predios);
-    if(!$('showPredios').checked) predLayer.remove();
     filter();
     processedPayload=payload;
     exportBtn.disabled=false;
