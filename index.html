@@ -3063,6 +3063,10 @@ setTimeout(()=>map.invalidateSize(),1000)
     doc.text(lines,x,y,{lineHeightFactor:opts.lineHeight||1.25});
     return y+lines.length*fontSize*.3528*(opts.lineHeight||1.25);
   }
+  async function getLogoData(source){
+    const img=source.querySelector('.report-brand img');if(!img)return null;
+    try{const image=new Image();image.crossOrigin='anonymous';image.src=img.src;await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;});const canvas=document.createElement('canvas');canvas.width=460;canvas.height=220;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/png');}catch(_){return null;}
+  }
   async function download(moduleId,filename,orientation){
     const source=document.getElementById(moduleId);
     if(!source||source.hidden)throw new Error('Abre el informe antes de generar el PDF.');
@@ -3070,6 +3074,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     const data=collectReport(source,isFirms);
     if(!data.headers.length||!data.body.length)throw new Error('El informe no contiene registros para exportar.');
     const JsPDF=await loadPdf();
+    const logoData=await getLogoData(source);
     const landscape=orientation==='landscape';
     const doc=new JsPDF({orientation:landscape?'landscape':'portrait',unit:'mm',format:'a4',compress:true});
     const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight();
@@ -3086,10 +3091,10 @@ setTimeout(()=>map.invalidateSize(),1000)
     const titleLines=doc.splitTextToSize(data.title,contentW-43);
     doc.text(titleLines,margin+6,y);
     const titleHeight=titleLines.length*7;
-    doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(...teal);
-    doc.text('CMPC',pageW-margin,18,{align:'right'});
+    if(logoData){doc.addImage(logoData,'PNG',pageW-margin-31,12,29,13);}
+    else{doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(...teal);doc.text('CMPC',pageW-margin,18,{align:'right'});}
     doc.setFont('helvetica','normal');doc.setFontSize(5.8);doc.setTextColor(...muted);
-    doc.text('MONITOREO TERRITORIAL · CHILE',pageW-margin,22,{align:'right'});
+    doc.text('MONITOREO TERRITORIAL · CHILE',pageW-margin,27,{align:'right'});
     y+=titleHeight+2;
     y=addWrapped(doc,data.subtitle,margin+6,y,contentW-12,8,[86,111,115],{lineHeight:1.25})+3;
     doc.setDrawColor(...line);doc.setLineWidth(.35);doc.line(margin,y,pageW-margin,y);y+=6;
@@ -3130,11 +3135,10 @@ setTimeout(()=>map.invalidateSize(),1000)
     const baseFont=isFirms?5.8:7.1;
     const columnStyles={};
     if(isFirms){
-      const widths=landscape?[24,20,42,18,31,31,35,18,15,18]:[];
-      widths.forEach((w,i)=>columnStyles[i]={cellWidth:w});
+      // NASA usa el ancho disponible completo en horizontal: el reparto automático evita columnas vacías o una tabla angosta.
     }else{
-      const widths=landscape?[23,23,50,25,42,18,25]:[19,19,43,23,42,19,25];
-      widths.forEach((w,i)=>columnStyles[i]={cellWidth:w});
+      const widths=landscape?null:[19,19,43,23,42,18,25];
+      if(widths)widths.forEach((w,i)=>columnStyles[i]={cellWidth:w});
     }
     const tableStart=Math.max(y+1,55);
     doc.autoTable({
@@ -3166,10 +3170,6 @@ setTimeout(()=>map.invalidateSize(),1000)
           doc.text(data.title,pageW-margin,9,{align:'right',maxWidth:contentW});
           doc.setDrawColor(...line);doc.line(margin,12,pageW-margin,12);
         }
-        doc.setDrawColor(...line);doc.setLineWidth(.25);doc.line(margin,pageH-10,pageW-margin,pageH-10);
-        doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(...muted);
-        doc.text('SUPPORT · MONITOREO TERRITORIAL',margin,pageH-5.5);
-        doc.text('Página '+page,pageW-margin,pageH-5.5,{align:'right'});
       }
     });
     // Nota de fuente al final del documento, sin añadir contenido del Monitor.
@@ -3181,6 +3181,13 @@ setTimeout(()=>map.invalidateSize(),1000)
       doc.setDrawColor(...line);doc.line(margin,noteY,pageW-margin,noteY);
       doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(...muted);
       doc.text(noteLines,margin,noteY+4,{lineHeightFactor:1.2});
+    }
+    const totalPages=doc.getNumberOfPages();
+    for(let page=1;page<=totalPages;page++){
+      doc.setPage(page);doc.setDrawColor(...line);doc.setLineWidth(.25);doc.line(margin,pageH-10,pageW-margin,pageH-10);
+      doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(...muted);
+      doc.text('SUPPORT · MONITOREO TERRITORIAL',margin,pageH-5.5);
+      doc.text('Página '+page+' de '+totalPages,pageW-margin,pageH-5.5,{align:'right'});
     }
     showPreview(doc.output('blob'),filename);
   }
