@@ -27,14 +27,15 @@ jobs:
         with:
           node-version: 22
 
-      - name: Validar JavaScript del dashboard
+      - name: Validar JavaScript del panel
         run: |
           python - <<'PY'
           import re
           from pathlib import Path
           html = Path('index.html').read_text(encoding='utf-8')
           scripts = re.findall(r'<script[^>]*>(.*?)</script>', html, re.S)
-          Path('/tmp/cmpc-dashboard.js').write_text('\n'.join(s for s in scripts if s.strip()), encoding='utf-8')
+          combined = chr(10).join(s for s in scripts if s.strip())
+          Path('/tmp/cmpc-dashboard.js').write_text(combined, encoding='utf-8')
           PY
           node --check /tmp/cmpc-dashboard.js
 
@@ -44,6 +45,7 @@ jobs:
           test -s events.json
           test -s predios.geojson
           test -s firms_chile.geojson
+          test -s selector_fundos_codes.b64
           test -s .assetsignore
 
       - name: Publicar solo en Worker de prueba
