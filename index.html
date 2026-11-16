@@ -600,6 +600,131 @@ html[data-theme="dark"] .leaflet-control-layers-separator{border-color:#3b5140}
 @media(max-width:600px){
  .range-options{grid-template-columns:1fr}
 }
+
+/* Distribución: fechas y filtros sobre el mapa; rangos dentro del mapa */
+.unified-grid{grid-template-columns:1.12fr 1.25fr .82fr!important}
+@media(max-width:1050px){.unified-grid{grid-template-columns:1fr 1fr!important}}
+@media(max-width:600px){.unified-grid{grid-template-columns:1fr!important}}
+.cmpc-map-range-wrap{margin:0!important}
+.cmpc-map-range-wrap .range-group{
+  width:228px;max-width:calc(100vw - 105px);padding:11px 12px;
+  border-radius:10px;box-shadow:0 4px 18px rgba(9,29,17,.2);
+}
+.cmpc-map-range-wrap .range-description{font-size:9px}
+.cmpc-map-range-wrap .range-options{gap:1px}
+.cmpc-map-range-wrap .range-options .legend-check{padding:5px 1px;font-size:10px}
+@media(max-width:600px){
+  .cmpc-map-range-wrap .range-group{width:205px;padding:9px 10px}
+  .cmpc-map-range-wrap .range-options .legend-check{font-size:9px;padding:4px 1px}
+}
+
+/* Modo oscuro: paleta forestal de los rangos aplicada a toda la interfaz */
+html[data-theme="dark"]{
+  --bg:#0d1710;--ink:#e7f0e8;--muted:#a7b8a9;
+  --surface:#142019;--surface-alt:#1a2b20;--line:#354b39;
+  --soft-text:#a7b8a9;--accent:#82b88a;--accent-soft:#203b28;
+}
+html[data-theme="dark"] body{
+  background:linear-gradient(180deg,#0e1b12 0,#111e15 340px,#0d1710 100%);
+  color:var(--ink);
+}
+html[data-theme="dark"] header{
+  background:linear-gradient(112deg,#0a1a10 0%,#12331d 58%,#1d492a 100%);
+  border-bottom:1px solid #3b6042;
+}
+html[data-theme="dark"] .kpi,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .top-date-panel,
+html[data-theme="dark"] .kmz-import-panel{
+  background:linear-gradient(145deg,#16241a,#131f17);
+  border-color:#344b38;color:#e7f0e8;
+  box-shadow:0 7px 22px rgba(0,0,0,.25);
+}
+html[data-theme="dark"] .kpi:before{background:#78ae7d}
+html[data-theme="dark"] .kpi:nth-child(2):before{background:#d65b5b}
+html[data-theme="dark"] .kpi:nth-child(3):before{background:#df923e}
+html[data-theme="dark"] .kpi:nth-child(4):before{background:#c7a43a}
+html[data-theme="dark"] .kpi:nth-child(5):before{background:#8a70c3}
+html[data-theme="dark"] .unified-heading b,
+html[data-theme="dark"] .top-date-heading b,
+html[data-theme="dark"] .legend-head b,
+html[data-theme="dark"] .kmz-import-head h2,
+html[data-theme="dark"] .panel h2{color:#e3f0e4}
+html[data-theme="dark"] .control-group,
+html[data-theme="dark"] .legend-option,
+html[data-theme="dark"] .kmz-dropzone{
+  background:linear-gradient(145deg,#1b2d20,#17271c);
+  border-color:#3b5540;color:#e0ece1;
+}
+html[data-theme="dark"] .control-title,
+html[data-theme="dark"] .field-label,
+html[data-theme="dark"] .legend-check,
+html[data-theme="dark"] .legend-section-title,
+html[data-theme="dark"] .legend-title{color:#c0d3c2}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea{
+  background:#101c14;color:#e7f0e8;border-color:#49624c;
+}
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus{
+  outline:2px solid rgba(122,181,132,.35);border-color:#80b88a;
+}
+html[data-theme="dark"] input::placeholder{color:#91a594}
+html[data-theme="dark"] button:not(.theme-toggle){
+  background:#2c5938;color:#f1f8f1;border:1px solid #49734f;
+}
+html[data-theme="dark"] button:not(.theme-toggle):hover{background:#376b44}
+html[data-theme="dark"] button.secondary,
+html[data-theme="dark"] .dates-group .date-reset,
+html[data-theme="dark"] .kmz-actions .kmz-secondary{
+  background:#263d2c;color:#dcebdd;border-color:#405a45;
+}
+html[data-theme="dark"] .legend-head,
+html[data-theme="dark"] .panel h2{border-color:#344b38}
+html[data-theme="dark"] .legend-option b{color:#e1eee2}
+html[data-theme="dark"] .legend-option small,
+html[data-theme="dark"] .legend-head span{color:#a3b7a5}
+html[data-theme="dark"] .map-status{background:#1a2b20;color:#c0d2c2;border-color:#354b39}
+html[data-theme="dark"] table th{background:#213728;color:#d4e5d5}
+html[data-theme="dark"] table td{border-color:#304635;color:#e0ebe1}
+html[data-theme="dark"] .event-row:hover{background:#203b28}
+html[data-theme="dark"] .event-row.selected-event{background:#25452e;box-shadow:inset 4px 0 #83bb8a}
+html[data-theme="dark"] .inside-row{background:#2a2340}
+html[data-theme="dark"] .leaflet-control-layers,
+html[data-theme="dark"] .leaflet-bar a,
+html[data-theme="dark"] .leaflet-popup-content-wrapper,
+html[data-theme="dark"] .leaflet-popup-tip{
+  background:#17271c;color:#e3eee4;border-color:#46604a;
+}
+html[data-theme="dark"] .leaflet-control-layers label{color:#d5e5d6}
+html[data-theme="dark"] .leaflet-control-layers-separator{border-color:#405a45}
+html[data-theme="dark"] .leaflet-bar a:hover{background:#294631}
+html[data-theme="dark"] .leaflet-control-zoom-in,
+html[data-theme="dark"] .leaflet-control-zoom-out{color:#e3eee4}
+html[data-theme="dark"] .leaflet-control-attribution{background:rgba(20,32,25,.88);color:#b9cbbb}
+html[data-theme="dark"] .leaflet-control-attribution a{color:#9ed0a4}
+html[data-theme="dark"] .range-group{
+  background:linear-gradient(145deg,#1d3523,#172b1d);
+  border-color:#49694d;
+  box-shadow:0 5px 19px rgba(0,0,0,.32);
+}
+html[data-theme="dark"] .range-group .control-title{color:#d0e5d1}
+html[data-theme="dark"] .range-description{color:#a4bba6}
+html[data-theme="dark"] .range-options .legend-check{color:#d1e2d2}
+html[data-theme="dark"] .range-options .legend-check input{accent-color:#8ac493}
+html[data-theme="dark"] .kmz-dropzone strong{color:#dcebdd}
+html[data-theme="dark"] .kmz-file-hint,
+html[data-theme="dark"] .kmz-note{color:#a7b9a9}
+html[data-theme="dark"] .kmz-sync-status{background:#243c2a;color:#c8dfca}
+html[data-theme="dark"] .kmz-status{background:#203526;color:#d0e1d1}
+html[data-theme="dark"] .kmz-status.success{background:#1e432b;color:#b8e5be}
+html[data-theme="dark"] .kmz-status.error{background:#472526;color:#ffc0bc}
+html[data-theme="dark"] .kmz-status.progress{background:#203b2a;color:#c2e1c7}
+html[data-theme="dark"] .sidebar-collapse-toggle{background:#203a27;color:#cce2ce;border-color:#3b5940}
+html[data-theme="dark"] .footer{color:#9fb2a1}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -687,16 +812,6 @@ html[data-theme="dark"] .leaflet-control-layers-separator{border-color:#3b5140}
       <label class="field-label">Predio / aviso<input id="search" placeholder="Buscar predio, aviso o tipo de quema..."></label>
       <label class="field-label">Radio máximo<select id="radius"><option value="1000">1 km</option><option value="3000">3 km</option><option value="5000" selected>5 km</option></select></label>
     </div>
-    <div class="control-group range-group">
-      <div class="control-title">RANGOS DE ALERTA</div>
-      <p class="range-description">Selecciona las categorías que deseas visualizar en el mapa y en el listado.</p>
-      <div class="range-options">
-        <label class="legend-check"><input type="checkbox" id="showInside" checked><i class="dot violet"></i><span>Dentro de predio CMPC · 0 km</span></label>
-        <label class="legend-check"><input type="checkbox" id="showRed" checked><i class="dot red"></i><span>Roja · menos de 1 km</span></label>
-        <label class="legend-check"><input type="checkbox" id="showOrange" checked><i class="dot orange"></i><span>Naranja · 1 a 3 km</span></label>
-        <label class="legend-check"><input type="checkbox" id="showYellow" checked><i class="dot yellow"></i><span>Amarilla · 3 a 5 km</span></label>
-      </div>
-    </div>
     <div class="control-group actions-group">
       <div class="control-title">ACCIONES</div>
       <button type="button" id="reset">Restablecer todos los filtros</button>
@@ -715,7 +830,17 @@ html[data-theme="dark"] .leaflet-control-layers-separator{border-color:#3b5140}
       <span id="mapExpandLabel">Ampliar mapa</span>
     </button>
   </div>
-  <div id="map"></div><div id="mapBaseStatus" class="map-status">Base satelital activa. Desde el selector de capas puedes cambiar a topográfico y mostrar u ocultar los predios CMPC.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div>
+  <div id="map"></div>
+  <div id="mapRangeGroup" class="control-group range-group" hidden>
+  <div class="control-title">RANGOS DE ALERTA</div>
+  <p class="range-description">Muestra u oculta avisos por nivel de proximidad.</p>
+  <div class="range-options">
+    <label class="legend-check"><input type="checkbox" id="showInside" checked><i class="dot violet"></i><span>Dentro de predio CMPC · 0 km</span></label>
+    <label class="legend-check"><input type="checkbox" id="showRed" checked><i class="dot red"></i><span>Roja · menos de 1 km</span></label>
+    <label class="legend-check"><input type="checkbox" id="showOrange" checked><i class="dot orange"></i><span>Naranja · 1 a 3 km</span></label>
+    <label class="legend-check"><input type="checkbox" id="showYellow" checked><i class="dot yellow"></i><span>Amarilla · 3 a 5 km</span></label>
+  </div>
+</div><div id="mapBaseStatus" class="map-status">Base satelital activa. Desde el selector de capas puedes cambiar a topográfico y mostrar u ocultar los predios CMPC.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div>
 </section>
 <section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 
@@ -798,6 +923,19 @@ L.control.layers(
   {'Predios CMPC':predLayer},
   {collapsed:true,position:'topright'}
 ).addTo(map);
+const rangeGroup=document.getElementById('mapRangeGroup');
+if(rangeGroup){
+  const rangeControl=L.control({position:'topleft'});
+  rangeControl.onAdd=function(){
+    const wrap=L.DomUtil.create('div','cmpc-map-range-wrap');
+    rangeGroup.hidden=false;
+    wrap.appendChild(rangeGroup);
+    L.DomEvent.disableClickPropagation(wrap);
+    L.DomEvent.disableScrollPropagation(wrap);
+    return wrap;
+  };
+  rangeControl.addTo(map);
+}
 let markers=L.layerGroup().addTo(map), visible=[], markerByEvent=[];
 const colors={ROJA:'#d62828',NARANJA:'#f28c28',AMARILLA:'#e2b72c',CMPC:'#7c3aed'};
 const isInside=e=>Number(e.distancia_m)===0;
