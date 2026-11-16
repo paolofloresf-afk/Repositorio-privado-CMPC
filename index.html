@@ -1634,6 +1634,39 @@ html:not([data-theme="dark"]) .actions-group .actions-dropdown-menu button{
 }
 html:not([data-theme="dark"]) .actions-group .actions-dropdown-menu button:hover{background:#DDEBED;border-color:#B7D0D2}
 
+
+/* Listado NASA FIRMS · proximidad máxima de 5 km */
+.firms-list-panel{margin-top:18px;scroll-margin-top:16px}
+.firms-list-intro{margin:0;padding:12px 16px;color:var(--muted);font-size:11px;line-height:1.55}
+.firms-list-tablewrap{max-height:470px;overflow:auto;border-top:1px solid var(--line)}
+.firms-list-table{width:100%;min-width:1260px;border-collapse:collapse;font-size:11px}
+.firms-list-table th{position:sticky;top:0;z-index:2;padding:11px 9px;white-space:nowrap;background:#203b3e;color:#dcebea;text-align:left;letter-spacing:.06em;font-size:9px}
+.firms-list-table td{padding:10px 9px;border-bottom:1px solid #35514a;white-space:nowrap}
+.firms-list-row:nth-child(odd){background:#203b2e}
+.firms-list-row:nth-child(even){background:#1a3328}
+.firms-list-row:hover{background:#2a4938}
+.firms-satellite-pill,.firms-confidence-pill{display:inline-flex;align-items:center;justify-content:center;border-radius:20px;padding:4px 9px;background:#294c3b;color:#d7eadc;font-size:9px;font-weight:850}
+.firms-frp{font-weight:850;color:#d6e7d8}
+.firms-near-distance{font-weight:850;color:#f0cd67}
+.firms-locate-btn{width:auto;min-width:78px;padding:6px 10px;border:1px solid #628b79;border-radius:7px;background:#244b3a;color:#e5f2e9;font-size:10px;font-weight:800;white-space:nowrap}
+.firms-locate-btn:hover{background:#32644a}
+.firms-empty{padding:18px!important;text-align:center;color:var(--muted);white-space:normal!important}
+.firms-list-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;color:var(--muted);font-size:10px}
+.firms-list-footer>div{display:flex;gap:7px}
+.firms-page-btn{width:auto;padding:7px 11px;border-radius:7px;font-size:10px}
+.firms-page-btn:disabled{opacity:.4;cursor:not-allowed}
+html:not([data-theme="dark"]) .firms-list-table th{background:#e8f0eb;color:#52695a}
+html:not([data-theme="dark"]) .firms-list-table td{border-color:#d8e5da;color:#24382a}
+html:not([data-theme="dark"]) .firms-list-row:nth-child(odd){background:#f0f6f1}
+html:not([data-theme="dark"]) .firms-list-row:nth-child(even){background:#e8f0e9}
+html:not([data-theme="dark"]) .firms-list-row:hover{background:#dcebdd}
+html:not([data-theme="dark"]) .firms-satellite-pill,html:not([data-theme="dark"]) .firms-confidence-pill{background:#dcebe0;color:#315d3e}
+html:not([data-theme="dark"]) .firms-frp{color:#315d3e}
+html:not([data-theme="dark"]) .firms-near-distance{color:#886b0b}
+html:not([data-theme="dark"]) .firms-locate-btn{background:#e4efe6;color:#315d3e;border-color:#c6dac9}
+html[data-theme="dark"] .firms-list-intro,html[data-theme="dark"] .firms-list-footer{color:#b7ceca}
+@media(max-width:650px){.firms-list-intro{padding:10px 12px}.firms-list-footer{align-items:flex-start;flex-direction:column}.firms-list-table{min-width:1260px}}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1866,6 +1899,24 @@ html:not([data-theme="dark"]) .actions-group .actions-dropdown-menu button:hover
 </section>
 <section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 
+<section class="panel list-panel firms-list-panel" id="firmsListPanel">
+  <h2>Listado de detecciones NASA FIRMS cercanas (<span id="firmsListCount">0</span>)</h2>
+  <p class="firms-list-intro">Solo detecciones ubicadas dentro de predios CMPC o a un máximo de 5 km del predio CMPC más cercano. Selecciona “Ver mapa” para centrar el punto y abrir su ficha.</p>
+  <div class="firms-list-tablewrap">
+    <table class="firms-list-table">
+      <thead><tr>
+        <th>Satélite</th><th>Fecha</th><th>Hora UTC</th><th>Confianza</th><th>FRP (MW)</th>
+        <th>Predio CMPC más cercano</th><th>Distancia</th><th>Latitud</th><th>Longitud</th><th>Día / noche</th><th>Mapa</th>
+      </tr></thead>
+      <tbody id="firmsTbody"><tr><td class="firms-empty" colspan="11">Cargando detecciones NASA FIRMS…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="firms-list-footer">
+    <span id="firmsListPageInfo">Calculando detecciones próximas a predios CMPC…</span>
+    <div><button type="button" id="firmsPagePrev" class="firms-page-btn" disabled>Anterior</button><button type="button" id="firmsPageNext" class="firms-page-btn" disabled>Siguiente</button></div>
+  </div>
+</section>
+
 
 <div class="footer">Distancia calculada desde cada aviso hasta el predio CMPC más cercano. Los puntos dentro de un predio se clasifican a 0 m.</div>
 
@@ -2028,10 +2079,30 @@ const GESTORES_POR_ZONA = {
   "YUNGAY":"MEDINA PERALTA GABRIEL ANDRES"
 };
 const normalizeZoneKey=value=>String(value??'').trim().toUpperCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/\\s+/g,' ');
+const normalizePredioKey=value=>String(value??'').trim().toUpperCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^A-Z0-9]+/g,' ').replace(/\\s+/g,' ').trim();
 let selectedPredioLayer=null;
+let nearbyPredioNames=new Set();
+function predioHighlightStyle(feature,isSelected=false){
+  const name=normalizePredioKey(feature?.properties?.predio);
+  if(isSelected)return {color:'#F4B400',weight:3.5,fillColor:'#FFD54A',fillOpacity:.52};
+  if(name&&nearbyPredioNames.has(name))return {color:'#E6A700',weight:2.8,fillColor:'#F6D84A',fillOpacity:.39};
+  return {color:'#1f8b43',weight:1.5,fillColor:'#52b96b',fillOpacity:.18};
+}
+function applyPredioHighlightStyles(){
+  if(typeof predLayer==='undefined')return;
+  predLayer.eachLayer(layer=>layer.setStyle(predioHighlightStyle(layer.feature,layer===selectedPredioLayer)));
+}
+function updateNearbyPredioHighlights(){
+  const radius=Number(document.getElementById('radius')?.value||5000);
+  nearbyPredioNames=new Set((visible||[])
+    .filter(event=>Number.isFinite(Number(event.distancia_m))&&Number(event.distancia_m)<=radius)
+    .map(event=>normalizePredioKey(event.predio_cercano))
+    .filter(Boolean));
+  applyPredioHighlightStyles();
+}
 // Los filtros y la leyenda se encuentran agrupados en el panel superior.
 const predLayer=L.geoJSON(DATA.predios,{
-  style:()=>({color:'#1f8b43',weight:1.5,fillColor:'#52b96b',fillOpacity:.18}),
+  style:feature=>predioHighlightStyle(feature,false),
   onEachFeature:(feature,layer)=>{
     const p=feature.properties||{};
     const nombre=escapePopupText(p.predio||'Predio CMPC');
@@ -2044,11 +2115,8 @@ const predLayer=L.geoJSON(DATA.predios,{
     const comuna=escapePopupText(fields.commune||'No informada en la capa actual');
     layer.bindPopup(`<b>${nombre}</b><br>Código de predio: <b>${codigo}</b><br>Comuna del predio: <b>${comuna}</b><br>Zona de gestión: ${zona}<br><b>Gestor de zona:</b> ${gestor}<br><b>Teléfono:</b> ${telefono}<br><small>Haz clic para centrar el mapa en este predio.</small>`);
     layer.on('click',()=>{
-      if(selectedPredioLayer && selectedPredioLayer!==layer){
-        predLayer.resetStyle(selectedPredioLayer);
-      }
       selectedPredioLayer=layer;
-      layer.setStyle({color:'#f59e0b',weight:3,fillColor:'#facc15',fillOpacity:.38});
+      applyPredioHighlightStyles();
       if(layer.getBounds && layer.getBounds().isValid()){
         map.flyToBounds(layer.getBounds(),{padding:[35,35],maxZoom:14,duration:1.1});
       }
@@ -2073,11 +2141,14 @@ const layerControl={removeLayer(){return this;},addOverlay(){return this;}};
     predLayer.addData({type:'FeatureCollection',features});
     DATA.predios={type:'FeatureCollection',features};
     prediosTotal=features.length;
+    selectedPredioLayer=null;
+    applyPredioHighlightStyles();
     if(!map.hasLayer(predLayer))predLayer.addTo(map);
     layerControl.removeLayer(predLayer);
     layerControl.addOverlay(predLayer,'Predios CMPC · todos ('+prediosTotal.toLocaleString('es-CL')+')');
     if(window.cmpcFitAllLayers)window.cmpcFitAllLayers();
     if(status)status.textContent='Capa completa cargada y visible: '+prediosTotal.toLocaleString('es-CL')+' predios CMPC. Las capas NASA FIRMS y SIDCO se muestran por encima de los polígonos.';
+    window.dispatchEvent(new CustomEvent('cmpc-predios-loaded'));
   }catch(error){
     if(status)status.textContent='No se pudo cargar la capa completa de predios CMPC: '+error.message+'. Se mantienen los polígonos iniciales disponibles.';
     console.error('Carga de predios CMPC:',error);
@@ -2145,6 +2216,7 @@ function filter(){
  document.getElementById('kYellow').textContent=visible.filter(e=>e.alerta==='AMARILLA').length;
  document.getElementById('kInside').textContent=visible.filter(isInside).length;
  document.getElementById('tbody').innerHTML=visible.slice(0,500).map((e,i)=>`<tr class="event-row ${isInside(e)?'inside-row':''}" data-event-index="${i}" tabindex="0" title="Haz clic para localizar esta quema en el mapa"><td><span class="pill ${isInside(e)?'CMPC':''}">${category(e)}</span></td><td><span class="pill ${e.alerta}">${e.alerta}</span></td><td>${e.fecha}</td><td>${e.comuna}</td><td>${e.predio_cercano}</td><td>${fmtDist(e.distancia_m)}</td><td>${e.orientacion}</td></tr>`).join('');
+ updateNearbyPredioHighlights();
 }
 // Seleccionar una fila del listado centra el mapa en su quema y abre la ficha.
 function locateEventRow(row){
@@ -2397,6 +2469,12 @@ setTimeout(()=>map.invalidateSize(),1000)
   mapLayersControl.addTo(map);
   let firmsFeatures=[];
   let selectedFirmsFiles=[];
+  let firmsNearbyRecords=[];
+  let firmsVisibleList=[];
+  let firmsCurrentPage=0;
+  const FIRMS_NEARBY_LIMIT_METERS=5000;
+  const FIRMS_LIST_PAGE_SIZE=100;
+  const firmsMarkersByKey=new Map();
 
   // Encuadra de una sola vez el territorio de predios y las detecciones para que los puntos FIRMS no queden fuera de la vista inicial.
   window.cmpcFitAllLayers=()=>{
@@ -2415,6 +2493,179 @@ setTimeout(()=>map.invalidateSize(),1000)
     const dates=firmsFeatures.map(f=>f.properties.acq_date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
     return {min:dates[0]||'',max:dates[dates.length-1]||''};
   }
+  function getGeometryPolygons(geometry){
+    if(!geometry)return [];
+    if(geometry.type==='Polygon')return [geometry.coordinates||[]];
+    if(geometry.type==='MultiPolygon')return geometry.coordinates||[];
+    return [];
+  }
+  function getFeatureBounds(feature){
+    let minLon=Infinity,minLat=Infinity,maxLon=-Infinity,maxLat=-Infinity;
+    const geometry=feature.geometry;
+    for(const polygon of getGeometryPolygons(geometry)){
+      for(const ring of polygon){
+        for(const point of ring){
+          const lon=Number(point[0]),lat=Number(point[1]);
+          if(Number.isFinite(lon)&&Number.isFinite(lat)){
+            minLon=Math.min(minLon,lon);maxLon=Math.max(maxLon,lon);
+            minLat=Math.min(minLat,lat);maxLat=Math.max(maxLat,lat);
+          }
+        }
+      }
+    }
+    return {minLon,minLat,maxLon,maxLat};
+  }
+  function pointInRing(lon,lat,ring){
+    let inside=false;
+    for(let i=0,j=ring.length-1;i<ring.length;j=i++){
+      const xi=ring[i][0],yi=ring[i][1],xj=ring[j][0],yj=ring[j][1];
+      const crosses=((yi>lat)!==(yj>lat))&&(lon<(xj-xi)*(lat-yi)/(yj-yi||1e-15)+xi);
+      if(crosses)inside=!inside;
+    }
+    return inside;
+  }
+  function pointInPolygonSet(lon,lat,polygon){
+    if(!polygon.length||!pointInRing(lon,lat,polygon[0]))return false;
+    for(let i=1;i<polygon.length;i++)if(pointInRing(lon,lat,polygon[i]))return false;
+    return true;
+  }
+  function pointToRingDistanceMeters(lon,lat,ring){
+    let min=Infinity;
+    const cos=Math.cos(lat*Math.PI/180),sx=111320*cos,sy=110574;
+    for(let i=0;i<ring.length-1;i++){
+      const ax=(ring[i][0]-lon)*sx,ay=(ring[i][1]-lat)*sy;
+      const bx=(ring[i+1][0]-lon)*sx,by=(ring[i+1][1]-lat)*sy;
+      const dx=bx-ax,dy=by-ay,den=dx*dx+dy*dy;
+      const t=den?Math.max(0,Math.min(1,(-(ax*dx+ay*dy))/den)):0;
+      const px=ax+t*dx,py=ay+t*dy;
+      min=Math.min(min,Math.hypot(px,py));
+      if(min===0)return 0;
+    }
+    return min;
+  }
+  function pointToPredioDistanceMeters(lon,lat,feature){
+    const p=feature.__firmsBounds||getFeatureBounds(feature);
+    const latPad=FIRMS_NEARBY_LIMIT_METERS/110574;
+    const lonPad=FIRMS_NEARBY_LIMIT_METERS/(111320*Math.max(.2,Math.cos(lat*Math.PI/180)));
+    if(lat<p.minLat-latPad||lat>p.maxLat+latPad||lon<p.minLon-lonPad||lon>p.maxLon+lonPad)return Infinity;
+    const polygons=getGeometryPolygons(feature.geometry);
+    let best=Infinity;
+    for(const polygon of polygons){
+      if(pointInPolygonSet(lon,lat,polygon))return 0;
+      for(const ring of polygon){
+        best=Math.min(best,pointToRingDistanceMeters(lon,lat,ring));
+        if(best<=0)return 0;
+      }
+    }
+    return best;
+  }
+  function rebuildFirmsNearbyRecords(){
+    const features=DATA.predios?.features||[];
+    if(!features.length){
+      firmsNearbyRecords=[];
+      renderFirmsList([]);
+      return;
+    }
+    const predios=features.filter(f=>f.geometry&&(f.geometry.type==='Polygon'||f.geometry.type==='MultiPolygon'));
+    predios.forEach(f=>{f.__firmsBounds=getFeatureBounds(f)});
+    firmsNearbyRecords=[];
+    firmsFeatures.forEach(feature=>{
+      const coordinates=feature.geometry?.coordinates||[];
+      const lon=Number(coordinates[0]),lat=Number(coordinates[1]);
+      if(!Number.isFinite(lon)||!Number.isFinite(lat))return;
+      let nearest=null,nearestDistance=Infinity;
+      for(const predio of predios){
+        const bound=predio.__firmsBounds;
+        const latDiff=Math.max(0,bound.minLat-lat,lat-bound.maxLat)*110574;
+        const lonDiff=Math.max(0,bound.minLon-lon,lon-bound.maxLon)*111320*Math.cos(lat*Math.PI/180);
+        if(Math.hypot(latDiff,lonDiff)>FIRMS_NEARBY_LIMIT_METERS)continue;
+        const distance=pointToPredioDistanceMeters(lon,lat,predio);
+        if(distance<nearestDistance){nearestDistance=distance;nearest=predio}
+        if(nearestDistance===0)break;
+      }
+      if(nearest&&nearestDistance<=FIRMS_NEARBY_LIMIT_METERS){
+        const props=nearest.properties||{};
+        firmsNearbyRecords.push({
+          feature,
+          distance:nearestDistance,
+          predio:String(props.predio||'Predio CMPC'),
+          zone:String(props.zona||''),
+          key:keyFor(feature)
+        });
+      }
+    });
+    firmsNearbyRecords.sort((a,b)=>{
+      const da=String(a.feature.properties?.acq_date||''),db=String(b.feature.properties?.acq_date||'');
+      return db.localeCompare(da)||String(b.feature.properties?.acq_time_utc||'').localeCompare(String(a.feature.properties?.acq_time_utc||''));
+    });
+    renderFirmsList();
+  }
+  function formatFirmsNumber(value,digits=5){
+    const n=Number(value);
+    return Number.isFinite(n)?n.toFixed(digits):'';
+  }
+  function renderFirmsList(filteredFeatures){
+    const records=filteredFeatures
+      ? firmsNearbyRecords.filter(record=>filteredFeatures.some(feature=>keyFor(feature)===record.key))
+      : firmsNearbyRecords;
+    firmsVisibleList=records;
+    $('firmsListCount').textContent=records.length.toLocaleString('es-CL');
+    const totalPages=Math.max(1,Math.ceil(records.length/FIRMS_LIST_PAGE_SIZE));
+    firmsCurrentPage=Math.min(firmsCurrentPage,totalPages-1);
+    const start=firmsCurrentPage*FIRMS_LIST_PAGE_SIZE;
+    const page=records.slice(start,start+FIRMS_LIST_PAGE_SIZE);
+    $('firmsListPageInfo').textContent=records.length
+      ? 'Mostrando '+(start+1).toLocaleString('es-CL')+'–'+(start+page.length).toLocaleString('es-CL')+' de '+records.length.toLocaleString('es-CL')+' detecciones dentro de 5 km.'
+      : (firmsFeatures.length?'No hay detecciones dentro de 5 km de predios CMPC con estos filtros.':'No hay detecciones NASA FIRMS cargadas.');
+    $('firmsTbody').innerHTML=page.length?page.map((record,index)=>{
+      const p=record.feature.properties||{},c=record.feature.geometry.coordinates;
+      const confidence=p.confidence==null?'':String(p.confidence)+(typeof p.confidence==='number'?'%':'');
+      const frp=p.frp_mw==null?'':Number(p.frp_mw).toFixed(2);
+      const daynight=p.daynight==='D'?'Día':p.daynight==='N'?'Noche':'';
+      return '<tr class="firms-list-row">'+
+        '<td><span class="firms-satellite-pill">'+escapeHtml(p.satellite||'')+'</span></td>'+
+        '<td>'+escapeHtml(p.acq_date||'')+'</td>'+
+        '<td>'+escapeHtml(timeUTC(p.acq_time_utc))+'</td>'+
+        '<td><span class="firms-confidence-pill">'+escapeHtml(confidence)+'</span></td>'+
+        '<td class="firms-frp">'+escapeHtml(frp)+'</td>'+
+        '<td>'+escapeHtml(record.predio)+'</td>'+
+        '<td class="firms-near-distance">'+(record.distance<1000?Math.round(record.distance)+' m':(record.distance/1000).toFixed(2)+' km')+'</td>'+
+        '<td>'+formatFirmsNumber(c[1])+'</td>'+
+        '<td>'+formatFirmsNumber(c[0])+'</td>'+
+        '<td>'+daynight+'</td>'+
+        '<td><button type="button" class="firms-locate-btn" data-firms-record="'+(start+index)+'">Ver mapa</button></td>'+
+      '</tr>';
+    }).join(''):'<tr><td class="firms-empty" colspan="11">No hay detecciones NASA FIRMS próximas a predios CMPC (≤ 5 km).</td></tr>';
+    $('firmsPagePrev').disabled=firmsCurrentPage===0||!records.length;
+    $('firmsPageNext').disabled=firmsCurrentPage>=totalPages-1||!records.length;
+  }
+  $('firmsTbody').addEventListener('click',event=>{
+    const button=event.target.closest('button[data-firms-record]');
+    if(!button)return;
+    const record=firmsVisibleList[Number(button.dataset.firmsRecord)];
+    if(!record)return;
+    const c=record.feature.geometry.coordinates;
+    map.flyTo([c[1],c[0]],Math.max(map.getZoom(),12),{duration:1});
+    const marker=firmsMarkersByKey.get(record.key);
+    if(marker)window.setTimeout(()=>marker.openPopup(),650);
+  });
+  $('firmsPagePrev').addEventListener('click',()=>{
+    firmsCurrentPage=Math.max(0,firmsCurrentPage-1);renderFirmsListFromCurrentFilters();
+  });
+  $('firmsPageNext').addEventListener('click',()=>{
+    firmsCurrentPage++;renderFirmsListFromCurrentFilters();
+  });
+  function renderFirmsListFromCurrentFilters(){
+    const from=$('firmsFrom').value,to=$('firmsTo').value,satellite=$('firmsSatellite').value;
+    const filtered=firmsFeatures.filter(f=>{
+      const p=f.properties||{},d=p.acq_date||'',sat=p.satellite||'';
+      const dateOk=(!from||!d||d>=from)&&(!to||!d||d<=to);
+      const satOk=satellite==='all'||(satellite==='other'?!['Aqua','Terra'].includes(sat):sat===satellite);
+      return dateOk&&satOk;
+    });
+    renderFirmsList(filtered);
+  }
+
   function renderLayer(){
     const from=$('firmsFrom').value,to=$('firmsTo').value,satellite=$('firmsSatellite').value;
     const visible=firmsFeatures.filter(f=>{
@@ -2424,6 +2675,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       return dateOk&&satOk;
     });
     firmsLayer.clearLayers();
+    firmsMarkersByKey.clear();
     visible.forEach(f=>{
       const c=f.geometry.coordinates;
       const heatIcon=L.divIcon({
@@ -2433,6 +2685,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       });
       const marker=L.marker([c[1],c[0]],{pane:'firmsPane',icon:heatIcon});
       marker.bindPopup(popupContent(f));marker.addTo(firmsLayer);
+      firmsMarkersByKey.set(keyFor(f),marker);
     });
     const terra=firmsFeatures.filter(f=>String(f.properties.satellite).toLowerCase()==='terra').length;
     const aqua=firmsFeatures.filter(f=>String(f.properties.satellite).toLowerCase()==='aqua').length;
@@ -2442,6 +2695,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     $('firmsOther').textContent=(firmsFeatures.length-terra-aqua).toLocaleString('es-CL');
     $('firmsStatus').textContent='NASA FIRMS: '+visible.length.toLocaleString('es-CL')+' puntos visibles en el mapa; '+firmsFeatures.length.toLocaleString('es-CL')+' acumulados en Chile. Los puntos se muestran sobre predios y alertas SIDCO.';
     $('downloadFirms').disabled=!firmsFeatures.length;
+    renderFirmsList(visible);
   }
   function setDateRange(){
     const r=dateRange();
@@ -2463,6 +2717,10 @@ setTimeout(()=>map.invalidateSize(),1000)
       console.error('NASA FIRMS',err);
     }
   }
+  window.addEventListener('cmpc-predios-loaded',rebuildFirmsNearbyRecords);
+  $('firmsPagePrev').addEventListener;
+  if((DATA.predios?.features||[]).length>=3000)rebuildFirmsNearbyRecords();
+
   $('firmsFile').addEventListener('change',()=>{
     selectedFirmsFiles=Array.from($('firmsFile').files||[]);
     $('firmsFileName').textContent=selectedFirmsFiles.length
@@ -2515,6 +2773,7 @@ setTimeout(()=>map.invalidateSize(),1000)
         firmsFeatures=Array.from(merged.values());
       }
       setDateRange();renderLayer();
+      if((DATA.predios?.features||[]).length>=3000)rebuildFirmsNearbyRecords();
       const added=$('firmsReplace').checked?cleaned.length:firmsFeatures.length-before;
       $('firmsStatus').textContent='Actualización correcta: '+parsed.length.toLocaleString('es-CL')+' registros leídos; '+cleaned.length.toLocaleString('es-CL')+' dentro de Chile; '+dropped.toLocaleString('es-CL')+' fuera de Chile o no válidos; '+added.toLocaleString('es-CL')+' nuevos. Total: '+firmsFeatures.length.toLocaleString('es-CL')+'.';
     }catch(err){
@@ -2525,7 +2784,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       button.textContent='Procesar y actualizar mapa';
     }
   });
-  ['firmsFrom','firmsTo','firmsSatellite'].forEach(id=>$(id).addEventListener('change',renderLayer));
+  ['firmsFrom','firmsTo','firmsSatellite'].forEach(id=>$(id).addEventListener('change',()=>{firmsCurrentPage=0;renderLayer()}));
   $('downloadFirms').addEventListener('click',()=>{
     const data={type:'FeatureCollection',name:'NASA FIRMS Chile',features:firmsFeatures};
     const blob=new Blob([JSON.stringify(data)],{type:'application/geo+json;charset=utf-8'});
