@@ -1122,6 +1122,301 @@ html[data-theme="dark"] .coordinate-message.error{color:#FFB8B8}
 }
 
 
+
+
+
+/* Informe preventivo integrado al Monitor */
+.report-module{max-width:1500px;margin:0 auto 16px;scroll-margin-top:18px}
+.report-module[hidden]{display:none!important}
+.report-heading{margin:10px 0 14px}
+.report-eyebrow{font-size:10px;letter-spacing:.16em;font-weight:850;color:var(--accent);margin-bottom:8px}
+.report-heading-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.report-heading h2{font-size:clamp(21px,2.2vw,28px);letter-spacing:-.025em;margin:0 0 6px;color:var(--ink)}
+.report-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.6;max-width:900px}
+.report-close{width:auto;white-space:nowrap;padding:8px 12px;font-size:10px}
+.report-panel{padding:17px!important}
+.report-controls{display:grid;grid-template-columns:1fr 1fr repeat(4,auto);align-items:end;gap:9px}
+.report-controls label{display:grid;gap:5px;margin:0;font-size:10px;font-weight:850;color:var(--muted)}
+.report-controls input{min-width:0;padding:9px;font-size:12px}
+.report-controls button{width:auto;min-height:36px;padding:9px 11px;font-size:10px;white-space:nowrap}
+.report-period{margin:13px 0 11px;padding:10px 12px;background:var(--surface-alt);border:1px solid var(--line);border-radius:9px;font-size:11px;color:var(--muted);font-weight:700}
+.report-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.report-kpi{min-width:0;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--surface-alt)}
+.report-kpi strong{display:block;margin-bottom:4px;font-size:26px;line-height:1.1;color:var(--ink)}
+.report-kpi span{font-size:10px;line-height:1.4;color:var(--muted);font-weight:700}
+.report-kpi.high{border-color:#d65b5b66}
+.report-kpi.high strong,.report-risk-red{color:#d65b5b}
+.report-kpi.medium strong,.report-risk-medium{color:#df923e}
+.report-kpi.low strong,.report-risk-low{color:#b69327}
+.report-method{display:flex;gap:9px;align-items:flex-start;margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--surface-alt);font-size:10px;line-height:1.55;color:var(--muted)}
+.report-method strong{white-space:nowrap;color:var(--ink)}
+.report-status{margin:10px 0 14px;font-size:11px;line-height:1.55;color:var(--muted)}
+.report-table-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 8px}
+.report-table-heading h3{margin:0;font-size:14px;color:var(--ink)}
+.report-table-heading span{font-size:10px;color:var(--muted);font-weight:800}
+.report-table-wrap{max-width:100%;overflow:auto;border:1px solid var(--line);border-radius:9px}
+.report-table{min-width:900px;font-size:11px}
+.report-table th{position:sticky;top:0;padding:10px 9px;background:var(--surface-alt);color:var(--muted)}
+.report-table td{padding:9px;border-bottom:1px solid var(--line);vertical-align:middle}
+.report-table td:first-child{white-space:nowrap}
+.report-table .report-distance{font-weight:850;color:#d65b5b;white-space:nowrap}
+.report-map-button{width:auto;padding:7px 10px;font-size:10px;white-space:nowrap}
+.report-empty{padding:18px!important;text-align:center;color:var(--muted);font-size:11px}
+.report-disclaimer{margin-top:13px;padding-top:11px;border-top:1px solid var(--line);font-size:10px;line-height:1.6;color:var(--muted)}
+.actions-dropdown{position:relative;width:100%}
+.actions-dropdown>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:9px;width:100%;padding:9px 7px;border:1px solid #3D7778;border-radius:7px;background:#245257;color:#fff;font-size:10px;font-weight:800;cursor:pointer}
+.actions-dropdown>summary::-webkit-details-marker{display:none}
+.actions-dropdown[open]>summary{border-radius:7px 7px 0 0}
+.actions-dropdown>summary span{font-size:14px;line-height:1;transition:transform .15s ease}
+.actions-dropdown[open]>summary span{transform:rotate(180deg)}
+.actions-dropdown-menu{padding:7px;background:var(--surface);border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px}
+.actions-dropdown-menu button{font-size:10px!important;line-height:1.35;white-space:normal;padding:8px!important}
+@media(max-width:1050px){.report-controls{grid-template-columns:1fr 1fr 1fr}.report-controls button{width:100%}}
+@media(max-width:650px){
+ .report-heading-row{display:grid}
+ .report-close{width:auto;justify-self:start}
+ .report-module{margin-bottom:12px}
+ .report-panel{padding:12px!important}
+ .report-controls{grid-template-columns:1fr 1fr}
+ .report-controls button{white-space:normal}
+ .report-kpis{grid-template-columns:1fr 1fr}
+ .report-method{display:grid}
+}
+@media print{
+ body *{visibility:hidden!important}
+ #riskReportModule,#riskReportModule *{visibility:visible!important}
+ #riskReportModule{display:block!important;position:absolute;inset:0;width:100%;max-width:none;padding:0;margin:0}
+ #riskReportModule .report-controls,#riskReportModule .report-close{display:none!important}
+ #riskReportModule .report-panel{border:0!important;box-shadow:none!important;padding:0!important}
+ #riskReportModule .report-table-wrap{overflow:visible}
+ #riskReportModule .report-table{min-width:0;font-size:8pt}
+ #riskReportModule .report-table th,#riskReportModule .report-table td{padding:5px}
+ #riskReportModule .report-map-button{display:none}
+}
+
+/* Modo claro: la misma paleta Azul petróleo del modo oscuro, en superficies claras */
+html:not([data-theme="dark"]){
+  color-scheme:light;
+  --bg:#EFF5F5!important;
+  --surface:#FFFFFF!important;
+  --surface-alt:#F3F8F8!important;
+  --line:#D1E0E1!important;
+  --ink:#1D363A!important;
+  --muted:#60797D!important;
+  --soft-text:#617A7D!important;
+  --accent:#2C7D80!important;
+  --accent-soft:#E3F0EF!important;
+  --navy:#10282C!important;
+  --blue:#24575C!important;
+  --cyan:#78BDB7!important;
+}
+html:not([data-theme="dark"]) body,
+html:not([data-theme="dark"]) .app-main,
+html:not([data-theme="dark"]) main#mainContent{
+  background:#EFF5F5!important;
+  color:#1D363A!important;
+}
+html:not([data-theme="dark"]) header{
+  background:linear-gradient(115deg,#0D2024 0%,#173A40 56%,#24565B 100%)!important;
+  border-color:#78BDB7!important;
+}
+html:not([data-theme="dark"]) .app-sidebar{
+  background:linear-gradient(180deg,#FFFFFF 0%,#F1F7F7 100%)!important;
+  border-color:#D1E0E1!important;
+}
+html:not([data-theme="dark"]) .kpi,
+html:not([data-theme="dark"]) .panel,
+html:not([data-theme="dark"]) .top-date-panel,
+html:not([data-theme="dark"]) .unified-controls,
+html:not([data-theme="dark"]) .kmz-import-panel,
+html:not([data-theme="dark"]) .converter-card{
+  background:#FFFFFF!important;
+  color:#1D363A!important;
+  border-color:#D1E0E1!important;
+  box-shadow:0 5px 18px rgba(22,58,63,.07)!important;
+}
+html:not([data-theme="dark"]) .control-group,
+html:not([data-theme="dark"]) .legend-option,
+html:not([data-theme="dark"]) .kmz-dropzone,
+html:not([data-theme="dark"]) .range-group,
+html:not([data-theme="dark"]) .sidebar-module-card{
+  background:#F3F8F8!important;
+  color:#1D363A!important;
+  border-color:#D1E0E1!important;
+}
+html:not([data-theme="dark"]) .sidebar-link.active,
+html:not([data-theme="dark"]) .sidebar-link:hover{
+  background:#E3F0EF!important;
+  color:#20565B!important;
+}
+html:not([data-theme="dark"]) .sidebar-link.active{
+  box-shadow:inset 3px 0 #2C8587!important;
+}
+html:not([data-theme="dark"]) .sidebar-module-mark,
+html:not([data-theme="dark"]) .sidebar-collapse-toggle{
+  background:#E3F0EF!important;
+  color:#2C777B!important;
+  border-color:#C5DADB!important;
+}
+html:not([data-theme="dark"]) .sidebar-topline,
+html:not([data-theme="dark"]) .sidebar-footer,
+html:not([data-theme="dark"]) .sidebar-brand{
+  border-color:#D1E0E1!important;
+}
+html:not([data-theme="dark"]) .sidebar-topline-mark,
+html:not([data-theme="dark"]) .sidebar-footer-dot{
+  background:#2C8587!important;
+}
+html:not([data-theme="dark"]) .sidebar-topline-label,
+html:not([data-theme="dark"]) .sidebar-section-label,
+html:not([data-theme="dark"]) .sidebar-footer,
+html:not([data-theme="dark"]) .sidebar-footer-copy small{
+  color:#668085!important;
+}
+html:not([data-theme="dark"]) .sidebar-footer-copy strong,
+html:not([data-theme="dark"]) .sidebar-link{
+  color:#29494D!important;
+}
+html:not([data-theme="dark"]) input,
+html:not([data-theme="dark"]) select,
+html:not([data-theme="dark"]) textarea{
+  background:#FFFFFF!important;
+  color:#1D363A!important;
+  border-color:#BED1D3!important;
+}
+html:not([data-theme="dark"]) input:focus,
+html:not([data-theme="dark"]) select:focus,
+html:not([data-theme="dark"]) textarea:focus{
+  border-color:#2C8587!important;
+  outline:2px solid rgba(44,133,135,.15)!important;
+}
+html:not([data-theme="dark"]) input::placeholder{color:#81979A!important}
+html:not([data-theme="dark"]) button:not(.theme-toggle),
+html:not([data-theme="dark"]) .actions-dropdown>summary{
+  background:#24575C!important;
+  color:#F4FAFA!important;
+  border-color:#39777B!important;
+}
+html:not([data-theme="dark"]) button:not(.theme-toggle):hover,
+html:not([data-theme="dark"]) .actions-dropdown>summary:hover{
+  background:#2C6B70!important;
+}
+html:not([data-theme="dark"]) button.secondary,
+html:not([data-theme="dark"]) .dates-group .date-reset,
+html:not([data-theme="dark"]) .kmz-actions .kmz-secondary{
+  background:#E3EFEE!important;
+  color:#24575C!important;
+  border-color:#C4DADB!important;
+}
+html:not([data-theme="dark"]) .unified-heading b,
+html:not([data-theme="dark"]) .top-date-heading b,
+html:not([data-theme="dark"]) .legend-head b,
+html:not([data-theme="dark"]) .kmz-import-head h2,
+html:not([data-theme="dark"]) .panel h2,
+html:not([data-theme="dark"]) .converter-heading h2,
+html:not([data-theme="dark"]) .converter-card-title h3,
+html:not([data-theme="dark"]) .legend-option b{
+  color:#1D4146!important;
+}
+html:not([data-theme="dark"]) .control-title,
+html:not([data-theme="dark"]) .field-label,
+html:not([data-theme="dark"]) .legend-check,
+html:not([data-theme="dark"]) .legend-section-title,
+html:not([data-theme="dark"]) .legend-title{
+  color:#587276!important;
+}
+html:not([data-theme="dark"]) .unified-heading span,
+html:not([data-theme="dark"]) .legend-option small,
+html:not([data-theme="dark"]) .legend-head span,
+html:not([data-theme="dark"]) .range-description,
+html:not([data-theme="dark"]) .note,
+html:not([data-theme="dark"]) .footer,
+html:not([data-theme="dark"]) .kmz-import-head p,
+html:not([data-theme="dark"]) .kmz-file-hint,
+html:not([data-theme="dark"]) .kmz-note,
+html:not([data-theme="dark"]) .converter-heading p,
+html:not([data-theme="dark"]) .converter-card-title p{
+  color:#688084!important;
+}
+html:not([data-theme="dark"]) .legend-head,
+html:not([data-theme="dark"]) .panel h2{
+  border-color:#D1E0E1!important;
+}
+html:not([data-theme="dark"]) table th{
+  background:#E5F0F0!important;
+  color:#34575B!important;
+}
+html:not([data-theme="dark"]) table td{
+  background:transparent!important;
+  color:#29454A!important;
+  border-color:#D5E2E2!important;
+}
+html:not([data-theme="dark"]) .event-row:hover,
+html:not([data-theme="dark"]) .event-row.selected-event{
+  background:#E7F2F1!important;
+}
+html:not([data-theme="dark"]) .event-row.selected-event{
+  box-shadow:inset 4px 0 #2C8587!important;
+}
+html:not([data-theme="dark"]) .map-status,
+html:not([data-theme="dark"]) .kmz-status{
+  background:#EDF4F4!important;
+  color:#526F73!important;
+  border-color:#D1E0E1!important;
+}
+html:not([data-theme="dark"]) .leaflet-control-layers,
+html:not([data-theme="dark"]) .leaflet-bar a,
+html:not([data-theme="dark"]) .leaflet-popup-content-wrapper,
+html:not([data-theme="dark"]) .leaflet-popup-tip{
+  background:#FFFFFF!important;
+  color:#1D363A!important;
+  border-color:#BED1D3!important;
+}
+html:not([data-theme="dark"]) .leaflet-control-layers label{color:#29494D!important}
+html:not([data-theme="dark"]) .leaflet-control-layers-separator{border-color:#D1E0E1!important}
+html:not([data-theme="dark"]) .leaflet-bar a:hover{background:#E3EFEE!important}
+html:not([data-theme="dark"]) .leaflet-control-attribution{
+  background:rgba(255,255,255,.9)!important;
+  color:#627A7E!important;
+}
+html:not([data-theme="dark"]) .leaflet-control-attribution a{color:#287D80!important}
+html:not([data-theme="dark"]) .theme-toggle{
+  background:rgba(100,183,173,.13)!important;
+  border-color:rgba(44,125,128,.3)!important;
+  color:#1D4146!important;
+}
+html:not([data-theme="dark"]) .theme-toggle:hover{background:rgba(100,183,173,.22)!important}
+html:not([data-theme="dark"]) .converter-eyebrow,
+html:not([data-theme="dark"]) .report-eyebrow{color:#2C8587!important}
+html:not([data-theme="dark"]) .converter-chip{
+  background:#E3F0EF!important;
+  color:#24575C!important;
+}
+html:not([data-theme="dark"]) .converter-input,
+html:not([data-theme="dark"]) .coordinate-output,
+html:not([data-theme="dark"]) .converter-example{
+  background:#F3F8F8!important;
+  border-color:#D1E0E1!important;
+  color:#1D363A!important;
+}
+html:not([data-theme="dark"]) .converter-input:focus{border-color:#2C8587!important}
+html:not([data-theme="dark"]) .coordinate-message.success{color:#34765F!important}
+html:not([data-theme="dark"]) .coordinate-message.error{color:#B94E4E!important}
+html:not([data-theme="dark"]) .report-period,
+html:not([data-theme="dark"]) .report-kpi,
+html:not([data-theme="dark"]) .report-method{
+  background:#F3F8F8!important;
+  border-color:#D1E0E1!important;
+}
+html:not([data-theme="dark"]) .report-table th{background:#E5F0F0!important;color:#34575B!important}
+html:not([data-theme="dark"]) .report-table td{color:#29454A!important;border-color:#D5E2E2!important}
+html:not([data-theme="dark"]) .actions-dropdown-menu{
+  background:#FFFFFF!important;
+  border-color:#D1E0E1!important;
+}
+html:not([data-theme="dark"]) .actions-dropdown-menu button{
+  background:#24575C!important;color:#F4FAFA!important;border-color:#39777B!important;
+}
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1219,11 +1514,58 @@ html[data-theme="dark"] .coordinate-message.error{color:#FFB8B8}
       <div class="control-title">ACCIONES</div>
       <button type="button" id="reset">Restablecer todos los filtros</button>
       <button type="button" id="csv">Exportar resultados a CSV</button>
+      <details class="actions-dropdown" id="actionsDropdown">
+        <summary>Informes <span aria-hidden="true">⌄</span></summary>
+        <div class="actions-dropdown-menu">
+          <button type="button" id="toggleRiskReport" aria-expanded="false">Informe preventivo CONAF</button>
+        </div>
+      </details>
     </div>
   </div>
 </section>
 
 
+
+<section id="riskReportModule" class="report-module" hidden aria-labelledby="riskReportTitle">
+  <div class="report-heading">
+    <div class="report-eyebrow">CENTRO DE MONITOREO · SIDCO / CONAF</div>
+    <div class="report-heading-row">
+      <div>
+        <h2 id="riskReportTitle">Informe preventivo de quemas próximas a predios CMPC</h2>
+        <p>Proyección de avisos de quema externos con vigencia en el período seleccionado. Los avisos ubicados dentro de predios CMPC se excluyen del análisis.</p>
+      </div>
+      <button type="button" class="secondary report-close" id="closeRiskReport">Cerrar informe</button>
+    </div>
+  </div>
+  <section class="panel report-panel">
+    <div class="report-controls">
+      <label>DESDE<input type="date" id="reportFrom"></label>
+      <label>HASTA<input type="date" id="reportTo"></label>
+      <button type="button" id="refreshReport">Actualizar informe</button>
+      <button type="button" class="secondary" id="nextFiveDays">Próximos 5 días</button>
+      <button type="button" class="secondary" id="printReport">Imprimir / Guardar PDF</button>
+      <button type="button" class="secondary" id="exportReport">Exportar CSV</button>
+    </div>
+    <div class="report-period" id="reportPeriod">Período del informe: preparando...</div>
+    <div class="report-kpis" id="reportKpis"></div>
+    <div class="report-method">
+      <strong>Criterio de priorización</strong>
+      <span>Se consideran exclusivamente avisos externos, ubicados fuera de los polígonos CMPC (distancia mayor que 0 m). <b class="report-risk-red">Riesgo alto:</b> menos de 1 km. <b class="report-risk-medium">Seguimiento:</b> 1–3 km. <b class="report-risk-low">Preventivo:</b> 3–5 km. Los avisos dentro de predios CMPC (distancia igual a 0 m) se excluyen de todas las cifras y listados.</span>
+    </div>
+    <div class="report-status" id="reportStatus" role="status" aria-live="polite"></div>
+    <div class="report-table-heading">
+      <h3>Avisos externos de riesgo alto</h3>
+      <span id="reportHighCount">0 registros</span>
+    </div>
+    <div class="report-table-wrap">
+      <table class="report-table">
+        <thead><tr><th>Vigencia declarada</th><th>Horario</th><th>Quema / aviso SIDCO</th><th>Comuna del aviso</th><th>Predio CMPC más cercano</th><th>Distancia</th><th>Ver mapa</th></tr></thead>
+        <tbody id="reportHighRows"><tr><td colspan="7" class="report-empty">Preparando informe...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="report-disclaimer">Este informe se construye con los avisos SIDCO cargados en el Monitor. Un aviso corresponde a una quema declarada/programada y no confirma por sí solo que exista un incendio ni que la actividad esté autorizada. Las distancias son en línea recta respecto del polígono CMPC más cercano. La vigencia se calcula entre la fecha de inicio y la fecha de término informadas.</div>
+  </section>
+</section>
 
 <section class="panel map-panel" id="mapPanel">
   <div class="panel-title-row">
@@ -1385,13 +1727,35 @@ const predLayer=L.geoJSON(DATA.predios,{
     });
   }
 }).addTo(map);
-// Las bases son excluyentes; la capa de predios contiene todos los polígonos disponibles.
-const prediosTotal=DATA.predios?.features?.length||0;
-L.control.layers(
+// La capa de mapa se sincroniza con el GeoJSON completo del repositorio (no con el subconjunto incrustado en el HTML).
+let prediosTotal=DATA.predios?.features?.length||0;
+const layerControl=L.control.layers(
   {'Satelital':satelliteBase,'Topográfico':topoBase,'CARTO Dark Matter':darkBase},
-  {['Predios CMPC · todos ('+prediosTotal+')']:predLayer},
+  {['Predios CMPC · cargando…']:predLayer},
   {collapsed:true,position:'topright'}
 ).addTo(map);
+(async function loadAllPrediosOnMap(){
+  const status=document.getElementById('mapBaseStatus');
+  try{
+    const response=await fetch('./predios.geojson?v=full-3169',{cache:'force-cache'});
+    if(!response.ok)throw new Error('HTTP '+response.status);
+    const collection=await response.json();
+    const features=(collection.features||[]).filter(feature=>feature.geometry&&(feature.geometry.type==='Polygon'||feature.geometry.type==='MultiPolygon'));
+    if(!features.length)throw new Error('El GeoJSON no contiene polígonos válidos.');
+    predLayer.clearLayers();
+    predLayer.addData({type:'FeatureCollection',features});
+    DATA.predios={type:'FeatureCollection',features};
+    prediosTotal=features.length;
+    layerControl.removeLayer(predLayer);
+    layerControl.addOverlay(predLayer,'Predios CMPC · todos ('+prediosTotal+')');
+    const bounds=predLayer.getBounds();
+    if(bounds.isValid())map.fitBounds(bounds,{padding:[22,22],maxZoom:7});
+    if(status)status.textContent='Capa completa cargada: '+prediosTotal.toLocaleString('es-CL')+' polígonos CMPC. Activa o desactiva la capa desde el selector del mapa.';
+  }catch(error){
+    if(status)status.textContent='No se pudo cargar la capa completa de predios CMPC: '+error.message+'. Se mantienen los polígonos iniciales disponibles.';
+    console.error('Carga de predios CMPC:',error);
+  }
+})();
 const rangeGroup=document.getElementById('mapRangeGroup');
 if(rangeGroup){
   const rangeControl=L.control({position:'topleft'});
@@ -2053,5 +2417,150 @@ setTimeout(()=>map.invalidateSize(),1000)
 
 
 
+
+<script>
+(() => {
+ const $=id=>document.getElementById(id);
+ const reportModule=$('riskReportModule');
+ const reportRows=$('reportHighRows');
+ const reportStatus=$('reportStatus');
+ const reportKpis=$('reportKpis');
+ const fromInput=$('reportFrom'),toInput=$('reportTo');
+ const menu=$('actionsDropdown'),toggleButton=$('toggleRiskReport');
+ let currentHighRisk=[];
+
+ function isoLocal(date){
+  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+ }
+ function displayDate(value){
+  if(!value)return 'Sin fecha';
+  const p=value.split('-');
+  return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:value;
+ }
+ function esc(value){
+  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ }
+ function isExternal(e){
+  const distance=Number(e?.distancia_m);
+  return Number.isFinite(distance)&&distance>0&&distance<=5000;
+ }
+ function distance(m){
+  const n=Number(m);
+  return n<1000?Math.round(n)+' m':(n/1000).toFixed(2)+' km';
+ }
+ function setDefaultDates(){
+  const today=new Date();
+  const end=new Date(today.getFullYear(),today.getMonth(),today.getDate()+4);
+  fromInput.value=isoLocal(today);
+  toInput.value=isoLocal(end);
+ }
+ function renderRiskReport(){
+  const from=fromInput.value,to=toInput.value;
+  if(!from||!to){
+   currentHighRisk=[];reportKpis.innerHTML='';$('reportHighCount').textContent='0 registros';
+   reportStatus.textContent='Selecciona ambas fechas para generar el informe.';
+   reportRows.innerHTML='<tr><td colspan="7" class="report-empty">Falta seleccionar el período.</td></tr>';
+   return;
+  }
+  if(from>to){
+   currentHighRisk=[];reportKpis.innerHTML='';$('reportHighCount').textContent='0 registros';
+   reportStatus.textContent='La fecha inicial no puede ser posterior a la fecha final.';
+   reportRows.innerHTML='<tr><td colspan="7" class="report-empty">Corrige el rango de fechas.</td></tr>';
+   return;
+  }
+  const overlapping=events.filter(e=>eventActiveInWindow(e,from,to));
+  const excludedInside=overlapping.filter(e=>Number(e.distancia_m)===0).length;
+  const all=overlapping.filter(isExternal).sort((a,b)=>normalizeSIDCODate(a.fecha).localeCompare(normalizeSIDCODate(b.fecha))||Number(a.distancia_m)-Number(b.distancia_m));
+  const high=all.filter(e=>Number(e.distancia_m)<1000).sort((a,b)=>Number(a.distancia_m)-Number(b.distancia_m));
+  const medium=all.filter(e=>Number(e.distancia_m)>=1000&&Number(e.distancia_m)<3000);
+  const low=all.filter(e=>Number(e.distancia_m)>=3000&&Number(e.distancia_m)<=5000);
+  currentHighRisk=high;
+  reportKpis.innerHTML=[
+   ['Avisos externos vigentes en el período',all.length,'total'],
+   ['Riesgo alto · menos de 1 km',high.length,'high'],
+   ['Seguimiento · 1 a 3 km',medium.length,'medium'],
+   ['Preventivo · 3 a 5 km',low.length,'low']
+  ].map(([label,value,kind])=>'<div class="report-kpi '+kind+'"><strong>'+value+'</strong><span>'+label+'</span></div>').join('');
+  const days=Math.round((new Date(to+'T12:00:00')-new Date(from+'T12:00:00'))/86400000)+1;
+  $('reportPeriod').textContent='Período del informe: '+displayDate(from)+' al '+displayDate(to)+' · Ventana de '+days+' días.';
+  $('reportHighCount').textContent=high.length+' registros';
+  if(!all.length){
+   reportStatus.textContent='No hay avisos externos con vigencia coincidente en el período seleccionado. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC.';
+  }else{
+   const starts=[...new Set(all.map(e=>normalizeSIDCODate(e.fecha)).filter(Boolean))].sort();
+   const startsInside=all.filter(e=>{const start=normalizeSIDCODate(e.fecha);return start>=from&&start<=to;}).length;
+   const alreadyActive=all.length-startsInside;
+   const latestDates=events.map(e=>normalizeSIDCODate(e.fecha)).filter(Boolean).sort();
+   const latest=latestDates[latestDates.length-1]||'';
+   reportStatus.textContent='Se encontraron '+all.length+' avisos externos con vigencia coincidente: '+startsInside+' comienzan dentro del período y '+alreadyActive+' comenzaron antes y siguen vigentes en parte de la ventana. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC. Fechas de inicio registradas: '+starts.map(displayDate).join(', ')+'. Última fecha de inicio cargada: '+displayDate(latest)+'.';
+  }
+  if(!high.length){
+   reportRows.innerHTML='<tr><td colspan="7" class="report-empty">No se identifican avisos externos de riesgo alto para este período.</td></tr>';
+  }else{
+   reportRows.innerHTML=high.map(e=>'<tr>'+
+    '<td>'+displayDate(normalizeSIDCODate(e.fecha))+' – '+displayDate(normalizeSIDCODate(e.fecha_fin)||normalizeSIDCODate(e.fecha))+'</td>'+
+    '<td>'+esc(e.inicio||'s/i')+' – '+esc(e.termino||'s/i')+'</td>'+
+    '<td><strong>'+esc(e.quema||'Quema SIDCO')+'</strong><br><small>Aviso '+esc(e.aviso||'s/i')+'</small></td>'+
+    '<td>'+esc(e.comuna||'No informada')+'</td>'+
+    '<td>'+esc(e.predio_cercano||'No informado')+'</td>'+
+    '<td class="report-distance">'+distance(e.distancia_m)+'</td>'+
+    '<td><button class="report-map-button" type="button" data-map-event="'+esc(e.id)+'">Ver en mapa</button></td>'+
+   '</tr>').join('');
+  }
+ }
+ function exportCsv(){
+  const columns=['fecha_inicio','fecha_termino','inicio','termino','quema','aviso','comuna_aviso','predio_cercano','distancia_m','alerta','lat','lon'];
+  const quote=value=>'"'+String(value??'').replaceAll('"','""')+'"';
+  const lines=[columns.join(';'),...currentHighRisk.map(e=>[
+   e.fecha,e.fecha_fin,e.inicio,e.termino,e.quema,e.aviso,e.comuna,e.predio_cercano,e.distancia_m,e.alerta,e.lat,e.lon
+  ].map(quote).join(';'))];
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='informe_riesgo_alto_externo_CMPC_'+fromInput.value+'_'+toInput.value+'.csv';
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+ }
+ function closeReport(){
+  reportModule.hidden=true;
+  toggleButton.setAttribute('aria-expanded','false');
+ }
+ setDefaultDates();
+ renderRiskReport();
+ $('refreshReport').addEventListener('click',renderRiskReport);
+ fromInput.addEventListener('change',renderRiskReport);
+ toInput.addEventListener('change',renderRiskReport);
+ window.addEventListener('cmpc-live-events-updated',renderRiskReport);
+ $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
+ $('printReport').addEventListener('click',()=>window.print());
+ $('exportReport').addEventListener('click',exportCsv);
+ $('closeRiskReport').addEventListener('click',closeReport);
+ toggleButton.addEventListener('click',()=>{
+  const open=reportModule.hidden;
+  reportModule.hidden=!open;
+  toggleButton.setAttribute('aria-expanded',String(open));
+  menu.open=false;
+  if(open){
+   renderRiskReport();
+   reportModule.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+ });
+ reportRows.addEventListener('click',event=>{
+  const button=event.target.closest('[data-map-event]');
+  if(!button)return;
+  const e=events.find(item=>String(item.id)===button.dataset.mapEvent);
+  if(!e)return;
+  $('from').value='';$('to').value='';$('commune').value='';$('search').value='';
+  $('radius').value='5000';
+  ['showInside','showRed','showOrange','showYellow'].forEach(id=>{const input=$(id);if(input)input.checked=true;});
+  filter();
+  const idx=visible.findIndex(item=>String(item.id)===String(e.id));
+  if(idx>=0&&markerByEvent[idx]){
+   map.setView([e.lat,e.lon],13);
+   markerByEvent[idx].openPopup();
+  }
+  $('mapPanel').scrollIntoView({behavior:'smooth',block:'start'});
+ });
+ window.renderRiskReport=renderRiskReport;
+})();
+</script>
 
 </body></html>
