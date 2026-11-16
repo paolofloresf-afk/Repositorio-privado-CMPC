@@ -1408,6 +1408,36 @@ html:not([data-theme="dark"]) .actions-dropdown-menu{
 html:not([data-theme="dark"]) .actions-dropdown-menu button{
   background:#24575C!important;color:#F4FAFA!important;border-color:#39777B!important;
 }
+
+/* Dos cajas independientes para cargar SIDCO y NASA FIRMS */
+.data-import-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch;margin:0 0 14px}
+.data-import-grid>.kmz-import-panel{min-width:0;height:100%;margin:0}
+.firms-import-panel{border-color:#c9e3e3;background:linear-gradient(180deg,#fff 0%,#f8fcfc 100%)}
+.firms-badge{background:#e1f4f2;border-color:#c7e9e6;color:#146d70}
+.firms-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
+.firms-stats>div{min-width:0;padding:10px 9px;border:1px solid #d9e9e9;border-radius:9px;background:#f4f9f9}
+.firms-stats strong{display:block;color:#176e72;font-size:22px;line-height:1.1;margin-bottom:4px}
+.firms-stats span{font-size:9px;color:#647f81;font-weight:750}
+.firms-upload-icon{background:#def3f0;color:#147d7c}
+.firms-filter-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:11px 0}
+.firms-filter-grid label{display:grid;gap:4px;margin:0;font-size:9px;font-weight:850;color:#627b7e}
+.firms-filter-grid input,.firms-filter-grid select{min-width:0;width:100%;padding:8px;font-size:11px}
+.firms-replace-option{display:flex;align-items:center;gap:7px;margin:2px 0 11px;font-size:10px;color:#5f7779;font-weight:650}
+.firms-replace-option input{width:auto;margin:0;accent-color:#16878a}
+.firms-actions button{flex:1}
+.firms-dropzone{border-color:#9ccfce;background:#f5fbfa}
+.firms-dropzone:hover,.firms-dropzone.dragover{border-color:#279d9b;background:#eaf8f6}
+html[data-theme="dark"] .firms-import-panel{background:#121d2d;border-color:#2b5a5d}
+html[data-theme="dark"] .firms-badge{background:#17383c;border-color:#2a5d60;color:#8de1d9}
+html[data-theme="dark"] .firms-stats>div{background:#172b36;border-color:#2e4f57}
+html[data-theme="dark"] .firms-stats strong{color:#78d4cc}
+html[data-theme="dark"] .firms-stats span,html[data-theme="dark"] .firms-filter-grid label,html[data-theme="dark"] .firms-replace-option{color:#9ab6ba}
+html[data-theme="dark"] .firms-upload-icon{background:#1a4145;color:#85d9d3}
+html[data-theme="dark"] .firms-dropzone{background:#142a31;border-color:#3a6a70}
+html[data-theme="dark"] .firms-dropzone:hover,html[data-theme="dark"] .firms-dropzone.dragover{background:#1a3a40;border-color:#72c7c2}
+@media(max-width:900px){.data-import-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.firms-filter-grid{grid-template-columns:1fr 1fr}.firms-filter-grid label:last-child{grid-column:1/-1}.firms-stats strong{font-size:19px}}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1580,6 +1610,7 @@ html:not([data-theme="dark"]) .actions-dropdown-menu button{
 </section>
 <section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 
+<div class="data-import-grid">
 <section class="kmz-import-panel" id="kmzImportPanel">
   <div class="kmz-import-head">
     <div>
@@ -1602,8 +1633,42 @@ html:not([data-theme="dark"]) .actions-dropdown-menu button{
   <div class="kmz-status" id="kmzStatus" role="status" aria-live="polite">Selecciona el KMZ más reciente que descargaste desde SIDCO.</div>
   <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div><div class="kmz-sync-status" id="sidcoStatus">SIDCO: snapshot inicial cargado</div>
 </section>
+<section class="kmz-import-panel firms-import-panel" id="firmsImportPanel">
+  <div class="kmz-import-head">
+    <div>
+      <h2>Actualizar detecciones NASA FIRMS</h2>
+      <p>Incorpora nuevos archivos satelitales. Se conservan únicamente las detecciones ubicadas dentro del territorio chileno.</p>
+    </div>
+    <span class="kmz-manual-badge firms-badge">NASA FIRMS</span>
+  </div>
+  <div class="firms-stats" id="firmsStats">
+    <div><strong id="firmsTotal">—</strong><span>Detecciones Chile</span></div>
+    <div><strong id="firmsTerra">—</strong><span>Terra</span></div>
+    <div><strong id="firmsAqua">—</strong><span>Aqua</span></div>
+  </div>
+  <label class="kmz-dropzone firms-dropzone" id="firmsDropzone" for="firmsFile">
+    <input type="file" id="firmsFile" accept=".zip,.csv,.geojson,.json,application/zip,text/csv,application/json">
+    <span class="kmz-upload-icon firms-upload-icon">＋</span>
+    <strong>Selecciona el archivo NASA FIRMS</strong>
+    <span class="kmz-file-hint">ZIP Shapefile, CSV o GeoJSON</span>
+    <span class="kmz-file-name" id="firmsFileName">Ningún archivo seleccionado</span>
+  </label>
+  <div class="firms-filter-grid">
+    <label>DESDE<input type="date" id="firmsFrom"></label>
+    <label>HASTA<input type="date" id="firmsTo"></label>
+    <label>SATÉLITE<select id="firmsSatellite"><option value="all">Todos</option><option value="Terra">Terra</option><option value="Aqua">Aqua</option><option value="other">Otros</option></select></label>
+  </div>
+  <label class="firms-replace-option"><input type="checkbox" id="firmsReplace"> Reemplazar la capa actual en lugar de acumular detecciones</label>
+  <div class="kmz-actions firms-actions">
+    <button type="button" id="processFirms" disabled>Procesar y actualizar mapa</button>
+    <button type="button" id="downloadFirms" class="kmz-secondary">Descargar GeoJSON actualizado</button>
+  </div>
+  <div class="kmz-status" id="firmsStatus" role="status" aria-live="polite">Cargando la capa inicial de NASA FIRMS para Chile…</div>
+  <div class="kmz-note">La carga actualiza inmediatamente el mapa de este navegador. Para publicar los datos nuevos a todos, descarga el GeoJSON actualizado y reemplaza <b>firms_chile.geojson</b> en el repositorio privado. NASA FIRMS se mantiene separado de los avisos SIDCO.</div>
+</section>
+</div>
 
-<div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.<div class="logo-attribution">Logotipo CMPC: <a href="https://commons.wikimedia.org/wiki/File:Logo-cmpc.svg" target="_blank" rel="noopener">archivo de CMPC en Wikimedia Commons</a> · Licencia CC BY-SA 4.0.</div></div>
+<div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.</div>
 
 </section>
 <section id="coordinateConverter" class="module-page converter-module" aria-labelledby="converterTitle">
