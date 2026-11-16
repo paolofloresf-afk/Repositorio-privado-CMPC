@@ -2053,6 +2053,38 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
  #riskReportModule .report-table tr,#firmsReportModule .report-table tr,
  #riskReportModule .report-kpi,#firmsReportModule .report-kpi{break-inside:avoid}
 }
+
+/* El tema de pantalla lo controla el selector global claro/oscuro.
+   La impresión/PDF fuerza una hoja blanca A4 horizontal, sin importar el tema activo. */
+@media print{
+ html,body{color-scheme:light!important;background:#fff!important;color:#20383b!important}
+ html[data-theme="dark"] #riskReportModule:not([hidden]),
+ html[data-theme="dark"] #firmsReportModule:not([hidden]),
+ html[data-theme="dark"] #riskReportModule .report-heading,
+ html[data-theme="dark"] #firmsReportModule .report-heading,
+ html[data-theme="dark"] #riskReportModule .report-panel,
+ html[data-theme="dark"] #firmsReportModule .report-panel{background:#fff!important;color:#20383b!important}
+ html[data-theme="dark"] #riskReportModule .report-period,
+ html[data-theme="dark"] #firmsReportModule .report-period,
+ html[data-theme="dark"] #riskReportModule .report-kpi,
+ html[data-theme="dark"] #firmsReportModule .report-kpi,
+ html[data-theme="dark"] #riskReportModule .report-insight-card,
+ html[data-theme="dark"] #firmsReportModule .report-insight-card,
+ html[data-theme="dark"] #riskReportModule .report-method,
+ html[data-theme="dark"] #firmsReportModule .report-method{background:#f7f9f9!important;color:#536b6d!important;border-color:#dce5e5!important}
+ html[data-theme="dark"] #riskReportModule .report-heading h2,
+ html[data-theme="dark"] #firmsReportModule .report-heading h2,
+ html[data-theme="dark"] #riskReportModule .report-insight-title,
+ html[data-theme="dark"] #firmsReportModule .report-insight-title,
+ html[data-theme="dark"] #riskReportModule .report-kpi strong,
+ html[data-theme="dark"] #firmsReportModule .report-kpi strong,
+ html[data-theme="dark"] #riskReportModule .report-table,
+ html[data-theme="dark"] #firmsReportModule .report-table{color:#20383b!important}
+ html[data-theme="dark"] #riskReportModule .report-table th,
+ html[data-theme="dark"] #firmsReportModule .report-table th{background:#eaf0f0!important;color:#25484a!important}
+ html[data-theme="dark"] #riskReportModule .report-table td,
+ html[data-theme="dark"] #firmsReportModule .report-table td{color:#263f41!important;border-color:#dce5e5!important}
+}
 </style>
 </head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
