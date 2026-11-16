@@ -1,0 +1,56 @@
+name: Actualizar y publicar Monitor CMPC
+
+on:
+  schedule:
+    # Cada 15 minutos, evitando el cambio exacto de hora para reducir retrasos.
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  deployments: write
+
+concurrency:
+  group: cmpc-monitor-production
+  cancel-in-progress: true
+
+jobs:
+  refresh-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener repositorio
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias geoespaciales
+        run: pip install -r requirements.txt
+
+      - name: Consultar SIDCO y cruzar avisos con predios CMPC
+        env:
+          SIDCO_URL: ${{ secrets.SIDCO_URL }}
+        run: python scripts/refresh.py
+
+      - name: Guardar nueva extracción válida
+        run: |
+          git config user.name "cmpc-monitor-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/events.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Actualizar avisos SIDCO y cruce CMPC"
+            git push
+          else
+            echo "Los datos SIDCO no cambiaron; se mantiene la versión anterior."
+          fi
+
+      - name: Publicar dashboard en Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=monitor-cmpc-cloud --branch=main
