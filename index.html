@@ -2210,7 +2210,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
       <button type="button" id="applyDates">Aplicar fechas</button>
       <button type="button" class="date-reset" id="clearDates">Restablecer período</button>
       <label class="radio-control">RADIO MÁXIMO
-        <select id="radius"><option value="1000">1 km</option><option value="3000">3 km</option><option value="5000" selected>5 km</option></select>
+        <select id="radius"><option value="1000">1 km</option><option value="3000" selected>3 km</option><option value="5000">5 km</option></select>
       </label>
     </div>
     <div class="control-group actions-group">
@@ -2542,9 +2542,9 @@ const defaultPeriod=()=>{
   return {from:shift(-2),to:shift(2)};
 };
 // Primera vista: solo avisos a 1 km o menos.
-document.getElementById('radius').value='5000';
+document.getElementById('radius').value='3000';
 document.getElementById('showInside').checked=false;
-document.getElementById('showOrange').checked=false;
+document.getElementById('showOrange').checked=true;
 document.getElementById('showYellow').checked=false;
 document.getElementById('showRed').checked=true;
 const initialPeriod=defaultPeriod();
@@ -2672,7 +2672,7 @@ function applyPredioHighlightStyles(){
   predLayer.eachLayer(layer=>layer.setStyle(predioHighlightStyle(layer.feature,layer===selectedPredioLayer)));
 }
 function updateNearbyPredioHighlights(){
-  const radius=Number(document.getElementById('radius')?.value||5000);
+  const radius=Number(document.getElementById('radius')?.value||3000);
   nearbyPredioNames=new Set((visible||[])
     .filter(event=>Number.isFinite(Number(event.distancia_m))&&Number(event.distancia_m)<=radius)
     .map(event=>normalizePredioKey(event.predio_cercano))
@@ -2924,7 +2924,7 @@ document.getElementById('clearDates').addEventListener('click',()=>{
   filter();
 });
 
-document.getElementById('reset').onclick=()=>{document.getElementById('from').value=defaultPeriod().from;document.getElementById('to').value=defaultPeriod().to;document.getElementById('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id).checked=true);if(!map.hasLayer(predLayer))predLayer.addTo(map);filter()};
+document.getElementById('reset').onclick=()=>{document.getElementById('from').value=defaultPeriod().from;document.getElementById('to').value=defaultPeriod().to;document.getElementById('radius').value='3000';document.getElementById('showInside').checked=false;document.getElementById('showRed').checked=true;document.getElementById('showOrange').checked=true;document.getElementById('showYellow').checked=false;if(!map.hasLayer(predLayer))predLayer.addTo(map);filter()};
 document.getElementById('csv').onclick=()=>{const cols=['fecha','alerta','comuna','quema','aviso','predio_cercano','distancia_m','distancia_km','orientacion','lat','lon'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv=[cols.join(';'),...visible.map(e=>cols.map(c=>q(e[c])).join(';'))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='alertas_quemas_CPMC_noviembre_2026.csv';a.click();URL.revokeObjectURL(a.href)};
 filter();
 // Encuadra la extensión real de TODOS los predios cargados, no solo los cercanos a avisos.
@@ -3437,10 +3437,10 @@ setTimeout(()=>map.invalidateSize(),1000)
   if((DATA.predios?.features||[]).length>=3000)rebuildFirmsNearbyRecords();
 
   // Sincroniza los filtros generales con NASA FIRMS: fecha, comuna, búsqueda y radio.
-  let globalMonitorFilters={from:'',to:'',commune:'',search:'',radius:5000};
+  let globalMonitorFilters={from:'',to:'',commune:'',search:'',radius:3000};
   window.addEventListener('cmpc-global-filter',event=>{
     globalMonitorFilters={...globalMonitorFilters,...(event.detail||{})};
-     const reportMax=$('firmsReportMaxKm');if(reportMax){reportMax.max=String(Number(globalMonitorFilters.radius||5000)/1000);reportMax.value=reportMax.max;}
+     const reportMax=$('firmsReportMaxKm');if(reportMax){reportMax.max=String(Number(globalMonitorFilters.radius||3000)/1000);reportMax.value=reportMax.max;}
      if(!$('firmsReportModule').hidden)renderFirmsReport();
     $('firmsFrom').value=globalMonitorFilters.from||'';
     $('firmsTo').value=globalMonitorFilters.to||'';
@@ -4347,7 +4347,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  $('refreshReport').addEventListener('click',renderRiskReport);
  fromInput.addEventListener('change',renderRiskReport);toInput.addEventListener('change',renderRiskReport);$('reportMinKm').addEventListener('change',renderRiskReport);$('reportMaxKm').addEventListener('change',renderRiskReport);
  window.addEventListener('cmpc-live-events-updated',renderRiskReport);
-  window.addEventListener('cmpc-global-filter',event=>{const km=Number(event.detail?.radius||5000)/1000;const max=$('reportMaxKm');if(max){max.max=String(km);max.value=String(km);}if(!$('riskReportModule').hidden)renderRiskReport();});
+  window.addEventListener('cmpc-global-filter',event=>{const km=Number(event.detail?.radius||3000)/1000;const max=$('reportMaxKm');if(max){max.max=String(km);max.value=String(km);}if(!$('riskReportModule').hidden)renderRiskReport();});
  $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
  $('printReport').addEventListener('click',()=>{
   const previous=pageSize;pageSize=Math.max(1,currentRows.length);currentPage=0;renderPagination();
@@ -4369,7 +4369,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   const button=e.target.closest('[data-map-event]');if(!button)return;
   const item=events.find(x=>String(x.id)===button.dataset.mapEvent);if(!item)return;
   $('from').value='';$('to').value='';
-  $('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>{if($(id))$(id).checked=true;});
+  $('radius').value='3000';$('showInside').checked=false;$('showRed').checked=true;$('showOrange').checked=true;$('showYellow').checked=false;
   filter();const idx=visible.findIndex(x=>String(x.id)===String(item.id));
   if(idx>=0&&markerByEvent[idx]){map.setView([item.lat,item.lon],13);markerByEvent[idx].openPopup();}
   $('mapPanel').scrollIntoView({behavior:'smooth',block:'start'});
