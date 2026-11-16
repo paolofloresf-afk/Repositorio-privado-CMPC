@@ -48,6 +48,29 @@ jobs:
           test -s selector_fundos_codes.b64
           test -s .assetsignore
 
+      - name: Validar datos JSON y GeoJSON
+        run: |
+          python - <<'PY'
+          import base64, json
+          from pathlib import Path
+
+          for filename in ('events.json', 'predios.geojson', 'firms_chile.geojson'):
+              data = json.loads(Path(filename).read_text(encoding='utf-8'))
+              print(f'{filename}: JSON válido ({type(data).__name__})')
+              if filename.endswith('.geojson'):
+                  assert data.get('type') == 'FeatureCollection', f'{filename}: no es FeatureCollection'
+                  assert isinstance(data.get('features'), list), f'{filename}: falta features'
+                  print(f"  features: {len(data['features'])}")
+                  for i, feature in enumerate(data['features']):
+                      assert feature.get('type') == 'Feature', f'{filename}: feature {i} inválida'
+                      assert feature.get('geometry') is None or 'type' in feature['geometry'], f'{filename}: geometría {i} inválida'
+
+          encoded = Path('selector_fundos_codes.b64').read_text(encoding='utf-8').strip()
+          decoded = base64.b64decode(encoded, validate=True)
+          assert decoded, 'selector_fundos_codes.b64 está vacío tras decodificar'
+          print(f'selector_fundos_codes.b64: Base64 válido ({len(decoded)} bytes decodificados)')
+          PY
+
       - name: Publicar solo en Worker de prueba
         uses: cloudflare/wrangler-action@v4
         with:
