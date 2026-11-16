@@ -2095,6 +2095,34 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
  html[data-theme="dark"] #riskReportModule .report-table td,
  html[data-theme="dark"] #firmsReportModule .report-table td{color:#263f41!important;border-color:#dce5e5!important}
 }
+
+/* Impresión aislada: el documento contiene únicamente el informe activo. */
+@media print{
+ body>*{visibility:hidden!important}
+ body *{visibility:hidden!important}
+ #riskReportModule:not([hidden]),#riskReportModule:not([hidden]) *,
+ #firmsReportModule:not([hidden]),#firmsReportModule:not([hidden]) *{visibility:visible!important}
+ #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){
+  position:absolute!important;left:0!important;top:0!important;width:100%!important;
+  margin:0!important;padding:0!important;display:block!important;
+ }
+ #riskReportModule:not([hidden]) .report-insight-grid,
+ #firmsReportModule:not([hidden]) .report-insight-grid,
+ #riskReportModule:not([hidden]) .report-method,
+ #firmsReportModule:not([hidden]) .report-method,
+ #riskReportModule:not([hidden]) .report-status,
+ #firmsReportModule:not([hidden]) .report-status,
+ #riskReportModule:not([hidden]) .report-controls,
+ #firmsReportModule:not([hidden]) .report-controls,
+ #riskReportModule:not([hidden]) .report-close,
+ #firmsReportModule:not([hidden]) .report-close,
+ #riskReportModule:not([hidden]) .report-pagination-footer,
+ #firmsReportModule:not([hidden]) .report-pagination-footer{display:none!important}
+ #riskReportModule:not([hidden]) .report-heading,
+ #firmsReportModule:not([hidden]) .report-heading{margin:0 0 7mm!important}
+ #riskReportModule:not([hidden]) .report-table-wrap,
+ #firmsReportModule:not([hidden]) .report-table-wrap{overflow:visible!important}
+}
 </style>
 </head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
