@@ -2030,11 +2030,29 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 
 <style id="cmpc-report-pdf-style">
 /* El informe conserva el tema del Monitor en pantalla; solo el PDF se imprime en blanco. */
-@page{size:A4 landscape;margin:11mm 10mm 12mm}
+@page{size:A4 portrait;margin:10mm 9mm 12mm}
 @media print{
  html,body{background:#fff!important;color:#20383b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  #riskReportModule:not([hidden]),#firmsReportModule:not([hidden]){display:block!important;position:static!important;width:100%!important;max-width:none!important;padding:0!important;margin:0!important;background:#fff!important}
  #riskReportModule:not([hidden]) .report-heading,#firmsReportModule:not([hidden]) .report-heading{padding:0 0 8px!important;margin:0 0 8px!important;background:#fff!important;border-top:0!important}
+ #riskReportModule .report-heading-row,#firmsReportModule .report-heading-row{align-items:center!important;gap:12px!important}
+ #riskReportModule .report-heading-row>div:first-child,#firmsReportModule .report-heading-row>div:first-child{min-width:0;flex:1 1 auto}
+ #riskReportModule .report-brand,#firmsReportModule .report-brand{flex:0 0 auto!important}
+ #riskReportModule .report-kpis,#firmsReportModule .report-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+ #riskReportModule .report-kpi,#firmsReportModule .report-kpi{padding:9px!important;border-radius:8px!important}
+ #riskReportModule .report-kpi strong,#firmsReportModule .report-kpi strong{font-size:19px!important}
+ #riskReportModule .report-insight-grid,#firmsReportModule .report-insight-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+ #riskReportModule .report-insight-card,#firmsReportModule .report-insight-card{padding:9px!important}
+ #riskReportModule .report-table,#firmsReportModule .report-table{table-layout:fixed!important;font-size:6.2pt!important}
+ #riskReportModule .report-table th,#riskReportModule .report-table td,
+ #firmsReportModule .report-table th,#firmsReportModule .report-table td{padding:3px 3px!important;overflow-wrap:anywhere!important;white-space:normal!important}
+ #riskReportModule .report-table td:first-child,#firmsReportModule .report-table td:first-child{white-space:normal!important}
+ #riskReportModule .report-table .report-map-button,#firmsReportModule .report-table .report-map-button{display:none!important}
+ #riskReportModule .report-table-heading h3,#firmsReportModule .report-table-heading h3{font-size:10pt!important}
+ #riskReportModule .report-period,#firmsReportModule .report-period{padding:7px 9px!important;margin:8px 0!important}
+ #riskReportModule .report-method,#firmsReportModule .report-method{font-size:7pt!important;padding:8px!important}
+ #riskReportModule .report-insight-title,#firmsReportModule .report-insight-title{font-size:8pt!important;margin-bottom:7px!important}
+
  .report-brand{margin:0!important;padding:0!important;border:0!important;gap:7px!important}
  .report-brand img{width:82px!important;height:40px!important}
  .report-brand span{font-size:6.5pt!important;color:#536b6d!important}
