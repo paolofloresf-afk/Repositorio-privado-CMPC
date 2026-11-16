@@ -3,7 +3,7 @@
 <title>Monitor CMPC | Alertas territoriales</title>
 <meta name="description" content="Monitor territorial de avisos SIDCO próximos a predios CMPC.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D202A'/%3E%3Cpath d='M8 41C8 21 24 7 50 8 50 30 35 46 8 41Z' fill='%239BD64B'/%3E%3Cpath d='M14 51C21 29 39 18 56 25 51 45 35 57 14 51Z' fill='%2335A45B'/%3E%3Cpath d='M10 55C22 42 35 28 50 14' fill='none' stroke='%23D8F3B0' stroke-width='2.7' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D202A'/%3E%3Cpath d='M9 47C10 35 13 25 22 17 28 21 32 30 29 39 26 47 18 50 9 47Z' fill='%2316894B'/%3E%3Cpath d='M22 58C20 39 28 18 43 5 51 14 51 29 43 43 38 52 30 57 22 58Z' fill='%2335A943'/%3E%3Cpath d='M32 59C37 39 48 18 59 10 64 25 59 44 48 54 42 59 37 61 32 59Z' fill='%2383C900'/%3E%3C/svg%3E">
 <style>
 :root{--navy:#0b1c32;--blue:#17395d;--cyan:#68c7df;--bg:#eef3f8;--ink:#17283d;--muted:#62758a}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -24,7 +24,7 @@ label{font-size:11px;color:var(--muted);font-weight:700;display:block;margin-bot
 .legend-check{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:11px;font-weight:600;color:#263d53;cursor:pointer}
 .legend-check input{width:auto;margin:0;accent-color:#174b72}
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;flex:0 0 12px}
-.dot.violet{background:#7c3aed;border:2px solid #4c1d95}.dot.red{background:#d62828}.dot.orange{background:#f28c28}.dot.yellow{background:#e2b72c}
+.dot.green{background:#9FC7A7;border:2px solid #43845D}.dot.red{background:#d62828}.dot.orange{background:#f28c28}.dot.yellow{background:#e2b72c}
 .square{display:inline-block;width:13px;height:13px;background:#52b96b;border:1px solid #238b45;flex:0 0 13px}
 .field-label{display:block;font-size:10px;font-weight:700;color:#60758a;margin:0 0 8px}
 .field-label input,.field-label select{display:block;width:100%;padding:7px;font-size:11px;margin-top:4px}
@@ -67,7 +67,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th{position:sticky;top:
 td{padding:9px 8px;border-bottom:1px solid #edf1f5}.event-row{cursor:pointer}.event-row:hover{background:#edf6fc}.event-row:focus{outline:2px solid #2878a8;outline-offset:-2px}.event-row.selected-event{background:#dceefa;box-shadow:inset 4px 0 #1476a8}
 .pill{font-size:10px;font-weight:800;padding:4px 6px;border-radius:20px;white-space:nowrap}
 .pill.ROJA{background:#fde2e2;color:#a91e1e}.pill.NARANJA{background:#ffedd5;color:#a44b00}.pill.AMARILLA{background:#fff5c2;color:#806000}
-.pill.CMPC{background:#ede9fe;color:#6d28d9}.inside-row{background:#faf5ff}
+.pill.CMPC{background:#E5EFE6;color:#386D4A}.inside-row{background:#F1F6F0}
 .note{font-size:12px;color:var(--muted);line-height:1.5;padding:12px 16px}
 .footer{font-size:11px;color:#687b8e;padding:15px 2px}
 @media(max-width:950px){.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}#map{height:430px}}
@@ -1467,33 +1467,41 @@ html[data-theme="dark"] .firms-file-help{color:#8fa9ac}
 .cmpc-layer-section input{width:13px;height:13px;flex:0 0 13px;margin:0;accent-color:#55bdb4}
 .cmpc-layer-swatch{width:9px;height:9px;flex:0 0 9px;border-radius:3px}
 .cmpc-layer-swatch.predios{background:#48a765}
-.cmpc-layer-swatch.sidco{background:#e75b4f}
-.cmpc-layer-swatch.firms{background:#25cfc6}
+.cmpc-layer-swatch.sidco{background:#B94A48}
+.cmpc-layer-swatch.firms{background:#806A9C}
 .cmpc-range-slot .range-group{display:block!important;padding:2px 0 0;margin:0;border:0;background:transparent;box-shadow:none}
 .cmpc-range-slot .range-options{display:grid;grid-template-columns:1fr 1fr;gap:1px 5px}
 .cmpc-range-slot .range-options .legend-check{display:flex;align-items:center;gap:6px;min-height:25px;padding:3px 5px;color:#b9c5cf;font-size:9px}
 .cmpc-range-slot .range-options .legend-check input{width:11px;height:11px;flex-basis:11px}
 .cmpc-range-slot .range-options .dot{width:8px;height:8px;flex-basis:8px}
 .cmpc-layer-section.basemap-section>label{min-height:27px}
-/* Símbolos de detección: círculos suaves por nivel y cuadrados morados FIRMS */
+/* Simbología cartográfica sobria: colores equilibrados, relleno visible y contorno limpio */
 .burn-dot-marker,.firms-square-marker{background:transparent!important;border:0!important}
 .burn-dot-marker span{
- display:block;width:14px;height:14px;margin:3px;border:1.5px solid var(--dot-color);
- border-radius:50%;background:color-mix(in srgb,var(--dot-color) 36%,transparent);
- box-shadow:0 0 0 3px color-mix(in srgb,var(--dot-color) 17%,transparent),0 0 10px color-mix(in srgb,var(--dot-color) 42%,transparent);
- backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px)
+ display:block;width:12px;height:12px;margin:4px;
+ border:2px solid var(--dot-color);border-radius:50%;
+ background:color-mix(in srgb,var(--dot-color) 76%,white);
+ box-shadow:0 0 0 1.5px rgba(246,249,247,.96),0 1px 3px rgba(13,36,42,.30)
 }
 .burn-dot-marker.cmpc-burn-dot span{
- width:15px;height:15px;margin:2.5px;border:2px solid #38e58b;
- border-radius:50%;background:rgba(36,212,122,.31);
- box-shadow:0 0 0 3px rgba(36,212,122,.18),0 0 11px rgba(36,212,122,.48),inset 0 0 4px rgba(255,255,255,.18)
+ width:14px;height:14px;margin:3px;
+ border:2px solid #43845D;border-radius:50%;
+ background:#A9CBAF;
+ box-shadow:0 0 0 1.5px rgba(246,249,247,.96),0 1px 3px rgba(13,36,42,.30)
 }
 .firms-square-marker span{
- display:block;width:10px;height:10px;margin:4px;border:1.5px solid rgba(216,180,254,.98);
- border-radius:2px;background:rgba(168,85,247,.40);
- box-shadow:0 0 0 3px rgba(168,85,247,.17),0 0 10px rgba(147,51,234,.45);
- backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px)
+ display:block;width:12px;height:12px;margin:3px;
+ border:2px solid #806A9C;border-radius:2px;
+ background:#BDAFCE;
+ box-shadow:0 0 0 1.5px rgba(246,249,247,.96),0 1px 3px rgba(13,36,42,.30)
 }
+html[data-theme="dark"] .burn-dot-marker span,
+html[data-theme="dark"] .burn-dot-marker.cmpc-burn-dot span,
+html[data-theme="dark"] .firms-square-marker span{
+ box-shadow:0 0 0 1.5px rgba(17,36,43,.96),0 1px 3px rgba(0,0,0,.45)
+}
+html[data-theme="dark"] .pill.CMPC{background:#294535!important;color:#C7E0CB!important}
+html[data-theme="dark"] .inside-row{background:#20382A!important}
 @media(max-width:650px){.cmpc-layers-control{width:205px}.cmpc-layers-body{max-height:300px}}
 
 
@@ -1619,10 +1627,10 @@ html:not([data-theme="dark"]) .insert-data-dropdown .actions-dropdown-menu butto
   <div class="header-inner">
     <div class="header-copy">
       <div class="header-leaf-logo" aria-label="Símbolo de hojas CMPC">
-        <svg viewBox="0 0 32 32" role="img" focusable="false" aria-hidden="true">
-          <path d="M4.2 20.4C4.1 10.8 12.1 3.5 25.1 4.1 25 15.1 17.9 22.4 4.2 20.4Z" fill="#9BD64B"/>
-          <path d="M7.1 25.5C10.7 14.8 19.5 9.4 28.3 12.1 25.9 22.1 17.8 28.1 7.1 25.5Z" fill="#35A45B"/>
-          <path d="M5.2 27.1C11.1 20.6 17.3 14.4 25.1 7.1" fill="none" stroke="#D8F3B0" stroke-width="1.35" stroke-linecap="round" opacity=".92"/>
+        <svg viewBox="0 0 64 64" role="img" focusable="false" aria-hidden="true">
+          <path d="M9 47C10 35 13 25 22 17C28 21 32 30 29 39C26 47 18 50 9 47Z" fill="#16894B"/>
+          <path d="M22 58C20 39 28 18 43 5C51 14 51 29 43 43C38 52 30 57 22 58Z" fill="#35A943"/>
+          <path d="M32 59C37 39 48 18 59 10C64 25 59 44 48 54C42 59 37 61 32 59Z" fill="#83C900"/>
         </svg>
       </div>
       <h1 id="pageTitle">Monitor de quemas próximas a predios CMPC</h1>
@@ -1649,7 +1657,7 @@ html:not([data-theme="dark"]) .insert-data-dropdown .actions-dropdown-menu butto
 <div class="kpi"><strong class="red" id="kRed">155</strong><span>Alerta roja · menos de 1 km</span></div>
 <div class="kpi"><strong class="orange" id="kOrange">138</strong><span>Alerta naranja · 1 a 3 km</span></div>
 <div class="kpi"><strong class="yellow" id="kYellow">79</strong><span>Alerta amarilla · 3 a 5 km</span></div>
-<div class="kpi"><strong style="color:#7c3aed" id="kInside">0</strong><span>Quemas declaradas dentro de predios CMPC</span></div>
+<div class="kpi"><strong style="color:#43845D" id="kInside">0</strong><span>Quemas declaradas dentro de predios CMPC</span></div>
 </div>
 
 <section class="top-date-panel unified-controls">
@@ -1804,7 +1812,7 @@ html:not([data-theme="dark"]) .insert-data-dropdown .actions-dropdown-menu butto
   <div class="control-title">RANGOS DE ALERTA</div>
   <p class="range-description">Muestra u oculta avisos por nivel de proximidad.</p>
   <div class="range-options">
-    <label class="legend-check"><input type="checkbox" id="showInside" checked><i class="dot violet"></i><span>Dentro de predio CMPC · 0 km</span></label>
+    <label class="legend-check"><input type="checkbox" id="showInside" checked><i class="dot green"></i><span>Dentro de predio CMPC · 0 km</span></label>
     <label class="legend-check"><input type="checkbox" id="showRed" checked><i class="dot red"></i><span>Roja · menos de 1 km</span></label>
     <label class="legend-check"><input type="checkbox" id="showOrange" checked><i class="dot orange"></i><span>Naranja · 1 a 3 km</span></label>
     <label class="legend-check"><input type="checkbox" id="showYellow" checked><i class="dot yellow"></i><span>Amarilla · 3 a 5 km</span></label>
@@ -1962,7 +1970,7 @@ const alertPane=map.createPane('alertMarkers');
 alertPane.style.zIndex='650';
 alertPane.style.pointerEvents='auto';
 let markers=L.layerGroup().addTo(map), visible=[], markerByEvent=[];
-const colors={ROJA:'#d62828',NARANJA:'#f28c28',AMARILLA:'#e2b72c',CMPC:'#7c3aed'};
+const colors={ROJA:'#B94A48',NARANJA:'#D18B3B',AMARILLA:'#C3A94C',CMPC:'#43845D'};
 const isInside=e=>Number(e.distancia_m)===0;
 const sidcoMonthMap={ene:1,feb:2,mar:3,abr:4,may:5,jun:6,jul:7,ago:8,sep:9,oct:10,nov:11,dic:12};
 function normalizeSIDCODate(value){
