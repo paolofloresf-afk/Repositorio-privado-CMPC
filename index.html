@@ -1482,6 +1482,62 @@ html[data-theme="dark"] .firms-file-help{color:#8fa9ac}
 .firms-heat-marker svg{width:14px;height:14px}
 @media(max-width:650px){.cmpc-layers-control{width:205px}.cmpc-layers-body{max-height:300px}}
 
+
+/* Tarjetas de carga: mismas dimensiones, estructura alineada y texto mínimo */
+.data-import-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch;margin:0 0 14px}
+.data-import-grid>.import-card{box-sizing:border-box;display:flex;flex-direction:column;align-self:stretch;min-width:0;min-height:310px;margin:0;padding:16px 17px;border-radius:13px}
+.import-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:29px;margin-bottom:12px}
+.import-card-head h2{margin:0!important;font-size:15px!important;font-weight:800!important;letter-spacing:-.01em}
+.import-card-tag{flex:0 0 auto;padding:5px 8px;border-radius:20px;background:#e7f0e8;color:#4c7352;font-size:8px;font-weight:850;letter-spacing:.07em}
+.import-card-tag.firms-tag{background:#e2f4f2;color:#197b7b}
+.import-dropzone{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:12px;min-height:78px;box-sizing:border-box;padding:12px 14px;border:1px dashed #92adae;border-radius:10px;background:#f5f9f9;text-align:left;cursor:pointer}
+.import-dropzone input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.import-upload-icon{display:flex;align-items:center;justify-content:center;flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:#deece3;color:#31784b;font-size:21px;font-weight:600}
+.import-file-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.import-file-copy strong{font-size:11px;font-weight:800;color:#294e4b}
+.import-file-copy small{display:block;max-width:100%;overflow-wrap:anywhere;font-size:10px;color:#738b8c}
+.import-card-actions{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin:11px 0!important}
+.import-card-actions button{width:100%!important;min-height:36px;padding:8px 10px!important;font-size:10px!important}
+.import-card-status{display:flex;align-items:center;min-height:40px;box-sizing:border-box;margin-top:auto!important;padding:8px 10px!important;font-size:10px!important;line-height:1.35!important}
+.import-card-sync{margin-top:7px;padding:7px 10px;border-radius:7px;font-size:9px}
+.import-card-stats{display:flex;align-items:center;gap:8px;min-height:28px;margin:0 0 10px!important;padding:0!important;border:0!important;background:transparent!important}
+.import-card-stats strong{font-size:19px!important;line-height:1!important;color:#2e8685!important}
+.import-card-stats>span{font-size:9px!important;font-weight:700;color:#75898d!important}
+.import-card-stats>span b{color:#49696b}
+.stat-separator{width:1px;height:17px;background:#d7e1e1}
+.firms-options{margin:9px 0 2px;border-top:1px solid #e1e9e9;border-bottom:1px solid #e1e9e9}
+.firms-options summary{padding:8px 2px;color:#60787a;font-size:10px;font-weight:750;cursor:pointer;list-style:none}
+.firms-options summary::-webkit-details-marker{display:none}
+.firms-options summary:after{content:"＋";float:right;color:#3b8988}
+.firms-options[open] summary:after{content:"−"}
+.firms-filter-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:2px 0 8px}
+.firms-filter-grid label{font-size:8px}
+.firms-filter-grid input,.firms-filter-grid select{padding:6px;font-size:10px}
+.firms-replace-option{font-size:9px;margin:5px 0}
+.firms-file-help{display:block;margin:4px 0 8px;font-size:9px;color:#829393}
+.firms-upload-icon{background:#dff1ef;color:#187f7d}
+.import-dropzone:hover,.import-dropzone.dragover{border-color:#4f9e9b;background:#edf7f6}
+.import-dropzone.firms-import-dropzone{min-height:78px}
+html[data-theme="dark"] .data-import-grid>.import-card{background:#172a2e!important;border-color:#34565a!important}
+html[data-theme="dark"] .import-card-head h2{color:#e6eff0!important}
+html[data-theme="dark"] .import-card-tag{background:#253a2e;color:#b8d8bd}
+html[data-theme="dark"] .import-card-tag.firms-tag{background:#1d4142;color:#88d6d0}
+html[data-theme="dark"] .import-dropzone{background:#1d3438;border-color:#45686b}
+html[data-theme="dark"] .import-file-copy strong{color:#dcebea}
+html[data-theme="dark"] .import-file-copy small{color:#9bb5b5}
+html[data-theme="dark"] .import-upload-icon{background:#29483c;color:#a8d5b0}
+html[data-theme="dark"] .import-upload-icon.firms-upload-icon{background:#21494a;color:#8fe0d9}
+html[data-theme="dark"] .import-card-stats strong{color:#79d2cc!important}
+html[data-theme="dark"] .import-card-stats>span{color:#a1b8bb!important}
+html[data-theme="dark"] .import-card-stats>span b{color:#c5e0df}
+html[data-theme="dark"] .stat-separator{background:#405d60}
+html[data-theme="dark"] .firms-options{border-color:#34565a}
+html[data-theme="dark"] .firms-options summary,html[data-theme="dark"] .firms-file-help{color:#a4b9ba}
+html[data-theme="dark"] .import-card-sync{background:#1e3b34;color:#b7dcca;border-color:#35594b}
+html[data-theme="dark"] .import-card-status{background:#20363a;color:#c4dddd;border-color:#35565a}
+@media(max-width:900px){.data-import-grid{grid-template-columns:1fr}.data-import-grid>.import-card{min-height:0}}
+@media(max-width:650px){.data-import-grid>.import-card{padding:13px}.import-card-head h2{font-size:14px!important}.import-card-stats{gap:6px}.firms-filter-grid{grid-template-columns:1fr 1fr}.firms-filter-grid label:last-child{grid-column:auto}}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1650,71 +1706,71 @@ html[data-theme="dark"] .firms-file-help{color:#8fa9ac}
     <label class="legend-check"><input type="checkbox" id="showOrange" checked><i class="dot orange"></i><span>Naranja · 1 a 3 km</span></label>
     <label class="legend-check"><input type="checkbox" id="showYellow" checked><i class="dot yellow"></i><span>Amarilla · 3 a 5 km</span></label>
   </div>
-</div><div id="mapBaseStatus" class="map-status">Mapa listo. Activa o desactiva las capas desde CAPAS.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div>
+</div><div id="mapBaseStatus" class="map-status">Mapa listo. Selecciona un predio, quema o foco para ver sus datos.</div>
 </section>
 <section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 
 <div class="data-import-grid">
-<section class="kmz-import-panel" id="kmzImportPanel">
-  <div class="kmz-import-head">
-    <div>
-      <h2>Actualizar avisos desde archivo KMZ</h2>
-      <p>Carga el KMZ descargado de SIDCO. El sistema leerá sus avisos, los cruzará con los predios CMPC y actualizará el mapa.</p>
+  <section class="kmz-import-panel import-card" id="kmzImportPanel">
+    <div class="import-card-head">
+      <h2>SIDCO</h2>
+      <span class="import-card-tag">QUEMAS</span>
     </div>
-    <span class="kmz-manual-badge">Carga manual</span>
-  </div>
-  <label class="kmz-dropzone" id="kmzDropzone" for="kmzFile">
-    <input type="file" id="kmzFile" accept=".kmz,.kml,application/vnd.google-earth.kmz,application/vnd.google-earth.kml+xml">
-    <span class="kmz-upload-icon">↑</span>
-    <strong>Selecciona o arrastra aquí tu archivo KMZ</strong>
-    <span class="kmz-file-hint">Formatos admitidos: .KMZ y .KML</span>
-    <span class="kmz-file-name" id="kmzFileName">Ningún archivo seleccionado</span>
-  </label>
-  <div class="kmz-actions">
-    <button type="button" id="processKmz" disabled>Procesar KMZ y actualizar mapa</button>
-    <button type="button" id="downloadProcessed" class="kmz-secondary" disabled>Descargar events.json actualizado</button>
-  </div>
-  <div class="kmz-status" id="kmzStatus" role="status" aria-live="polite">Selecciona el KMZ más reciente que descargaste desde SIDCO.</div>
-  <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div><div class="kmz-sync-status" id="sidcoStatus">SIDCO: snapshot inicial cargado</div>
-</section>
-<section class="kmz-import-panel firms-import-panel" id="firmsImportPanel">
-  <div class="kmz-import-head">
-    <div>
-      <h2>Actualizar detecciones NASA FIRMS</h2>
-      <p>Actualiza las detecciones satelitales de Chile.</p>
-    </div>
-    <span class="kmz-manual-badge firms-badge">NASA FIRMS</span>
-  </div>
-  <div class="firms-stats" id="firmsStats">
-    <div><strong id="firmsTotal">—</strong><span>Detecciones Chile</span></div>
-    <div><strong id="firmsTerra">—</strong><span>Terra</span></div>
-    <div><strong id="firmsAqua">—</strong><span>Aqua</span></div>
-    <div><strong id="firmsOther">—</strong><span>Otros</span></div>
-  </div>
-  <div class="firms-file-row">
-    <label class="firms-file-button" for="firmsFile">
-      <span aria-hidden="true">↑</span> Seleccionar archivo(s)
-      <input type="file" id="firmsFile" accept=".zip,.shp,.dbf,.shx,.prj,.cpg,.csv,.geojson,.json,application/zip,text/csv,application/json" multiple>
+    <label class="import-dropzone" id="kmzDropzone" for="kmzFile">
+      <input type="file" id="kmzFile" accept=".kmz,.kml,application/vnd.google-earth.kmz,application/vnd.google-earth.kml+xml">
+      <span class="import-upload-icon">↑</span>
+      <span class="import-file-copy">
+        <strong>Seleccionar archivo KMZ</strong>
+        <small class="kmz-file-name" id="kmzFileName">Ningún archivo seleccionado</small>
+      </span>
     </label>
-    <span class="kmz-file-name" id="firmsFileName">Ningún archivo seleccionado</span>
-  </div>
-  <div class="firms-file-help">Puedes subir el ZIP completo o seleccionar juntos el .shp, .dbf, .shx, .prj y .cpg.</div>
-  <div class="firms-filter-grid">
-    <label>DESDE<input type="date" id="firmsFrom"></label>
-    <label>HASTA<input type="date" id="firmsTo"></label>
-    <label>SATÉLITE<select id="firmsSatellite"><option value="all">Todos</option><option value="Terra">Terra</option><option value="Aqua">Aqua</option><option value="other">Otros</option></select></label>
-  </div>
-  <label class="firms-replace-option"><input type="checkbox" id="firmsReplace"> Reemplazar la capa actual en lugar de acumular detecciones</label>
-  <div class="kmz-actions firms-actions">
-    <button type="button" id="processFirms" disabled>Procesar y actualizar mapa</button>
-    <button type="button" id="downloadFirms" class="kmz-secondary">Descargar datos actualizados</button>
-  </div>
-  <div class="kmz-status" id="firmsStatus" role="status" aria-live="polite">Cargando la capa inicial de NASA FIRMS para Chile…</div>
-  <div class="kmz-note">La carga actualiza inmediatamente el mapa de este navegador. Para publicar los datos nuevos a todos, descarga el GeoJSON actualizado y reemplaza <b>firms_chile.geojson</b> en el repositorio privado. NASA FIRMS se mantiene separado de los avisos SIDCO.</div>
-</section>
+    <div class="kmz-actions import-card-actions">
+      <button type="button" id="processKmz" disabled>Procesar</button>
+      <button type="button" id="downloadProcessed" class="kmz-secondary" disabled>Descargar</button>
+    </div>
+    <div class="kmz-status import-card-status" id="kmzStatus" role="status" aria-live="polite">Esperando archivo SIDCO.</div>
+    <div class="kmz-sync-status import-card-sync" id="sidcoStatus">SIDCO: datos iniciales</div>
+  </section>
+
+  <section class="kmz-import-panel firms-import-panel import-card" id="firmsImportPanel">
+    <div class="import-card-head">
+      <h2>NASA FIRMS</h2>
+      <span class="import-card-tag firms-tag">FOCOS DE CALOR</span>
+    </div>
+    <div class="firms-stats import-card-stats" id="firmsStats">
+      <strong id="firmsTotal">—</strong><span>puntos</span>
+      <span class="stat-separator"></span>
+      <span><b id="firmsTerra">—</b> Terra</span>
+      <span><b id="firmsAqua">—</b> Aqua</span>
+      <span><b id="firmsOther">—</b> Otros</span>
+    </div>
+    <label class="import-dropzone firms-import-dropzone" for="firmsFile">
+      <input type="file" id="firmsFile" accept=".zip,.shp,.dbf,.shx,.prj,.cpg,.csv,.geojson,.json,application/zip,text/csv,application/json" multiple>
+      <span class="import-upload-icon firms-upload-icon">↑</span>
+      <span class="import-file-copy">
+        <strong>Seleccionar archivo FIRMS</strong>
+        <small class="kmz-file-name" id="firmsFileName">Ningún archivo seleccionado</small>
+      </span>
+    </label>
+    <details class="firms-options">
+      <summary>Filtros y opciones</summary>
+      <div class="firms-filter-grid">
+        <label>Desde<input type="date" id="firmsFrom"></label>
+        <label>Hasta<input type="date" id="firmsTo"></label>
+        <label>Satélite<select id="firmsSatellite"><option value="all">Todos</option><option value="Terra">Terra</option><option value="Aqua">Aqua</option><option value="other">Otros</option></select></label>
+      </div>
+      <label class="firms-replace-option"><input type="checkbox" id="firmsReplace"> Reemplazar datos actuales</label>
+      <small class="firms-file-help">Admite un ZIP completo o los archivos del Shapefile seleccionados juntos.</small>
+    </details>
+    <div class="kmz-actions firms-actions import-card-actions">
+      <button type="button" id="processFirms" disabled>Procesar</button>
+      <button type="button" id="downloadFirms" class="kmz-secondary">Descargar</button>
+    </div>
+    <div class="kmz-status import-card-status" id="firmsStatus" role="status" aria-live="polite">Cargando datos de Chile…</div>
+  </section>
 </div>
 
-<div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.</div>
+<div class="footer">Distancia calculada desde cada aviso hasta el predio CMPC más cercano. Los puntos dentro de un predio se clasifican a 0 m.</div>
 
 </section>
 <section id="coordinateConverter" class="module-page converter-module" aria-labelledby="converterTitle">
@@ -2108,7 +2164,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       'Día/noche: '+(p.daynight==='D'?'Día':p.daynight==='N'?'Noche':'No informado')+'</div>';
   }
 
-  const firmsLayer=L.layerGroup().addTo(map);
+  const firmsLayer=L.featureGroup().addTo(map);
   const firmsPane=map.createPane('firmsPane');
   firmsPane.style.zIndex='670';
   firmsPane.style.pointerEvents='auto';
