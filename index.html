@@ -536,6 +536,42 @@ html[data-theme="dark"] .sidebar-collapse-toggle:hover{background:#243b2a}
  body.sidebar-collapsed .sidebar-footer{justify-content:flex-start;flex-direction:row}
  body.sidebar-collapsed .sidebar-footer-copy{display:flex}
 }
+
+/* Orden de trabajo: mapa a ancho completo, listado debajo y carga al final */
+.layout{display:flex;flex-direction:column;gap:16px}
+.map-panel,.list-panel,.kmz-import-panel{width:100%;max-width:none}
+.map-panel{overflow:hidden}
+.panel-title-row{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:58px;padding:0 16px;border-bottom:1px solid #e7efe7}
+.panel-title-row h2{border:0!important;padding:14px 0!important;flex:1}
+.panel-title-row h2:before{content:"";width:3px;height:15px;flex:0 0 3px;border-radius:5px;background:#5e9a68}
+.map-expand-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:auto;min-width:125px;padding:9px 12px;background:#edf5ed;color:#356943;border:1px solid #dce9dc;border-radius:9px;font-size:10px;font-weight:700;white-space:nowrap}
+.map-expand-toggle:hover{background:#e3efe3}
+.map-expand-toggle svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#map{height:650px;min-height:650px;border-radius:0}
+.map-panel .map-status{font-size:9px}
+.map-panel .note{padding:12px 17px 15px}
+.map-panel.map-expanded #map{height:calc(100vh - 210px)!important;min-height:520px;max-height:1000px}
+.map-panel.map-expanded{border-color:#b8d2bc;box-shadow:0 10px 30px rgba(20,65,34,.1)}
+.list-panel{margin-top:0}
+.list-panel .tablewrap{max-height:620px;overflow:auto}
+#kmzImportPanel{margin-top:17px}
+html[data-theme="dark"] .panel-title-row{border-color:#2a4330}
+html[data-theme="dark"] .map-expand-toggle{background:#203a27;color:#c5e0c7;border-color:#36553d}
+html[data-theme="dark"] .map-expand-toggle:hover{background:#29482f}
+html[data-theme="dark"] .map-panel.map-expanded{border-color:#456c4c;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+@media(max-width:900px){
+ .layout{display:flex;flex-direction:column}
+ #map{height:540px;min-height:540px}
+ .map-panel.map-expanded #map{height:calc(100vh - 190px)!important;min-height:440px}
+}
+@media(max-width:600px){
+ .panel-title-row{padding:0 12px;min-height:54px}
+ .panel-title-row h2{font-size:11px;padding:12px 0!important}
+ .map-expand-toggle{min-width:38px;padding:8px}
+ .map-expand-toggle span{display:none}
+ #map{height:440px;min-height:440px}
+ .map-panel.map-expanded #map{height:calc(100vh - 185px)!important;min-height:380px}
+}
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -640,6 +676,19 @@ html[data-theme="dark"] .sidebar-collapse-toggle:hover{background:#243b2a}
 </section>
 
 
+
+<section class="panel map-panel" id="mapPanel">
+  <div class="panel-title-row">
+    <h2>Mapa de Chile · imagen satelital, predios y alertas</h2>
+    <button type="button" id="mapExpandToggle" class="map-expand-toggle" aria-expanded="false" aria-controls="map" title="Ampliar mapa">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      <span id="mapExpandLabel">Ampliar mapa</span>
+    </button>
+  </div>
+  <div id="map"></div><div id="mapBaseStatus" class="map-status">Base cartográfica: imagen satelital Esri. Puedes cambiar a topográfico o calles desde el selector de capas.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div>
+</section>
+<section class="panel list-panel" id="burnListPanel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
+
 <section class="kmz-import-panel" id="kmzImportPanel">
   <div class="kmz-import-head">
     <div>
@@ -662,10 +711,6 @@ html[data-theme="dark"] .sidebar-collapse-toggle:hover{background:#243b2a}
   <div class="kmz-status" id="kmzStatus" role="status" aria-live="polite">Selecciona el KMZ más reciente que descargaste desde SIDCO.</div>
   <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div><div class="kmz-sync-status" id="sidcoStatus">SIDCO: snapshot inicial cargado</div>
 </section>
-<div class="layout">
-<section class="panel"><h2>Mapa de Chile · imagen satelital, predios y alertas</h2><div id="map"></div><div id="mapBaseStatus" class="map-status">Base cartográfica: imagen satelital Esri. Puedes cambiar a topográfico o calles desde el selector de capas.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div></section>
-<section class="panel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
-</div>
 <div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.<div class="logo-attribution">Logotipo CMPC: <a href="https://commons.wikimedia.org/wiki/File:Logo-cmpc.svg" target="_blank" rel="noopener">archivo de CMPC en Wikimedia Commons</a> · Licencia CC BY-SA 4.0.</div></div>
 </main>
 </div>
@@ -1160,6 +1205,32 @@ map.fitBounds([[-56.5,-76.8],[-17.0,-66.0]],{padding:[18,18],maxZoom:5});map.set
  if(sidebarBackdrop)sidebarBackdrop.addEventListener('click',closeSidebar);
  if(sidebar)sidebar.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeSidebar));
  document.addEventListener('keydown',event=>{if(event.key==='Escape')closeSidebar();});
+})();
+</script>
+
+<script>
+(() => {
+ const panel=document.getElementById('mapPanel');
+ const button=document.getElementById('mapExpandToggle');
+ const label=document.getElementById('mapExpandLabel');
+ if(!panel||!button)return;
+ const sync=()=>{
+  const expanded=panel.classList.contains('map-expanded');
+  button.setAttribute('aria-expanded',String(expanded));
+  button.setAttribute('title',expanded?'Reducir mapa':'Ampliar mapa');
+  button.setAttribute('aria-label',expanded?'Reducir mapa':'Ampliar mapa');
+  if(label)label.textContent=expanded?'Reducir mapa':'Ampliar mapa';
+  button.querySelector('svg').innerHTML=expanded
+   ?'<path d="M3 9V5a2 2 0 0 1 2-2h4M21 9V5a2 2 0 0 0-2-2h-4M3 15v4a2 2 0 0 0 2 2h4M21 15v4a2 2 0 0 1-2 2h-4"/>'
+   :'<path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/>';
+ };
+ button.addEventListener('click',()=>{
+  panel.classList.toggle('map-expanded');
+  sync();
+  window.setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize({pan:false});},260);
+  if(panel.classList.contains('map-expanded'))panel.scrollIntoView({behavior:'smooth',block:'start'});
+ });
+ sync();
 })();
 </script>
 </body></html>
