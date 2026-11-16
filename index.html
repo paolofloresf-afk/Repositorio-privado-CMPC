@@ -1438,6 +1438,11 @@ const satelliteBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/ser
 const topoBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{
   maxZoom:18,attribution:'Tiles &copy; Esri — Sources: Esri, USGS, NOAA'
 });
+const darkBase=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  subdomains:'abcd',
+  maxZoom:20,
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+});
 let satelliteFallbackUsed=false;
 satelliteBase.on('tileerror',()=>{
   if(!satelliteFallbackUsed && map.hasLayer(satelliteBase)){
@@ -1483,7 +1488,7 @@ const predLayer=L.geoJSON(DATA.predios,{
 }).addTo(map);
 // Solo dos mapas base y una capa superpuesta de predios CMPC.
 L.control.layers(
-  {'Satelital':satelliteBase,'Topográfico':topoBase},
+  {'Satelital':satelliteBase,'Topográfico':topoBase,'Base oscura':darkBase},
   {'Predios CMPC':predLayer},
   {collapsed:true,position:'topright'}
 ).addTo(map);
