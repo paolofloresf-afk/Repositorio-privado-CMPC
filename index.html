@@ -1582,6 +1582,58 @@ html:not([data-theme="dark"]) .insert-data-dropdown>summary{background:#e5f3f3;c
 html:not([data-theme="dark"]) .insert-data-dropdown .actions-dropdown-menu button{background:#eaf4f4;color:#1c5155;border-color:#d1e2e2}
 @media(max-width:900px){.data-import-grid{grid-template-columns:minmax(0,1fr)}}
 
+
+/* Desplegables de acciones: control visual consistente con azul petróleo */
+.actions-group .actions-dropdown{position:relative;width:100%;margin-top:2px}
+.actions-group .actions-dropdown>summary{
+ list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
+ width:100%;min-height:42px;padding:6px 9px 6px 12px;
+ border:1px solid #426d75;border-radius:10px;background:#173f49;color:#EAF4F5;
+ font-size:11px;font-weight:750;letter-spacing:.01em;cursor:pointer;
+ transition:background .16s,border-color .16s,box-shadow .16s
+}
+.actions-group .actions-dropdown>summary::-webkit-details-marker{display:none}
+.actions-group .actions-dropdown>summary:hover{background:#205460;border-color:#5d9094}
+.actions-group .actions-dropdown>summary:focus-visible{outline:2px solid #71B7B9;outline-offset:2px}
+.actions-group .actions-dropdown[open]>summary{border-color:#6b9da0;background:#20545d}
+.actions-group .actions-dropdown>summary .action-chevron{
+ display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;
+ border:1px solid rgba(215,237,238,.18);border-radius:8px;
+ background:rgba(219,239,240,.09);transition:transform .18s ease,background .18s
+}
+.actions-group .actions-dropdown>summary .action-chevron svg{display:block;width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.actions-group .actions-dropdown[open]>summary .action-chevron{transform:rotate(180deg);background:rgba(219,239,240,.17)}
+.actions-group .actions-dropdown-menu{
+ position:absolute;top:calc(100% + 5px);left:0;right:0;z-index:1800;
+ display:grid;gap:5px;padding:7px;border:1px solid #345d65;border-radius:10px;
+ background:#102e37;box-shadow:0 10px 25px rgba(3,19,25,.27)
+}
+.actions-group .actions-dropdown-menu button{
+ display:flex;align-items:center;justify-content:flex-start;gap:8px;
+ width:100%;min-height:36px;margin:0;padding:8px 10px!important;
+ border:1px solid #345b63;border-radius:7px;background:#19434d;color:#E4F0F1;
+ font-size:10px!important;font-weight:650;text-align:left;line-height:1.35;
+ transition:background .15s,border-color .15s
+}
+.actions-group .actions-dropdown-menu button:hover{background:#245b64;border-color:#5c8589;box-shadow:none;filter:none}
+html:not([data-theme="dark"]) .actions-group .actions-dropdown>summary{
+ background:#E6F0F1;color:#244B53;border-color:#C6DADD
+}
+html:not([data-theme="dark"]) .actions-group .actions-dropdown>summary:hover,
+html:not([data-theme="dark"]) .actions-group .actions-dropdown[open]>summary{
+ background:#D8E9EA;border-color:#A9CBCD
+}
+html:not([data-theme="dark"]) .actions-group .actions-dropdown>summary .action-chevron{
+ color:#315E64;background:#F5FAFA;border-color:#C7DADB
+}
+html:not([data-theme="dark"]) .actions-group .actions-dropdown-menu{
+ background:#F8FBFB;border-color:#CFDEDF;box-shadow:0 10px 24px rgba(19,51,57,.15)
+}
+html:not([data-theme="dark"]) .actions-group .actions-dropdown-menu button{
+ background:#EAF2F3;border-color:#D4E1E2;color:#284C53
+}
+html:not([data-theme="dark"]) .actions-group .actions-dropdown-menu button:hover{background:#DDEBED;border-color:#B7D0D2}
+
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1681,14 +1733,14 @@ html:not([data-theme="dark"]) .insert-data-dropdown .actions-dropdown-menu butto
       <button type="button" id="reset">Restablecer todos los filtros</button>
       <button type="button" id="csv">Exportar resultados a CSV</button>
       <details class="actions-dropdown insert-data-dropdown" id="insertDataDropdown">
-        <summary>Insertar datos <span aria-hidden="true">⌄</span></summary>
+        <summary>Insertar datos <span class="action-chevron" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5.5 7.5 4.5 4.5 4.5-4.5"/></svg></span></summary>
         <div class="actions-dropdown-menu">
           <button type="button" id="openKmzImport">＋ Quemas SIDCO</button>
           <button type="button" id="openFirmsImport">＋ NASA FIRMS</button>
         </div>
       </details>
       <details class="actions-dropdown" id="actionsDropdown">
-        <summary>Informes <span aria-hidden="true">⌄</span></summary>
+        <summary>Informes <span class="action-chevron" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5.5 7.5 4.5 4.5 4.5-4.5"/></svg></span></summary>
         <div class="actions-dropdown-menu">
           <button type="button" id="toggleRiskReport" aria-expanded="false">Informe preventivo CONAF</button>
         </div>
