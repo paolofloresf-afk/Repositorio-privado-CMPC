@@ -2026,33 +2026,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 </style>
 
 <style id="cmpc-report-pdf-style">
-/* Informes CMPC: identidad blanca, limpia y compacta en pantalla y PDF. */
-#riskReportModule,#firmsReportModule{--surface:#fff!important;--surface-alt:#f5f8f8!important;--line:#dce5e5!important;--ink:#20383b!important;--muted:#64777a!important;color:#20383b!important;background:#fff!important}
-#riskReportModule .report-heading,#firmsReportModule .report-heading{padding:16px 18px 0;margin:10px 0 12px;background:#fff!important;border-top:5px solid #17484b}
-#riskReportModule .report-heading h2,#firmsReportModule .report-heading h2{font-size:22px;color:#173f43!important;letter-spacing:-.02em}
-#riskReportModule .report-heading p,#firmsReportModule .report-heading p{font-size:11px;color:#607477!important;max-width:760px}
-#riskReportModule .report-eyebrow,#firmsReportModule .report-eyebrow{color:#397b7d!important;font-size:9px}
-.report-brand{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 0 9px;margin:0 0 11px;border-bottom:1px solid #dce5e5}
-.report-brand img{display:block;width:94px;height:48px;object-fit:contain;object-position:left center}
-.report-brand span{font-size:8px;letter-spacing:.16em;font-weight:800;color:#61787a}
-#riskReportModule .report-panel,#firmsReportModule .report-panel{padding:14px!important;background:#fff!important;border:1px solid #dce5e5!important;box-shadow:none!important}
-#riskReportModule .report-controls,#firmsReportModule .report-controls{margin-bottom:8px}
-#riskReportModule .report-period,#firmsReportModule .report-period{margin:9px 0;padding:8px 10px;background:#f5f8f8!important;border:1px solid #dce5e5;border-left:3px solid #397b7d;font-size:10px;color:#536b6d!important}
-#riskReportModule .report-kpis,#firmsReportModule .report-kpis{gap:8px}
-#riskReportModule .report-kpi,#firmsReportModule .report-kpi{padding:10px 11px;background:#f8fafa!important;border:1px solid #dce5e5!important;border-radius:7px}
-#riskReportModule .report-kpi strong,#firmsReportModule .report-kpi strong{font-size:22px;color:#173f43!important}
-#riskReportModule .report-kpi span,#firmsReportModule .report-kpi span{font-size:9px;color:#617477!important}
-#riskReportModule .report-insight-grid,#firmsReportModule .report-insight-grid{gap:8px;margin:9px 0}
-#riskReportModule .report-insight-card,#firmsReportModule .report-insight-card{padding:10px;background:#fff!important;border:1px solid #dce5e5;border-radius:7px}
-#riskReportModule .report-insight-title,#firmsReportModule .report-insight-title{font-size:10px;color:#25484a!important}
-#riskReportModule .report-status,#firmsReportModule .report-status{font-size:10px;color:#617477!important;margin:8px 0}
-#riskReportModule .report-table-heading,#firmsReportModule .report-table-heading{margin:10px 0 6px}
-#riskReportModule .report-table-heading h3,#firmsReportModule .report-table-heading h3{font-size:12px;color:#173f43!important}
-#riskReportModule .report-table,#firmsReportModule .report-table{font-size:9px;color:#263f41!important}
-#riskReportModule .report-table th,#firmsReportModule .report-table th{background:#edf3f3!important;color:#35585a!important;font-size:8px;text-transform:uppercase;letter-spacing:.04em}
-#riskReportModule .report-table td,#firmsReportModule .report-table td{padding:7px 6px;border-bottom:1px solid #e5ebeb}
-#riskReportModule .report-method,#firmsReportModule .report-method{margin:9px 0;padding:9px;background:#f7f9f9!important;border:1px solid #e0e7e7;color:#5d7072!important;font-size:9px}
-#riskReportModule .report-disclaimer,#firmsReportModule .report-disclaimer{font-size:9px;color:#64777a!important}
+/* El informe conserva el tema del Monitor en pantalla; solo el PDF se imprime en blanco. */
 @page{size:A4 landscape;margin:11mm 10mm 12mm}
 @media print{
  html,body{background:#fff!important;color:#20383b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
