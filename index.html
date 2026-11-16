@@ -91,6 +91,9 @@ td{padding:9px 8px;border-bottom:1px solid #edf1f5}.event-row{cursor:pointer}.ev
 .dates-group input{width:100%;min-width:0;padding:7px;font-size:11px}
 .dates-group button{width:100%;padding:8px 6px;font-size:10px;align-self:end}
 .dates-group .date-reset{background:#e7eef5;color:#183653}
+.dates-group .radio-control{grid-column:1/-1;display:grid;gap:4px;margin:0;font-size:10px;font-weight:800;color:#536b81;letter-spacing:.04em}
+.dates-group .radio-control select{width:100%;padding:7px;font-size:11px;letter-spacing:normal}
+
 .control-group .field-label{margin:0 0 7px}
 .control-group .field-label:last-child{margin-bottom:0}
 .legend-group-top{display:grid;align-content:start;gap:5px}
@@ -2201,17 +2204,14 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
   <div class="unified-heading"><b>FILTROS Y LEYENDA DEL MONITOREO</b><span>Ajusta el período y la búsqueda, y selecciona los rangos que deseas revisar. Las capas base y los predios se administran desde el mapa.</span></div>
   <div class="unified-grid">
     <div class="control-group dates-group">
-      <div class="control-title">PERÍODO DE QUEMAS</div>
+      <div class="control-title">PERÍODO Y RADIO</div>
       <label>DESDE<input type="date" id="from" value="2026-11-01"></label>
       <label>HASTA<input type="date" id="to" value="2026-11-30"></label>
       <button type="button" id="applyDates">Aplicar fechas</button>
       <button type="button" class="date-reset" id="clearDates">Restablecer período</button>
-    </div>
-    <div class="control-group">
-      <div class="control-title">FILTROS DE BÚSQUEDA</div>
-      <label class="field-label">Comuna<select id="commune"><option value="">Todas las comunas</option></select></label>
-      <label class="field-label">Predio / aviso<input id="search" placeholder="Buscar predio, aviso o tipo de quema..."></label>
-      <label class="field-label">Radio máximo<select id="radius"><option value="1000">1 km</option><option value="3000">3 km</option><option value="5000">5 km</option></select></label>
+      <label class="radio-control">RADIO MÁXIMO
+        <select id="radius"><option value="1000">1 km</option><option value="3000">3 km</option><option value="5000" selected>5 km</option></select>
+      </label>
     </div>
     <div class="control-group actions-group">
       <div class="control-title">ACCIONES</div>
@@ -2834,7 +2834,7 @@ function renderBurnList(){
 }
 function filter(){
  const from=document.getElementById('from').value,to=document.getElementById('to').value;
- const commune=document.getElementById('commune').value,search=document.getElementById('search').value.toLowerCase(),radius=+document.getElementById('radius').value;
+ const commune='',search='',radius=+document.getElementById('radius').value;
  const radiusKm=radius/1000;
  // Sincroniza la leyenda de rangos con el radio elegido en el panel principal.
  const rangeDescription=document.querySelector('#mapRangeGroup .range-description');
@@ -2915,8 +2915,8 @@ document.getElementById('burnPagination').addEventListener('click',ev=>{
 document.getElementById('burnPageSize').addEventListener('change',ev=>{
   burnPageSize=Math.max(1,Number(ev.target.value)||5);burnListPage=0;renderBurnList();
 });
-const communes=[...new Set(events.map(e=>e.comuna).filter(Boolean))].sort();communes.forEach(c=>{let o=document.createElement('option');o.value=c;o.textContent=c;document.getElementById('commune').appendChild(o)});
-['from','to','commune','search','radius','showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id).addEventListener('input',filter));
+const communes=[...new Set(events.map(e=>e.comuna).filter(Boolean))].sort();communes.forEach(c=>{let o=document.createElement('option');o.value=c;o.textContent=c;document.getElementById('commune')?.appendChild(o)});
+['from','to','radius','showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id)?.addEventListener('input',filter));
 document.getElementById('applyDates').addEventListener('click',filter);
 document.getElementById('clearDates').addEventListener('click',()=>{
   document.getElementById('from').value=defaultPeriod().from;
@@ -2924,7 +2924,7 @@ document.getElementById('clearDates').addEventListener('click',()=>{
   filter();
 });
 
-document.getElementById('reset').onclick=()=>{document.getElementById('from').value=defaultPeriod().from;document.getElementById('to').value=defaultPeriod().to;document.getElementById('commune').value='';document.getElementById('search').value='';document.getElementById('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id).checked=true);if(!map.hasLayer(predLayer))predLayer.addTo(map);filter()};
+document.getElementById('reset').onclick=()=>{document.getElementById('from').value=defaultPeriod().from;document.getElementById('to').value=defaultPeriod().to;document.getElementById('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>document.getElementById(id).checked=true);if(!map.hasLayer(predLayer))predLayer.addTo(map);filter()};
 document.getElementById('csv').onclick=()=>{const cols=['fecha','alerta','comuna','quema','aviso','predio_cercano','distancia_m','distancia_km','orientacion','lat','lon'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv=[cols.join(';'),...visible.map(e=>cols.map(c=>q(e[c])).join(';'))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='alertas_quemas_CPMC_noviembre_2026.csv';a.click();URL.revokeObjectURL(a.href)};
 filter();
 // Encuadra la extensión real de TODOS los predios cargados, no solo los cercanos a avisos.
@@ -3901,7 +3901,8 @@ setTimeout(()=>map.invalidateSize(),1000)
     return {events:output,predios:Array.from(matched.values())};
   }
   function updateCommunes(){
-    const select=$('commune'),chosen=select.value;
+    const select=$('commune');if(!select)return;
+    const chosen=select.value;
     select.innerHTML='<option value="">Todas las comunas</option>';
     Array.from(new Set(events.map(e=>e.comuna).filter(Boolean))).sort().forEach(c=>{
       const option=document.createElement('option');option.value=c;option.textContent=c;select.appendChild(option);
@@ -4367,7 +4368,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  reportRows.addEventListener('click',e=>{
   const button=e.target.closest('[data-map-event]');if(!button)return;
   const item=events.find(x=>String(x.id)===button.dataset.mapEvent);if(!item)return;
-  $('from').value='';$('to').value='';$('commune').value='';$('search').value='';
+  $('from').value='';$('to').value='';
   $('radius').value='5000';['showInside','showRed','showOrange','showYellow'].forEach(id=>{if($(id))$(id).checked=true;});
   filter();const idx=visible.findIndex(x=>String(x.id)===String(item.id));
   if(idx>=0&&markerByEvent[idx]){map.setView([item.lat,item.lon],13);markerByEvent[idx].openPopup();}
