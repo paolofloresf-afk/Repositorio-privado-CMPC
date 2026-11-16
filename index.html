@@ -201,6 +201,126 @@ html[data-theme="dark"] .leaflet-control-attribution a{color:#8fc8e8}
 html[data-theme="dark"] .leaflet-bar a:hover{background:#263b54}
 html[data-theme="dark"] .leaflet-control-zoom-in,
 html[data-theme="dark"] .leaflet-control-zoom-out{color:#e4edf7}
+
+/* Pulido visual: jerarquía, ritmo, superficies y estados */
+:root{
+ --bg:#f3f6fa;--ink:#17283d;--muted:#64768a;
+ --surface:#ffffff;--surface-alt:#f7f9fc;--line:#e2e8f0;
+ --accent:#26769b;--accent-soft:#e9f3f8;
+}
+body{font-family:Inter,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#edf3f8 0,#f6f8fb 340px,#f3f6fa 100%);color:var(--ink);letter-spacing:.005em}
+header{position:relative;overflow:hidden;padding:30px 30px 28px;background:linear-gradient(112deg,#0a1c31 0%,#123650 58%,#1b526b 100%);border:0}
+header:after{content:"";position:absolute;width:520px;height:260px;right:-110px;top:-150px;border-radius:50%;background:radial-gradient(circle,rgba(113,196,213,.16),transparent 70%);pointer-events:none}
+.header-inner{position:relative;z-index:1;max-width:1540px;min-height:82px}
+.header-eyebrow{font-size:9px;letter-spacing:.2em;color:#a9cbd9;margin-bottom:10px}
+header h1{font-size:clamp(21px,2.1vw,28px);font-weight:650;letter-spacing:-.035em;margin-bottom:7px}
+header p{font-size:12px;color:#c4d5e1;letter-spacing:.015em}
+.theme-toggle{border:1px solid rgba(221,239,248,.25);background:rgba(235,247,252,.09);border-radius:11px;padding:10px 14px;min-width:132px;font-size:11px;transition:background .18s,border-color .18s}
+.theme-toggle:hover{background:rgba(235,247,252,.16);border-color:rgba(221,239,248,.42)}
+main{max-width:1540px;padding:24px clamp(12px,2vw,28px) 30px}
+.kpis{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.kpi{position:relative;overflow:hidden;min-height:108px;padding:19px 18px 16px;border:1px solid #e2e8ef;border-radius:13px;background:rgba(255,255,255,.96);box-shadow:0 3px 12px rgba(19,45,70,.035);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.kpi:before{content:"";position:absolute;left:18px;top:0;width:34px;height:3px;border-radius:0 0 4px 4px;background:#3d8aa9}
+.kpi:nth-child(2):before{background:#d65b5b}.kpi:nth-child(3):before{background:#df923e}.kpi:nth-child(4):before{background:#c7a43a}.kpi:nth-child(5):before{background:#8a70c3}
+.kpi:hover{transform:translateY(-2px);border-color:#d4e0e9;box-shadow:0 8px 20px rgba(19,45,70,.07)}
+.kpi strong{font-size:32px;line-height:1.05;font-weight:680;letter-spacing:-.045em;margin-bottom:8px}
+.kpi span{display:block;max-width:230px;font-size:10px;line-height:1.45;font-weight:600;color:#718196;letter-spacing:.015em}
+.top-date-panel,.kmz-import-panel{border:1px solid #e1e8ef;border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 4px 16px rgba(19,45,70,.035)}
+.unified-controls{padding:17px 18px!important;margin-bottom:15px}
+.unified-heading{gap:5px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #edf1f5}
+.unified-heading b{font-size:10px;letter-spacing:.13em;color:#526c82}
+.unified-heading span{font-size:11px;color:#8492a2;line-height:1.5}
+.unified-grid{grid-template-columns:1.05fr 1.15fr 1.2fr .76fr;gap:10px}
+.control-group{background:#f8fafc;border:1px solid #edf1f5;border-radius:10px;padding:12px}
+.control-title{font-size:9px;letter-spacing:.12em;color:#77899b;margin-bottom:10px}
+.field-label,.dates-group label{font-size:9px;letter-spacing:.025em;color:#65798c}
+input,select,button{font-family:inherit}
+input,select{border:1px solid #dbe3eb;border-radius:8px;background:#fff;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:none;border-color:#6da4bf;box-shadow:0 0 0 3px rgba(65,139,171,.12)}
+button{border-radius:8px;letter-spacing:.01em;transition:transform .15s,filter .15s,box-shadow .15s}
+button:hover{filter:brightness(1.05);box-shadow:0 3px 9px rgba(17,48,75,.12)}
+button:active{transform:translateY(1px)}
+.actions-group button{font-size:9px;padding:9px 8px}
+.actions-group button#reset{background:#e9eff4;color:#34536d;border:1px solid #dce5ec}
+.actions-group button#csv{background:#245e78;color:#fff}
+.legend-check{font-size:10px!important;color:#526b80!important}
+.legend-check input{accent-color:#357f9d}
+.dot{box-shadow:0 0 0 2px rgba(255,255,255,.8)}
+.square{background:rgba(82,185,107,.22);border:1.5px solid #238b45;border-radius:3px}
+.kmz-import-panel{padding:17px 18px}
+.kmz-import-head{align-items:center;margin-bottom:13px}
+.kmz-import-head h2{font-size:14px;font-weight:650;letter-spacing:-.015em;color:#203b53}
+.kmz-import-head p{font-size:10px;line-height:1.5;color:#8492a2;max-width:760px}
+.kmz-manual-badge{font-size:9px;letter-spacing:.05em;text-transform:uppercase;background:#eef6f0;border-color:#dcece0;color:#477653}
+.kmz-dropzone{min-height:108px;border:1.5px dashed #b9ccd8;border-radius:11px;background:linear-gradient(180deg,#fbfdfe,#f7fafc);gap:7px;transition:border-color .18s,background .18s,transform .18s}
+.kmz-dropzone:hover,.kmz-dropzone.dragover{border-color:#5e9ab4;background:#f1f8fb}
+.kmz-upload-icon{width:29px;height:29px;font-size:19px;background:#eaf3f7;color:#36748e}
+.kmz-dropzone strong{font-size:11px;font-weight:650;color:#31546c}
+.kmz-file-hint{font-size:9px;color:#91a0af}
+.kmz-file-name{font-size:10px;color:#36748e}
+.kmz-actions{margin-top:11px}
+.kmz-actions button{font-size:10px;padding:9px 13px}
+.kmz-actions .kmz-secondary{background:#eef2f6;color:#476178;border:1px solid #e0e7ed}
+.kmz-status{border:1px solid #e8eef3;background:#f7f9fb;color:#61768a;border-radius:8px;font-size:10px}
+.kmz-note{font-size:9px;color:#8c9aaa}
+.kmz-sync-status{background:#f0f5f8;color:#687e91;border:1px solid #e5edf2;border-radius:7px;font-size:9px}
+.layout{grid-template-columns:minmax(0,1.15fr) minmax(460px,.95fr);gap:15px;align-items:stretch}
+.panel{overflow:hidden;border:1px solid #e1e8ef;border-radius:14px;background:#fff;box-shadow:0 4px 16px rgba(19,45,70,.04)}
+.panel h2{display:flex;align-items:center;gap:9px;padding:15px 17px;font-size:12px;font-weight:700;letter-spacing:.005em;color:#29475f;border-bottom:1px solid #edf1f5}
+.panel h2:before{content:"";width:3px;height:15px;flex:0 0 3px;border-radius:5px;background:#67a6bd}
+#map{height:590px;min-height:590px;border-radius:0;background:#e8edf0}
+.map-status{padding:8px 13px;font-size:9px;color:#7890a1;background:#f8fafb;border-color:#edf1f4}
+.note{padding:12px 16px 15px;font-size:10px;line-height:1.65;color:#7d8d9b}
+.tablewrap{max-height:590px;scrollbar-color:#c9d5df transparent;scrollbar-width:thin}
+table{font-size:10px}
+table th{padding:12px 10px;background:#f5f8fa;color:#75879a;font-size:8px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #e7edf2}
+table td{padding:10px 9px;border-bottom:1px solid #f0f3f6;color:#455e73;font-size:10px}
+.event-row:nth-child(even){background:#fbfcfd}
+.event-row:hover{background:#f0f6f9}
+.event-row.selected-event{background:#eaf3f8;box-shadow:inset 3px 0 #4b91ae}
+.pill{font-size:8px;letter-spacing:.04em;padding:4px 7px}
+.footer{margin-top:17px;padding:13px 15px;border-top:1px solid #e2e9ef;color:#8897a5;font-size:9px;line-height:1.65}
+.leaflet-control-layers{border:1px solid rgba(42,68,88,.15)!important;border-radius:9px!important;box-shadow:0 4px 15px rgba(12,35,55,.14)!important;overflow:hidden}
+.leaflet-control-zoom,.leaflet-bar{border:1px solid rgba(42,68,88,.16)!important;border-radius:8px!important;overflow:hidden}
+.leaflet-control-scale-line{border-color:#5e7484!important;color:#5e7484!important;background:rgba(255,255,255,.78)!important}
+.leaflet-popup-content-wrapper{border-radius:10px;box-shadow:0 8px 24px rgba(12,35,55,.18)}
+.leaflet-popup-content{font-size:11px;line-height:1.6}
+:focus-visible{outline:2px solid #4b91ae;outline-offset:2px}
+@media(max-width:1100px){.unified-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.tablewrap{max-height:480px}#map{height:500px;min-height:500px}}
+@media(max-width:650px){main{padding:15px 10px 22px}.header-inner{gap:14px}.header-copy{width:100%}.kpis{gap:8px}.kpi{min-height:95px;padding:15px 13px}.kpi strong{font-size:27px}.kpi span{font-size:9px}.unified-grid{grid-template-columns:1fr}.control-group{padding:11px}.kmz-import-panel,.unified-controls{padding:13px!important}.kmz-actions{display:grid;grid-template-columns:1fr}.kmz-actions button{width:100%}.layout{gap:11px}#map{height:420px;min-height:420px}.panel h2{padding:13px 14px}}
+/* Correspondencia visual del tema oscuro */
+html[data-theme="dark"] body{background:linear-gradient(180deg,#0b1421 0,#101a29 360px,#0d1725 100%)}
+html[data-theme="dark"] .kpi{background:#152235;border-color:#28384c;box-shadow:0 5px 18px rgba(0,0,0,.17)}
+html[data-theme="dark"] .kpi span{color:#9eafc1}
+html[data-theme="dark"] .kpi:hover{border-color:#3b536b}
+html[data-theme="dark"] .unified-heading{border-color:#293a4e}
+html[data-theme="dark"] .unified-heading b{color:#b6c9db}
+html[data-theme="dark"] .unified-heading span{color:#8fa2b6}
+html[data-theme="dark"] .control-group{background:#17263a;border-color:#293b50}
+html[data-theme="dark"] .control-title{color:#9fb1c4}
+html[data-theme="dark"] input,html[data-theme="dark"] select{background:#101d2e;border-color:#34495f;color:#e5edf6}
+html[data-theme="dark"] .actions-group button#reset{background:#26374b;color:#cfdae6;border-color:#34495f}
+html[data-theme="dark"] .actions-group button#csv{background:#286d85;color:#fff}
+html[data-theme="dark"] .kmz-dropzone{background:#132337;border-color:#3c566c}
+html[data-theme="dark"] .kmz-dropzone:hover,html[data-theme="dark"] .kmz-dropzone.dragover{background:#192e43;border-color:#6eaac4}
+html[data-theme="dark"] .kmz-dropzone strong{color:#d2e3ee}
+html[data-theme="dark"] .kmz-file-hint,html[data-theme="dark"] .kmz-note{color:#91a6bb}
+html[data-theme="dark"] .kmz-status{background:#17273b;border-color:#2d4055;color:#bfcede}
+html[data-theme="dark"] .kmz-sync-status{background:#1a2d42;border-color:#2a4056;color:#aebfd0}
+html[data-theme="dark"] .kmz-actions .kmz-secondary{background:#25374d;color:#d4e1ec;border-color:#34495f}
+html[data-theme="dark"] .panel h2{color:#d7e4ef;border-color:#2a3a4e}
+html[data-theme="dark"] .panel h2:before{background:#5b9eb8}
+html[data-theme="dark"] .map-status{background:#18283c;border-color:#2b3e53;color:#a8bbcd}
+html[data-theme="dark"] .note{color:#9aacc0}
+html[data-theme="dark"] table th{background:#1c2b40;color:#a9bbcd;border-color:#2c3d52}
+html[data-theme="dark"] table td{color:#c5d2df;border-color:#29394c}
+html[data-theme="dark"] .event-row:nth-child(even){background:#142237}
+html[data-theme="dark"] .event-row:hover{background:#20364c}
+html[data-theme="dark"] .event-row.selected-event{background:#25445a;box-shadow:inset 3px 0 #67afc9}
+html[data-theme="dark"] .footer{border-color:#2a3b50;color:#8fa3b8}
+html[data-theme="dark"] .leaflet-control-scale-line{border-color:#94a8b8!important;color:#d6e2ec!important;background:rgba(16,29,46,.82)!important}
+html[data-theme="dark"] .leaflet-popup-content-wrapper,html[data-theme="dark"] .leaflet-popup-tip{background:#17273b;color:#e5edf6}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 </style></head><body>
 <header>
   <div class="header-inner">
@@ -279,7 +399,7 @@ html[data-theme="dark"] .leaflet-control-zoom-out{color:#e4edf7}
   <div class="kmz-note">La carga actualiza el dashboard en este navegador. Para que los datos queden guardados en la nube y los vean otros usuarios, descarga el archivo events.json procesado y reemplázalo en el repositorio privado. La carga no envía el KMZ ni sus datos a SIDCO.</div><div class="kmz-sync-status" id="sidcoStatus">SIDCO: snapshot inicial cargado</div>
 </section>
 <div class="layout">
-<section class="panel"><h2>Mapa de Chile · imagen satelital, predios y alertas</h2><div id="map"></div><div id="mapBaseStatus" class="map-status">Base cartográfica: imagen satelital Esri. Puedes cambiar a topográfico o calles desde el selector de capas.</div><div class="note">El mapa utiliza imágenes satelitales Esri como base predeterminada. Puedes alternar entre satélite, topográfico y calles desde el selector de capas arriba a la derecha. Los puntos violetas grandes identifican avisos cuya ubicación cae dentro de un polígono CMPC (clasificación operativa “Quema CMPC · dentro”); los demás puntos conservan el color de su alerta por distancia. Los polígonos celestes muestran predios CMPC asociados a eventos dentro de 5 km. Haz clic en cualquier predio para que el mapa se desplace y acerque automáticamente a su ubicación; el predio seleccionado quedará resaltado. Selecciona un punto para ver fecha, distancia, orientación y predio más cercano. La orientación indica el rumbo desde el límite del predio hacia la quema.</div></section>
+<section class="panel"><h2>Mapa de Chile · imagen satelital, predios y alertas</h2><div id="map"></div><div id="mapBaseStatus" class="map-status">Base cartográfica: imagen satelital Esri. Puedes cambiar a topográfico o calles desde el selector de capas.</div><div class="note">Vista satelital con capas territoriales CMPC en verde y avisos codificados por nivel de alerta. Los puntos se muestran con transparencia para conservar la lectura del terreno. Haz clic en un predio para acercarte y ver sus datos; selecciona un aviso para consultar fecha, distancia, orientación y predio más cercano. La orientación representa el rumbo desde el límite del predio hacia el aviso, no la dirección del viento.</div></section>
 <section class="panel"><h2>Listado de quemas (<span id="count">372</span>)</h2><div class="tablewrap"><table><thead><tr><th>Clasificación</th><th>Alerta</th><th>Fecha</th><th>Comuna</th><th>Predio CMPC</th><th>Distancia</th><th>Orientación</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 </div>
 <div class="footer">Metodología: distancia mínima en línea recta desde el punto geográfico del aviso hasta el polígono del predio, calculada en proyección UTM local. Si el punto cae dentro del polígono, la distancia es 0 y el aviso se distingue como “Quema CMPC · dentro”. Esta clasificación se basa únicamente en la ubicación declarada respecto del polígono; no verifica por sí sola quién realizó la quema ni su autorización. Orientación calculada desde el punto más cercano del límite hacia la quema. No representa dirección del viento ni propagación del fuego.</div>
