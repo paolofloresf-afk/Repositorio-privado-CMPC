@@ -2209,13 +2209,14 @@ function filter(){
   const m=L.marker([e.lat,e.lon],{icon:dotIcon,pane:'alertMarkers',keyboard:true});
   m.bindPopup(popup(e));m.addTo(markers);markerByEvent[index]=m;
  });
- document.getElementById('count').textContent=visible.length;
+ const externalBurnRows=visible.map((event,index)=>({event,index})).filter(item=>!isInside(item.event));
+ document.getElementById('count').textContent=externalBurnRows.length;
  document.getElementById('kTotal').textContent=visible.length;
  document.getElementById('kRed').textContent=visible.filter(e=>e.alerta==='ROJA').length;
  document.getElementById('kOrange').textContent=visible.filter(e=>e.alerta==='NARANJA').length;
  document.getElementById('kYellow').textContent=visible.filter(e=>e.alerta==='AMARILLA').length;
  document.getElementById('kInside').textContent=visible.filter(isInside).length;
- document.getElementById('tbody').innerHTML=visible.slice(0,500).map((e,i)=>`<tr class="event-row ${isInside(e)?'inside-row':''}" data-event-index="${i}" tabindex="0" title="Haz clic para localizar esta quema en el mapa"><td><span class="pill ${isInside(e)?'CMPC':''}">${category(e)}</span></td><td><span class="pill ${e.alerta}">${e.alerta}</span></td><td>${e.fecha}</td><td>${e.comuna}</td><td>${e.predio_cercano}</td><td>${fmtDist(e.distancia_m)}</td><td>${e.orientacion}</td></tr>`).join('');
+ document.getElementById('tbody').innerHTML=externalBurnRows.slice(0,500).map(({event:e,index})=>`<tr class="event-row" data-event-index="${index}" tabindex="0" title="Haz clic para localizar esta quema en el mapa"><td><span class="pill">QUEMA EXTERNA</span></td><td><span class="pill ${e.alerta}">${e.alerta}</span></td><td>${e.fecha}</td><td>${e.comuna}</td><td>${e.predio_cercano}</td><td>${fmtDist(e.distancia_m)}</td><td>${e.orientacion}</td></tr>`).join('');
  updateNearbyPredioHighlights();
 }
 // Seleccionar una fila del listado centra el mapa en su quema y abre la ficha.
