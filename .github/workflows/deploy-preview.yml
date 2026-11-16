@@ -33,8 +33,8 @@ jobs:
           import re
           from pathlib import Path
           html = Path('index.html').read_text(encoding='utf-8')
-          scripts = re.findall(r'<script(?:\\s[^>]*)?>(.*?)</script>', html, re.S)
-          Path('/tmp/cmpc-dashboard.js').write_text('\\n'.join(s for s in scripts if s.strip()), encoding='utf-8')
+          scripts = re.findall(r'<script[^>]*>(.*?)</script>', html, re.S)
+          Path('/tmp/cmpc-dashboard.js').write_text('\n'.join(s for s in scripts if s.strip()), encoding='utf-8')
           PY
           node --check /tmp/cmpc-dashboard.js
 
