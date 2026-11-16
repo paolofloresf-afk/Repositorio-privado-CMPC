@@ -2836,6 +2836,24 @@ function filter(){
  const from=document.getElementById('from').value,to=document.getElementById('to').value;
  const commune=document.getElementById('commune').value,search=document.getElementById('search').value.toLowerCase(),radius=+document.getElementById('radius').value;
  const radiusKm=radius/1000;
+ // Sincroniza la leyenda de rangos con el radio elegido en el panel principal.
+ const rangeDescription=document.querySelector('#mapRangeGroup .range-description');
+ if(rangeDescription)rangeDescription.textContent='Muestra u oculta avisos por nivel de proximidad. Radio máximo seleccionado: '+radiusKm+' km.';
+ const rangeLegend=[
+  {id:'showInside',label:'Dentro de predio CMPC · 0 km',available:true},
+  {id:'showRed',label:'Roja · menos de 1 km',available:radiusKm>0},
+  {id:'showOrange',label:'Naranja · 1 a 3 km',available:radiusKm>1},
+  {id:'showYellow',label:'Amarilla · 3 a 5 km',available:radiusKm>3}
+ ];
+ rangeLegend.forEach(item=>{
+  const input=document.getElementById(item.id);
+  if(!input)return;
+  input.disabled=!item.available;
+  const label=input.closest('label');
+  const text=label?.querySelector('span');
+  if(text)text.textContent=item.label+(item.available?'':' · fuera del radio seleccionado');
+  if(label)label.style.opacity=item.available?'1':'.45';
+ });
  ['reportMaxKm','firmsReportMaxKm'].forEach(id=>{const input=document.getElementById(id);if(input){input.max=String(radiusKm);input.value=String(radiusKm);}});
  const firmsIntro=document.querySelector('.firms-list-intro');if(firmsIntro)firmsIntro.textContent='Solo detecciones ubicadas dentro de predios CMPC o a un máximo de '+radiusKm+' km del predio CMPC más cercano.';
  window.dispatchEvent(new CustomEvent('cmpc-global-filter',{detail:{from,to,commune,search,radius,showInside:document.getElementById('showInside').checked,showRed:document.getElementById('showRed').checked,showOrange:document.getElementById('showOrange').checked,showYellow:document.getElementById('showYellow').checked}}));
