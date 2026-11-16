@@ -1438,19 +1438,21 @@ const satelliteBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/ser
 const topoBase=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{
   maxZoom:18,attribution:'Tiles &copy; Esri — Sources: Esri, USGS, NOAA'
 });
-// Base gris oscuro de Esri + referencias/etiquetas en una sola opción del selector.
-const darkBaseTiles=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{
-  maxZoom:16,
-  maxNativeZoom:16,
-  attribution:'Sources: Esri, HERE, Garmin, &copy; OpenStreetMap contributors, and the GIS user community'
+// CARTO Dark Matter: fondo sin etiquetas + capa transparente de etiquetas.
+const CARTO_BASEMAPS_KEY='cb1_59vd_1_9d4211b005e57bbe4c174097';
+const cartoDarkAttribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+const darkNoLabels=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png?key='+CARTO_BASEMAPS_KEY,{
+  subdomains:'abcd',
+  minZoom:0,
+  maxZoom:20,
+  attribution:cartoDarkAttribution
 });
-const darkReferenceTiles=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',{
-  maxZoom:16,
-  maxNativeZoom:16,
-  attribution:'Labels: Esri, HERE, &copy; OpenStreetMap contributors, and the GIS user community',
-  pane:'overlayPane'
+const darkOnlyLabels=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png?key='+CARTO_BASEMAPS_KEY,{
+  subdomains:'abcd',
+  minZoom:0,
+  maxZoom:20
 });
-const darkBase=L.layerGroup([darkBaseTiles,darkReferenceTiles]);
+const darkBase=L.layerGroup([darkNoLabels,darkOnlyLabels]);
 let satelliteFallbackUsed=false;
 satelliteBase.on('tileerror',()=>{
   if(!satelliteFallbackUsed && map.hasLayer(satelliteBase)){
