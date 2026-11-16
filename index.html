@@ -1663,12 +1663,12 @@ html[data-theme="dark"] .firms-file-help{color:#8fa9ac}
   </div>
   <div class="firms-file-row">
     <label class="firms-file-button" for="firmsFile">
-      <span aria-hidden="true">↑</span> Seleccionar ZIP
-      <input type="file" id="firmsFile" accept=".zip,application/zip">
+      <span aria-hidden="true">↑</span> Seleccionar archivo(s)
+      <input type="file" id="firmsFile" accept=".zip,.shp,.dbf,.shx,.prj,.cpg,.csv,.geojson,.json,application/zip,text/csv,application/json" multiple>
     </label>
-    <span class="kmz-file-name" id="firmsFileName">Ningún ZIP seleccionado</span>
+    <span class="kmz-file-name" id="firmsFileName">Ningún archivo seleccionado</span>
   </div>
-  <div class="firms-file-help">Sube un solo ZIP con los archivos .shp, .dbf, .shx y .prj (el .cpg es opcional).</div>
+  <div class="firms-file-help">Puedes subir el ZIP completo o seleccionar juntos el .shp, .dbf, .shx, .prj y .cpg.</div>
   <div class="firms-filter-grid">
     <label>DESDE<input type="date" id="firmsFrom"></label>
     <label>HASTA<input type="date" id="firmsTo"></label>
@@ -1676,7 +1676,7 @@ html[data-theme="dark"] .firms-file-help{color:#8fa9ac}
   </div>
   <label class="firms-replace-option"><input type="checkbox" id="firmsReplace"> Reemplazar la capa actual en lugar de acumular detecciones</label>
   <div class="kmz-actions firms-actions">
-    <button type="button" id="processFirms" disabled>Procesar ZIP y actualizar mapa</button>
+    <button type="button" id="processFirms" disabled>Procesar y actualizar mapa</button>
     <button type="button" id="downloadFirms" class="kmz-secondary">Descargar datos actualizados</button>
   </div>
   <div class="kmz-status" id="firmsStatus" role="status" aria-live="polite">Cargando la capa inicial de NASA FIRMS para Chile…</div>
@@ -2091,7 +2091,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   firmsPane.style.pointerEvents='auto';
   layerControl.addOverlay(firmsLayer,'NASA FIRMS · detecciones Chile');
   let firmsFeatures=[];
-  let selectedFirmsFile=null;
+  let selectedFirmsFiles=[];
 
   function dateRange(){
     const dates=firmsFeatures.map(f=>f.properties.acq_date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
@@ -2140,21 +2140,47 @@ setTimeout(()=>map.invalidateSize(),1000)
     }
   }
   $('firmsFile').addEventListener('change',()=>{
-    selectedFirmsFile=$('firmsFile').files?.[0]||null;
-    $('firmsFileName').textContent=selectedFirmsFile?selectedFirmsFile.name:'Ningún ZIP seleccionado';
-    $('processFirms').disabled=!selectedFirmsFile;
+    selectedFirmsFiles=Array.from($('firmsFile').files||[]);
+    $('firmsFileName').textContent=selectedFirmsFiles.length
+      ? selectedFirmsFiles.map(f=>f.name).join(', ')
+      : 'Ningún archivo seleccionado';
+    $('processFirms').disabled=!selectedFirmsFiles.length;
   });
   $('processFirms').addEventListener('click',async()=>{
-    if(!selectedFirmsFile)return;
+    if(!selectedFirmsFiles.length)return;
     const button=$('processFirms');
     button.disabled=true;button.textContent='Procesando…';
-    $('firmsStatus').textContent='Leyendo ZIP y filtrando detecciones dentro de Chile…';
+    $('firmsStatus').textContent='Leyendo archivo(s) y filtrando detecciones dentro de Chile…';
     try{
-      if(!selectedFirmsFile.name.toLowerCase().endsWith('.zip'))throw new Error('Selecciona un archivo .ZIP de NASA FIRMS.');
-      if(typeof window.shp!=='function')throw new Error('No se pudo cargar el lector de Shapefile. Recarga el Monitor.');
-      const parsed=flattenFeatures(await window.shp(await selectedFirmsFile.arrayBuffer()));
+      const files=selectedFirmsFiles;
+      const zip=files.find(f=>f.name.toLowerCase().endsWith('.zip'));
+      let parsed=[];
+      if(zip){
+        if(typeof window.shp!=='function')throw new Error('No se pudo cargar el lector Shapefile. Recarga el Monitor.');
+        parsed=flattenFeatures(await window.shp(await zip.arrayBuffer()));
+      }else{
+        const shpFile=files.find(f=>f.name.toLowerCase().endsWith('.shp'));
+        const csvFile=files.find(f=>f.name.toLowerCase().endsWith('.csv'));
+        const geoFile=files.find(f=>f.name.toLowerCase().endsWith('.geojson')||f.name.toLowerCase().endsWith('.json'));
+        if(shpFile){
+          if(typeof window.shp!=='function')throw new Error('No se pudo cargar el lector Shapefile. Recarga el Monitor.');
+          const object={shp:await shpFile.arrayBuffer()};
+          const dbf=files.find(f=>f.name.toLowerCase().endsWith('.dbf'));
+          const prj=files.find(f=>f.name.toLowerCase().endsWith('.prj'));
+          if(!dbf)throw new Error('Falta el archivo .dbf. Selecciona todos los archivos complementarios del Shapefile.');
+          object.dbf=await dbf.arrayBuffer();
+          if(prj)object.prj=await prj.text();
+          parsed=flattenFeatures(await window.shp(object));
+        }else if(csvFile){
+          parsed=parseCSV(await csvFile.text());
+        }else if(geoFile){
+          parsed=flattenFeatures(JSON.parse(await geoFile.text()));
+        }else{
+          throw new Error('Selecciona un ZIP, un Shapefile completo, un CSV o un GeoJSON.');
+        }
+      }
       const cleaned=parsed.map(normalizeFeature).filter(Boolean);
-      if(!cleaned.length)throw new Error('El ZIP no contiene detecciones válidas dentro de Chile. Verifica que incluya los archivos del Shapefile.');
+      if(!cleaned.length)throw new Error('No se encontraron detecciones válidas dentro de Chile. Revisa que el archivo corresponda a NASA FIRMS.');
       const dropped=Math.max(0,parsed.length-cleaned.length);
       const before=firmsFeatures.length;
       if($('firmsReplace').checked){
@@ -2168,11 +2194,11 @@ setTimeout(()=>map.invalidateSize(),1000)
       const added=$('firmsReplace').checked?cleaned.length:firmsFeatures.length-before;
       $('firmsStatus').textContent='Actualización correcta: '+parsed.length.toLocaleString('es-CL')+' registros leídos; '+cleaned.length.toLocaleString('es-CL')+' dentro de Chile; '+dropped.toLocaleString('es-CL')+' fuera de Chile o no válidos; '+added.toLocaleString('es-CL')+' nuevos. Total: '+firmsFeatures.length.toLocaleString('es-CL')+'.';
     }catch(err){
-      $('firmsStatus').textContent='No se pudo procesar el ZIP: '+err.message;
+      $('firmsStatus').textContent='No se pudo procesar el archivo: '+err.message;
       console.error('NASA FIRMS',err);
     }finally{
-      button.disabled=!selectedFirmsFile;
-      button.textContent='Procesar ZIP y actualizar mapa';
+      button.disabled=!selectedFirmsFiles.length;
+      button.textContent='Procesar y actualizar mapa';
     }
   });
   ['firmsFrom','firmsTo','firmsSatellite'].forEach(id=>$(id).addEventListener('change',renderLayer));
