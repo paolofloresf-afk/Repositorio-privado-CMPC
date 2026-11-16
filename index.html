@@ -1822,9 +1822,8 @@ const layerControl=L.control.layers(
     if(!map.hasLayer(predLayer))predLayer.addTo(map);
     layerControl.removeLayer(predLayer);
     layerControl.addOverlay(predLayer,'Predios CMPC · todos ('+prediosTotal.toLocaleString('es-CL')+')');
-    const bounds=predLayer.getBounds();
-    if(bounds.isValid())map.fitBounds(bounds,{padding:[22,22],maxZoom:7});
-    if(status)status.textContent='Capa completa cargada y visible: '+prediosTotal.toLocaleString('es-CL')+' predios CMPC. Las alertas se mantienen por encima de los polígonos.';
+    if(window.cmpcFitAllLayers)window.cmpcFitAllLayers();
+    if(status)status.textContent='Capa completa cargada y visible: '+prediosTotal.toLocaleString('es-CL')+' predios CMPC. Las capas NASA FIRMS y SIDCO se muestran por encima de los polígonos.';
   }catch(error){
     if(status)status.textContent='No se pudo cargar la capa completa de predios CMPC: '+error.message+'. Se mantienen los polígonos iniciales disponibles.';
     console.error('Carga de predios CMPC:',error);
@@ -2093,6 +2092,19 @@ setTimeout(()=>map.invalidateSize(),1000)
   let firmsFeatures=[];
   let selectedFirmsFiles=[];
 
+  // Encuadra de una sola vez el territorio de predios y las detecciones para que los puntos FIRMS no queden fuera de la vista inicial.
+  window.cmpcFitAllLayers=()=>{
+    const bounds=L.latLngBounds();
+    if(typeof predLayer!=='undefined'){
+      const predBounds=predLayer.getBounds();
+      if(predBounds.isValid())bounds.extend(predBounds);
+    }
+    if(firmsFeatures.length){
+      const detectionBounds=firmsLayer.getBounds();
+      if(detectionBounds.isValid())bounds.extend(detectionBounds);
+    }
+    if(bounds.isValid())map.fitBounds(bounds,{padding:[28,28],maxZoom:5});
+  };
   function dateRange(){
     const dates=firmsFeatures.map(f=>f.properties.acq_date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
     return {min:dates[0]||'',max:dates[dates.length-1]||''};
@@ -2117,7 +2129,7 @@ setTimeout(()=>map.invalidateSize(),1000)
     $('firmsTerra').textContent=terra.toLocaleString('es-CL');
     $('firmsAqua').textContent=aqua.toLocaleString('es-CL');
     $('firmsOther').textContent=(firmsFeatures.length-terra-aqua).toLocaleString('es-CL');
-    $('firmsStatus').textContent='NASA FIRMS: '+visible.length.toLocaleString('es-CL')+' detecciones visibles; '+firmsFeatures.length.toLocaleString('es-CL')+' acumuladas en Chile. Los puntos se dibujan sobre los predios.';
+    $('firmsStatus').textContent='NASA FIRMS: '+visible.length.toLocaleString('es-CL')+' puntos visibles en el mapa; '+firmsFeatures.length.toLocaleString('es-CL')+' acumulados en Chile. Los puntos se muestran sobre predios y alertas SIDCO.';
     $('downloadFirms').disabled=!firmsFeatures.length;
   }
   function setDateRange(){
@@ -2132,8 +2144,9 @@ setTimeout(()=>map.invalidateSize(),1000)
       const data=await r.json();
       firmsFeatures=flattenFeatures(data).map(normalizeFeature).filter(Boolean);
       setDateRange();renderLayer();
+      window.cmpcFitAllLayers();
       const d=dateRange();
-      $('firmsStatus').textContent='Capa inicial cargada: '+firmsFeatures.length.toLocaleString('es-CL')+' detecciones filtradas para Chile ('+d.min+' a '+d.max+').';
+      $('firmsStatus').textContent='Capa inicial cargada: '+firmsFeatures.length.toLocaleString('es-CL')+' puntos FIRMS visibles en el mapa de Chile ('+d.min+' a '+d.max+').';
     }catch(err){
       $('firmsStatus').textContent='No se pudo cargar firms_chile.geojson: '+err.message;
       console.error('NASA FIRMS',err);
