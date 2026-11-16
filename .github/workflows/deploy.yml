@@ -1,7 +1,8 @@
 name: Actualizar y publicar Monitor CMPC
 
 on:
-  # Primera validación manual. Activaremos la programación tras validar SIDCO y Cloudflare.
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -24,36 +25,11 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Preparar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Instalar dependencias geoespaciales
-        run: pip install -r requirements.txt
-
-      - name: Consultar SIDCO y cruzar avisos con predios CMPC
-        env:
-          SIDCO_URL: ${{ secrets.SIDCO_URL }}
-        run: python refresh.py
-
-      - name: Guardar nueva extracción válida
-        run: |
-          git config user.name "cmpc-monitor-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add events.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Actualizar avisos SIDCO y cruce CMPC"
-            git push
-          else
-            echo "Los datos SIDCO no cambiaron; se mantiene la versión anterior."
-          fi
-
       - name: Preparar carpeta pública
         run: |
           rm -rf dist
           mkdir -p dist
-          cp index.html events.json dist/
+          cp index.html events.json predios.geojson dist/
 
       - name: Publicar dashboard en Cloudflare Pages
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
