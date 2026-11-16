@@ -3108,7 +3108,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       selectorCodesPromise=(async()=>{
         const response=await fetch('./selector_fundos_codes.b64',{cache:'force-cache'});
         if(!response.ok)throw new Error('No se pudo cargar el cruce del Selector de Fundo (HTTP '+response.status+').');
-        const encoded=(await response.text()).replace(/\\s+/g,'');
+        const encoded=(await response.text()).replace(/\s+/g,'');
         const bytes=Uint8Array.from(atob(encoded),ch=>ch.charCodeAt(0));
         if(typeof DecompressionStream==='undefined')throw new Error('El navegador no permite descomprimir el cruce de fundos.');
         const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
@@ -3118,10 +3118,10 @@ setTimeout(()=>map.invalidateSize(),1000)
     return selectorCodesPromise;
   }
   function reportFundKey(value){
-    return String(value??'').trim().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').replace(/\\s+/g,' ').trim();
+    return String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').replace(/\s+/g,' ').trim();
   }
   function displayReportDate(value){
-    const m=String(value||'').match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);
+    const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
     return m?m[3]+'-'+m[2]+'-'+m[1]:String(value||'');
   }
   function getFirmsReportEnrichment(record){
