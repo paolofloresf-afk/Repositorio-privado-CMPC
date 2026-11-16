@@ -1957,6 +1957,77 @@ function predioMapFields(feature){
   return {code:String(code||'').trim(),commune:String(commune||'').trim()};
 }
 const escapePopupText=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const GESTORES_POR_ZONA = {
+  "ANGOL":"MEZA ESPINOZA RIGOBERTO ENRIQUE",
+  "CARAHUE":"DIAZ CARRASCO ROLANDO",
+  "CAYUCUPIL":"RECABARREN CEBALLOS MARIA JOSE",
+  "CHACAYAL-LA PERLA":"RIFFO SALAZAR JOHN LUIS",
+  "CHILLAN":"MONTOYA RICHARD",
+  "CHOQUE":"SAEZ VERA CARLOS",
+  "COCHENTO":"PARISCHEWSKI CASTEL AGNIESZKA MARTINA",
+  "COLICHEU":"CERDA ZUNIGA CLAUDIA XIMENA",
+  "CONTULMO":"SEGUEL JORQUERA NICOLAS ANTONIO",
+  "COYHAIQUE NORTE":"JUAN CALOS MOREIRA RYCKS",
+  "COYHAIQUE SUR":"JUAN CALOS MOREIRA RYCKS",
+  "CUNCO FREIRE":"PACHECO YANEZ JOSE MARCELO",
+  "CURANILAHUE":"SAEZ SAEZ MIGUEL ALFREDO",
+  "EL MORRO":"BOBADILLA MENA EMANUEL",
+  "ERCILLA":"OVIEDO STEGMANN HUMBERTO ALEJANDRO",
+  "ESCUADRON":"TERESA JACQUELINE BRAVO PEREZ",
+  "GORBEA PITRUFQUEN":"ECHEVERRIA VASQUEZ JAIME EDO.",
+  "HUALQUI":"UYARTE ALARCON MAXIMO OMAR",
+  "HUAPITRIO":"RAMOS MARINAO JAVIER ANDRES",
+  "HUAQUI":"ALARCON GARCES SEGUNDO HERNALDO",
+  "IMPERIAL":"CURAQUEO MARIHUAN CESAR VICENTE",
+  "LA AURORA":"CORTEZ MUNOZ LUIS",
+  "LA ESPERANZA":"PRADO SEGUEL RICHARD ELVIZ",
+  "LAJA":"SEPULVEDA MARTINEZ OSCAR MAURICIO",
+  "LANALHUE":"HERRERA VERGARA GUSTAVO",
+  "LAS ACACIAS":"GARRIDO LEAL VICTOR",
+  "LAS ARAUCARIAS":"PAREDES ZAPATA EDGARDO ENRIQUE",
+  "LAUTARO VILCUN":"MORALES ANCAMIL PEDRO ADAN",
+  "LONCOCHE":"GIUSTI CANOBBI ENZO LEONEL",
+  "LOS ALPES":"POBLETE ESPINOZA JESSENIA PILAR",
+  "LOS BARROS":"JARA LARA HERNAN DEL CARMEN",
+  "LOS LAURELES":"SAAVEDRA LANTANO CAROL ALEJANDRA",
+  "LOS RIOS VALDIVIA":"INOSTROZA VEGA JAIME",
+  "LOS SAUCES":"RUBIO MENA CLAUDIO HERIBERTO",
+  "MAITENREHUE":"PROVOSTE FIGUEROA FRANCO GERMAN",
+  "MANZANAR":"RETAMAL VILLANUEVA PRIMO ENRIQUE",
+  "MININCO":"ROMAN ORELLANA ENRIQUE EUGENIO",
+  "MONTERREY":"ABURTO SOTO VICTOR MANUEL",
+  "NACIMIENTO":"CABEZA GARRIDO GONZALO ENRIQUE",
+  "NEGRETE":"PIZARRO BELTRAN NATALIA",
+  "NIHUINCO":"MIERES RIOS PATRICIO ENRIQUE",
+  "PICHIPELLAHUEN":"SILVA LANDERO JOSE ORLANDO",
+  "PUREN-QUETRAHUE":"SANZANA GUZMAN ERALDO DAVID",
+  "QUILACO":"CAROLINA ANDREA VALENZUELA IBARRA",
+  "QUILLECO":"SAEZ BERNALES CAMILA ANDREA",
+  "RENAICO":"CLAUDIA ALEJANDRA ALARCON LANDEROS",
+  "RUCAMANQUI":"AEDO CESPEDES CLAUDIA MARIBEL",
+  "RUPANCO OSORNO":"VASQUEZ DIAZ HECTOR ROLANDO",
+  "SAN ANDRES":"ARIAS DIAZ FRANCISCO JAVIER",
+  "SAN JOSE":"MU?OZ MANUEL",
+  "SAN ROSENDO":"OMAR ESPINOZA JARA",
+  "SANTA ADRIANA":"MONTOYA MENDOZA CRISTIAN",
+  "SANTA BARBARA":"BENAVIDES REYES JUAN ANDRES",
+  "SANTA JUANA":"VALLADARES ARAUJO MAURICIO ALEJANDRO",
+  "SANTA JULIA":"SANDOVAL CABRERA MANUELA MARCELA",
+  "SELVA OSCURA":"CRIMILDA MARIA LAGOS ERICES",
+  "TEMUCO CHOL CHOL":"OYARZUN BARRAZA JOSE LUIS",
+  "TEODORO SCHMIDT":"PACHECO RODRIGUEZ JORGE OSVALDO",
+  "TINAJON":"ANDRES ANTONIO ABURTO CACERES",
+  "TIRUA":"GALLARDO JUAN",
+  "TOLTEN":"ESTRADA ORTIZ MARJORIE SOLANGE",
+  "TOTORAS":"AREVALO PAZ CLAUDIA ALEJANDRA",
+  "TRAIGUEN":"BARRA SEPULVEDA JOSE GABRIEL",
+  "TRILAHUE":"SILVA ORTIZ JOHANA MARIOLY",
+  "TRINTRE":"DIAZ CARRASCO HECTOR",
+  "VICTORIA":"CASTILLO MIRANDA HERIBERTO ANTONIO",
+  "YUMBEL":"PURRAN PURRAN PAULINA ODETH",
+  "YUNGAY":"MEDINA PERALTA GABRIEL ANDRES"
+};
+const normalizeZoneKey=value=>String(value??'').trim().toUpperCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/\\s+/g,' ');
 let selectedPredioLayer=null;
 // Los filtros y la leyenda se encuentran agrupados en el panel superior.
 const predLayer=L.geoJSON(DATA.predios,{
@@ -1965,10 +2036,13 @@ const predLayer=L.geoJSON(DATA.predios,{
     const p=feature.properties||{};
     const nombre=escapePopupText(p.predio||'Predio CMPC');
     const zona=escapePopupText(p.zona||'Sin zona informada');
+    const gestorRaw=GESTORES_POR_ZONA[normalizeZoneKey(p.zona)]||'No identificado en el Excel recibido';
+    const gestor=escapePopupText(gestorRaw);
+    const telefono='No informado en el Excel recibido';
     const fields=predioMapFields(feature);
     const codigo=escapePopupText(fields.code||'No disponible en la capa actual');
     const comuna=escapePopupText(fields.commune||'No informada en la capa actual');
-    layer.bindPopup(`<b>${nombre}</b><br>Código de predio: <b>${codigo}</b><br>Comuna del predio: <b>${comuna}</b><br>Zona administrativa: ${zona}<br><small>Haz clic para centrar el mapa en este predio.</small>`);
+    layer.bindPopup(`<b>${nombre}</b><br>Código de predio: <b>${codigo}</b><br>Comuna del predio: <b>${comuna}</b><br>Zona de gestión: ${zona}<br><b>Gestor de zona:</b> ${gestor}<br><b>Teléfono:</b> ${telefono}<br><small>Haz clic para centrar el mapa en este predio.</small>`);
     layer.on('click',()=>{
       if(selectedPredioLayer && selectedPredioLayer!==layer){
         predLayer.resetStyle(selectedPredioLayer);
