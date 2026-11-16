@@ -2396,8 +2396,8 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
     </div>
     <div class="report-table-wrap">
       <table class="report-table firms-report-table">
-        <thead><tr><th>Detección</th><th>Satélite / sensor</th><th>Predio CMPC más cercano</th><th>Código fundo</th><th>Zona</th><th>Gestor de zona</th><th>Distancia</th><th>FRP</th><th>Confianza</th><th>Mapa</th></tr></thead>
-        <tbody id="firmsReportRows"><tr><td colspan="10" class="report-empty">Calculando distancias...</td></tr></tbody>
+        <thead><tr><th>Detección</th><th>Satélite / sensor</th><th>Predio CMPC más cercano</th><th>Código fundo</th><th>Subárea / gestor</th><th>Zona / gestor</th><th>Subgerencia / subgerente</th><th>Distancia</th><th>FRP</th><th>Confianza</th><th>Mapa</th></tr></thead>
+        <tbody id="firmsReportRows"><tr><td colspan="11" class="report-empty">Calculando distancias...</td></tr></tbody>
       </table>
     </div>
     <div class="report-pagination-footer">
@@ -2692,9 +2692,18 @@ const predLayer=L.geoJSON(DATA.predios,{
     const fields=predioMapFields(feature);
     const codigo=escapePopupText(fields.code||'No disponible en la capa actual');
     const comuna=escapePopupText(fields.commune||'No informada en la capa actual');
-    layer.bindPopup(`<b>${nombre}</b><br>Código de predio: <b>${codigo}</b><br>Comuna del predio: <b>${comuna}</b><br>Zona de gestión: ${zona}<br><b>Gestor de zona:</b> ${gestor}<br><b>Teléfono:</b> ${telefono}<br><small>Haz clic para centrar el mapa en este predio.</small>`);
-    layer.on('click',()=>{
+    const managementKey=normalizePredioKey(p.zona||'');
+    let management={};
+    const managementHtml=()=>'<br><b>Subárea:</b> '+escapePopupText(management.subarea||p.zona||'No informada')+
+      '<br><b>Gestor de subárea:</b> '+escapePopupText(management.subareaManager||'Sin gestor informado')+
+      '<br><b>Zona:</b> '+escapePopupText(management.zone||'No informada')+
+      '<br><b>Gestor de zona:</b> '+escapePopupText(management.zoneManager||'Sin gestor informado')+
+      '<br><b>Subgerencia:</b> '+escapePopupText(management.submanagement||'No informada')+
+      '<br><b>Subgerente:</b> '+escapePopupText(management.submanager||'Sin gestor informado');
+    layer.bindPopup(`<b>${nombre}</b><br>Código de predio: <b>${codigo}</b><br>Comuna del predio: <b>${comuna}</b>`+managementHtml()+`<br><small>Haz clic para centrar el mapa en este predio.</small>`);
+    layer.on('click',async()=>{
       selectedPredioLayer=layer;
+      try{await loadSelectorManagementData();management=selectorManagementData?.[managementKey]||{};layer.setPopupContent(`<b>${nombre}</b><br>Código de predio: <b>${codigo}</b><br>Comuna del predio: <b>${comuna}</b>`+managementHtml()+`<br><small>Haz clic para centrar el mapa en este predio.</small>`);}catch(error){}
       applyPredioHighlightStyles();
       if(layer.getBounds && layer.getBounds().isValid()){
         map.flyToBounds(layer.getBounds(),{padding:[35,35],maxZoom:14,duration:1.1});
@@ -3074,14 +3083,25 @@ setTimeout(()=>map.invalidateSize(),1000)
   function popupContent(f){
     const p=f.properties||{};
     const confidence=typeof p.confidence==='number'?p.confidence+'%':escapeHtml(p.confidence||'No informada');
-    return '<div style="min-width:190px"><b style="color:#087c82">NASA FIRMS · detección térmica</b><br>'+
+    const record=firmsNearbyRecords.find(r=>keyFor(r.feature)===keyFor(f));
+    const e=record?getFirmsReportEnrichment(record):{};
+    const fund=record?'<hr><b>Predio CMPC más cercano:</b> '+escapeHtml(record.predio||'No identificado')+
+      '<br><b>Código fundo:</b> '+escapeHtml(e.code||'No disponible')+
+      '<br><b>Distancia:</b> '+(Number(record.distance)<1000?Math.round(record.distance)+' m':(Number(record.distance)/1000).toFixed(2)+' km')+
+      '<br><b>Subárea:</b> '+escapeHtml(e.subarea||'No informada')+
+      '<br><b>Gestor de subárea:</b> '+escapeHtml(e.subareaManager||'Sin gestor informado')+
+      '<br><b>Zona:</b> '+escapeHtml(e.zoneName||'No informada')+
+      '<br><b>Gestor de zona:</b> '+escapeHtml(e.zoneManager||'Sin gestor informado')+
+      '<br><b>Subgerencia:</b> '+escapeHtml(e.submanagement||'No informada')+
+      '<br><b>Subgerente:</b> '+escapeHtml(e.submanager||'Sin gestor informado'):'<hr><b>Predio CMPC:</b> Sin asociación dentro del radio de 5 km';
+    return '<div style="min-width:220px"><b style="color:#087c82">NASA FIRMS · detección térmica</b><br>'+
       '<b>'+escapeHtml(p.satellite||'Satélite no informado')+'</b> · '+escapeHtml(p.instrument||'')+'<br>'+
       'Fecha: '+escapeHtml(p.acq_date||'No informada')+'<br>'+
       'Hora: '+timeUTC(p.acq_time_utc)+'<br>'+
       'Confianza: <b>'+confidence+'</b><br>'+
       'Brillo: '+(p.brightness_k==null?'No informado':Number(p.brightness_k).toFixed(2)+' K')+'<br>'+
       'FRP: <b>'+(p.frp_mw==null?'No informado':Number(p.frp_mw).toFixed(2)+' MW')+'</b><br>'+
-      'Día/noche: '+(p.daynight==='D'?'Día':p.daynight==='N'?'Noche':'No informado')+'</div>';
+      'Día/noche: '+(p.daynight==='D'?'Día':p.daynight==='N'?'Noche':'No informado')+fund+'</div>';
   }
 
   const firmsLayer=L.featureGroup().addTo(map);
@@ -3399,7 +3419,7 @@ setTimeout(()=>map.invalidateSize(),1000)
         iconSize:[18,18],iconAnchor:[9,9],popupAnchor:[0,-9]
       });
       const marker=L.marker([c[1],c[0]],{pane:'firmsPane',icon:heatIcon});
-      marker.bindPopup(popupContent(f));marker.addTo(firmsLayer);
+      marker.bindPopup(popupContent(f));marker.on('click',async()=>{try{await loadSelectorManagementData();marker.setPopupContent(popupContent(f)).openPopup();}catch(error){}});marker.addTo(firmsLayer);
       firmsMarkersByKey.set(keyFor(f),marker);
     });
     const terra=firmsFeatures.filter(f=>String(f.properties.satellite).toLowerCase()==='terra').length;
@@ -3523,6 +3543,22 @@ setTimeout(()=>map.invalidateSize(),1000)
 
   // Informe NASA FIRMS · detecciones hasta 3 km del polígono CMPC más cercano.
   let selectorCodesPromise=null;
+  let selectorManagementPromise=null;
+  let selectorManagementData=null;
+  async function loadSelectorManagementData(){
+    if(!selectorManagementPromise){
+      selectorManagementPromise=(async()=>{
+        const response=await fetch('./selector_management.b64',{cache:'force-cache'});
+        if(!response.ok)throw new Error('No se pudo cargar la asignación de gestores del Selector de Fundo.');
+        const encoded=(await response.text()).replace(/\s+/g,'');
+        const bytes=Uint8Array.from(atob(encoded),ch=>ch.charCodeAt(0));
+        const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        selectorManagementData=JSON.parse(await new Response(stream).text());
+        return selectorManagementData;
+      })();
+    }
+    return selectorManagementPromise;
+  }
   let firmsReportRows=[];
   let firmsReportPage=0;
   let firmsReportPageSize=10;
@@ -3549,10 +3585,10 @@ setTimeout(()=>map.invalidateSize(),1000)
     return m?m[3]+'-'+m[2]+'-'+m[1]:String(value||'');
   }
   function getFirmsReportEnrichment(record){
-    const name=reportFundKey(record.predio),zone=reportFundKey(record.zone);
-    const code=firmsReportFundData?.byNameZone?.[name+'|'+zone]||firmsReportFundData?.byUniqueName?.[name]||'';
-    const manager=firmsReportFundData?.managersBySubarea?.[zone]||'';
-    return {code,manager};
+    const name=reportFundKey(record.predio),subareaKey=reportFundKey(record.zone);
+    const code=firmsReportFundData?.byNameZone?.[name+'|'+subareaKey]||firmsReportFundData?.byUniqueName?.[name]||'';
+    const management=selectorManagementData?.[subareaKey]||{};
+    return {code,subarea:management.subarea||record.zone||'',subareaManager:management.subareaManager||'',zoneName:management.zone||'',zoneManager:management.zoneManager||'',submanagement:management.submanagement||'',submanager:management.submanager||''};
   }
   function getFirmsReportFiltered(){
     const from=$('firmsReportFrom').value,to=$('firmsReportTo').value;
@@ -3586,8 +3622,9 @@ setTimeout(()=>map.invalidateSize(),1000)
         '<td><strong>'+escapeHtml(p.satellite||'No informado')+'</strong><br><small>'+escapeHtml(p.instrument||'')+'</small></td>'+
         '<td><strong>'+escapeHtml(record.predio||'Predio no identificado')+'</strong></td>'+
         '<td class="report-firms-code">'+escapeHtml(record.code||'—')+'</td>'+
-        '<td><strong>'+escapeHtml(record.zone||'—')+'</strong></td>'+
-        '<td class="report-firms-manager">'+escapeHtml(record.manager||'Gestor no identificado')+'</td>'+
+        '<td><strong>'+escapeHtml(record.subarea||'—')+'</strong><br><small>Gestor subárea: '+escapeHtml(record.subareaManager||'Sin gestor informado')+'</small></td>'+
+        '<td><strong>'+escapeHtml(record.zoneName||'—')+'</strong><br><small>Gestor zona: '+escapeHtml(record.zoneManager||'Sin gestor informado')+'</small></td>'+
+        '<td><strong>'+escapeHtml(record.submanagement||'—')+'</strong><br><small>Subgerente: '+escapeHtml(record.submanager||'Sin gestor informado')+'</small></td>'+
         '<td class="report-firms-distance">'+escapeHtml(dist)+'</td>'+
         '<td>'+escapeHtml(frp)+'</td>'+
         '<td>'+escapeHtml(conf)+'</td>'+
@@ -3625,6 +3662,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       }
       if((DATA.predios?.features||[]).length>=3000)rebuildFirmsNearbyRecords();
       firmsReportFundData=await loadSelectorFundData();
+      await loadSelectorManagementData();
       firmsReportRows=getFirmsReportFiltered();
       firmsReportPage=0;
       const near=firmsReportRows.filter(r=>Number(r.distance)<1000).length;
@@ -3632,7 +3670,7 @@ setTimeout(()=>map.invalidateSize(),1000)
       const inside=firmsReportRows.filter(r=>Number(r.distance)===0).length;
       const terra=firmsReportRows.filter(r=>String(r.feature.properties?.satellite||'').toLowerCase()==='terra').length;
       const aqua=firmsReportRows.filter(r=>String(r.feature.properties?.satellite||'').toLowerCase()==='aqua').length;
-      const managerMissing=firmsReportRows.filter(r=>!r.manager).length;
+      const managerMissing=firmsReportRows.filter(r=>!r.subareaManager).length;
       $('firmsReportKpis').innerHTML=[
         ['Detecciones · '+minKm+'–'+maxKm+' km',firmsReportRows.length,'total'],
         ['Dentro de predio',inside,'inside'],
@@ -3657,11 +3695,11 @@ setTimeout(()=>map.invalidateSize(),1000)
     }
   }
   function exportFirmsReport(){
-    const columns=['fecha','hora_utc','satellite','sensor','predio_mas_cercano','codigo_fundo','zona','gestor_zona','distancia_m','frp_mw','confianza','latitud','longitud'];
+    const columns=['fecha','hora_utc','satellite','sensor','predio_mas_cercano','codigo_fundo','subarea','gestor_subarea','zona','gestor_zona','subgerencia','subgerente','distancia_m','frp_mw','confianza','latitud','longitud'];
     const quote=value=>'"'+String(value??'').replaceAll('"','""')+'"';
     const lines=[columns.join(';'),...firmsReportRows.map(r=>{
       const p=r.feature.properties||{},c=r.feature.geometry.coordinates;
-      return [p.acq_date,timeUTC(p.acq_time_utc),p.satellite,p.instrument,r.predio,r.code,r.zone,r.manager,r.distance,p.frp_mw,p.confidence,c[1],c[0]].map(quote).join(';');
+      return [p.acq_date,timeUTC(p.acq_time_utc),p.satellite,p.instrument,r.predio,r.code,r.subarea,r.subareaManager,r.zoneName,r.zoneManager,r.submanagement,r.submanager,r.distance,p.frp_mw,p.confidence,c[1],c[0]].map(quote).join(';');
     })];
     const url=URL.createObjectURL(new Blob(['\\ufeff'+lines.join('\\r\\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
     a.href=url;a.download='informe_NASA_FIRMS_predios_CPMC_3km_'+$('firmsReportFrom').value+'_'+$('firmsReportTo').value+'.csv';a.click();URL.revokeObjectURL(url);
