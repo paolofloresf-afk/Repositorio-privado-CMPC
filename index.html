@@ -4359,13 +4359,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   currentPage=v==='prev'?Math.max(0,currentPage-1):v==='next'?Math.min(pages-1,currentPage+1):Math.max(0,Math.min(pages-1,Number(v)||0));
   renderPagination();
  });
- toggleButton.addEventListener('click',()=>{
-  const open=reportModule.hidden;reportModule.hidden=!open;toggleButton.setAttribute('aria-expanded',String(open));
-  const other=$('firmsReportModule');if(other)other.hidden=true;
-  const otherButton=$('toggleFirmsReport');if(otherButton)otherButton.setAttribute('aria-expanded','false');
-  menu.open=false;
-  if(open){renderRiskReport();reportModule.scrollIntoView({behavior:'smooth',block:'start'});}
- });
+
  reportRows.addEventListener('click',e=>{
   const button=e.target.closest('[data-map-event]');if(!button)return;
   const item=events.find(x=>String(x.id)===button.dataset.mapEvent);if(!item)return;
