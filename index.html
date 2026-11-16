@@ -431,7 +431,6 @@ body{min-height:100vh}
 .sidebar-link:hover{background:#edf4ed;color:#315c3a}
 .sidebar-link.active{background:#e8f2e8;color:#27613a;box-shadow:inset 3px 0 #4d9259}
 .sidebar-link.report-shortcut{margin-left:10px;padding-left:10px;font-size:10px;border-left:1px solid #d5e2d5;border-radius:0 8px 8px 0}
-.report-module{scroll-margin-top:18px}
 .sidebar-workspace{padding-top:29px}
 .sidebar-module-card{display:flex;align-items:flex-start;gap:10px;margin:0 2px;padding:12px 10px;border:1px dashed #cbdccb;border-radius:10px;background:rgba(255,255,255,.62)}
 .sidebar-module-mark{width:25px;height:25px;display:grid;place-items:center;flex:0 0 25px;border-radius:7px;background:#e8f2e8;color:#4e8a57;font-size:18px;line-height:1}
@@ -1123,72 +1122,6 @@ html[data-theme="dark"] .coordinate-message.error{color:#FFB8B8}
 }
 
 
-/* Informe preventivo de riesgo a cinco días */
-.report-module{max-width:1500px;margin:0 auto;padding:26px 0 34px}
-.report-heading{margin-bottom:18px}
-.report-eyebrow{font-size:10px;letter-spacing:.18em;font-weight:850;color:#548b68;margin-bottom:8px}
-.report-heading h2{font-size:clamp(23px,2.4vw,30px);letter-spacing:-.025em;margin:0 0 7px;color:var(--ink)}
-.report-heading p{margin:0;color:var(--muted);font-size:13px;line-height:1.6;max-width:920px}
-.report-panel{padding:19px!important}
-.report-controls{display:grid;grid-template-columns:1fr 1fr repeat(4,auto);align-items:end;gap:9px}
-.report-controls label{display:grid;gap:5px;margin:0;font-size:10px;font-weight:850;color:var(--muted)}
-.report-controls input{min-width:0;padding:9px;font-size:12px}
-.report-controls button{width:auto;min-height:36px;padding:9px 11px;font-size:10px;white-space:nowrap}
-.report-period{margin:14px 0 12px;padding:10px 12px;background:var(--surface-alt);border:1px solid var(--line);border-radius:9px;font-size:11px;color:var(--muted);font-weight:700}
-.report-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.report-kpi{min-width:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface-alt)}
-.report-kpi strong{display:block;margin-bottom:4px;font-size:27px;line-height:1.1;color:var(--ink)}
-.report-kpi span{font-size:10px;line-height:1.4;color:var(--muted);font-weight:700}
-.report-kpi.high{border-color:#d65b5b55}
-.report-kpi.high strong{color:#d65b5b}
-.report-kpi.medium strong{color:#df923e}
-.report-kpi.low strong{color:#c7a43a}
-.report-method{display:flex;gap:9px;align-items:flex-start;margin:13px 0;padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--surface-alt);font-size:10px;line-height:1.55;color:var(--muted)}
-.report-method strong{white-space:nowrap;color:var(--ink)}
-.report-risk-red{color:#d65b5b}
-.report-status{margin:10px 0 15px;font-size:11px;line-height:1.5;color:var(--muted)}
-.report-table-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:15px 0 9px}
-.report-table-heading h3{margin:0;font-size:14px;color:var(--ink)}
-.report-table-heading span{font-size:10px;color:var(--muted);font-weight:800}
-.report-table-wrap{max-width:100%;overflow:auto;border:1px solid var(--line);border-radius:9px}
-.report-table{min-width:900px;font-size:11px}
-.report-table th{position:sticky;top:0;padding:11px 9px;background:#edf3f8;color:#52677c}
-.report-table td{padding:10px 9px;border-bottom:1px solid var(--line);vertical-align:middle}
-.report-table td:first-child{white-space:nowrap}
-.report-table .report-distance{font-weight:850;color:#d65b5b;white-space:nowrap}
-.report-map-button{width:auto;padding:7px 10px;font-size:10px;white-space:nowrap}
-.report-empty{padding:18px!important;text-align:center;color:var(--muted);font-size:11px}
-.report-disclaimer{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:10px;line-height:1.6;color:var(--muted)}
-html[data-theme="dark"] .report-period,
-html[data-theme="dark"] .report-kpi,
-html[data-theme="dark"] .report-method{background:#18282B;border-color:#355054;color:#A9C0C1}
-html[data-theme="dark"] .report-kpi strong,
-html[data-theme="dark"] .report-method strong,
-html[data-theme="dark"] .report-table-heading h3{color:#E1EEEE}
-html[data-theme="dark"] .report-table th{background:#203B3F;color:#D7E9E8}
-html[data-theme="dark"] .report-table td{background:#18282B;color:#E1EEEE;border-color:#30494D}
-html[data-theme="dark"] .report-map-button{background:#245257!important;border-color:#3D7778!important}
-@media(max-width:1050px){.report-controls{grid-template-columns:1fr 1fr 1fr}.report-controls button{width:100%}}
-@media(max-width:650px){
- .report-module{padding:18px 0 26px}
- .report-panel{padding:13px!important}
- .report-controls{grid-template-columns:1fr 1fr}
- .report-controls button{white-space:normal}
- .report-kpis{grid-template-columns:1fr 1fr}
- .report-method{display:grid}
-}
-@media print{
- body *{visibility:hidden!important}
- #riskReportModule,#riskReportModule *{visibility:visible!important}
- #riskReportModule{display:block!important;position:absolute;inset:0;width:100%;max-width:none;padding:0}
- #riskReportModule .report-controls{display:none!important}
- #riskReportModule .report-panel{border:0!important;box-shadow:none!important;padding:0!important}
- #riskReportModule .report-table-wrap{overflow:visible}
- #riskReportModule .report-table{min-width:0;font-size:8pt}
- #riskReportModule .report-table th,#riskReportModule .report-table td{padding:5px}
- #riskReportModule .report-map-button{display:none}
-}
-
 </style></head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <span class="sidebar-topline-mark"></span>
@@ -1205,10 +1138,7 @@ html[data-theme="dark"] .report-map-button{background:#245257!important;border-c
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/><path d="M3 21h18"/></svg>
       <span>Conversor de coordenadas</span>
     </a>
-    <a class="sidebar-link" id="navReport" href="#riskReportModule" title="Informe quemas CONAF">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M15 3v5h5M9 13h7M9 17h7M9 9h2"/></svg>
-      <span>Informe quemas CONAF</span>
-    </a>
+    
   </nav>
   <div class="sidebar-workspace">
     <div class="sidebar-section-label">ESPACIO DE TRABAJO</div>
@@ -1372,42 +1302,7 @@ html[data-theme="dark"] .report-map-button{background:#245257!important;border-c
     <div class="converter-footnote">Esta herramienta cambia el formato de presentación entre GMS y decimal. No transforma datum ni convierte coordenadas UTM.</div>
   </section>
 
-<section id="riskReportModule" class="module-page report-module" aria-labelledby="riskReportTitle">
-  <div class="report-heading">
-    <div class="report-eyebrow">CENTRO DE MONITOREO · SIDCO</div>
-    <h2 id="riskReportTitle">Informe preventivo de quemas próximas a predios CMPC</h2>
-    <p>Proyección de avisos de quema externos con vigencia en el período seleccionado. Se excluyen los avisos ubicados dentro de predios CMPC.</p>
-  </div>
-  <section class="panel report-panel">
-    <div class="report-controls">
-      <label>DESDE<input type="date" id="reportFrom"></label>
-      <label>HASTA<input type="date" id="reportTo"></label>
-      <button type="button" id="refreshReport">Actualizar informe</button>
-      <button type="button" class="secondary" id="nextFiveDays">Próximos 5 días</button>
-      <button type="button" class="secondary" id="printReport">Imprimir / Guardar PDF</button>
-      <button type="button" class="secondary" id="exportReport">Exportar CSV</button>
-    </div>
-    <div class="report-period" id="reportPeriod">Período del informe: preparando...</div>
-    <div class="report-kpis" id="reportKpis"></div>
-    <div class="report-method">
-      <strong>Criterio de priorización</strong>
-      <span>Se consideran exclusivamente avisos externos, ubicados fuera de los polígonos CMPC (distancia mayor que 0 m). <b class="report-risk-red">Riesgo alto:</b> menos de 1 km. <b>Seguimiento:</b> 1–3 km. <b>Preventivo:</b> 3–5 km. Los avisos dentro de predios CMPC (distancia igual a 0 m) se excluyen de todas las cifras y listados.</span>
-    </div>
-    <div class="report-status" id="reportStatus" role="status" aria-live="polite"></div>
-    <div class="report-table-heading">
-      <h3>Avisos externos de riesgo alto</h3>
-      <span id="reportHighCount">0 registros</span>
-    </div>
-    <div class="report-table-wrap">
-      <table class="report-table">
-        <thead><tr><th>Vigencia declarada</th><th>Horario</th><th>Quema / aviso SIDCO</th><th>Comuna del aviso</th><th>Predio CMPC más cercano</th><th>Distancia</th><th>Ver mapa</th></tr></thead>
-        <tbody id="reportHighRows"><tr><td colspan="7">Preparando informe...</td></tr></tbody>
-      </table>
-    </div>
-    <div class="report-disclaimer">Este informe se construye con los avisos SIDCO cargados en el monitor. Un aviso corresponde a una quema declarada/programada y no confirma por sí solo que exista un incendio ni que la actividad esté autorizada. Las distancias son en línea recta respecto del polígono CMPC más cercano. La vigencia se calcula entre la fecha de inicio y la fecha de término informadas.</div>
-  </section>
-</section>
-  <div class="converter-example-grid">
+<div class="converter-example-grid">
     <div class="converter-example">
       <span>GRADOS, MINUTOS Y SEGUNDOS</span>
       <strong>37°4'59"S, 71°47'52"W</strong>
@@ -2128,8 +2023,7 @@ setTimeout(()=>map.invalidateSize(),1000)
 (() => {
  const modules={
   monitor:{page:document.getElementById('burnMonitorModule'),link:document.getElementById('navMonitor'),title:'Monitor de quemas próximas a predios CMPC',docTitle:'Monitor CMPC | Alertas territoriales'},
-  coordinates:{page:document.getElementById('coordinateConverter'),link:document.getElementById('navCoordinates'),title:'Conversor de coordenadas',docTitle:'Conversor de coordenadas | Monitor CMPC'},
-  report:{page:document.getElementById('riskReportModule'),link:document.getElementById('navReport'),title:'Informe quemas CONAF',docTitle:'Informe quemas CONAF | Monitor CMPC'}
+  coordinates:{page:document.getElementById('coordinateConverter'),link:document.getElementById('navCoordinates'),title:'Conversor de coordenadas',docTitle:'Conversor de coordenadas | Monitor CMPC'}
  };
  const title=document.getElementById('pageTitle');
  function closeSidebar(){
@@ -2151,153 +2045,13 @@ setTimeout(()=>map.invalidateSize(),1000)
   if(scrollToTop)window.scrollTo({top:0,behavior:'smooth'});
   closeSidebar();
   if(name==='monitor')window.setTimeout(()=>{if(typeof map!=='undefined')map.invalidateSize({pan:false});},100);
-  if(name==='report'&&typeof window.renderRiskReport==='function')window.renderRiskReport();
  }
  modules.monitor.link.addEventListener('click',event=>{event.preventDefault();selectModule('monitor');});
  modules.coordinates.link.addEventListener('click',event=>{event.preventDefault();selectModule('coordinates');});
- modules.report.link.addEventListener('click',event=>{event.preventDefault();selectModule('report');});
 })();
 </script>
 
 
-<script>
-(() => {
- const $=id=>document.getElementById(id);
- const fromInput=$('reportFrom'),toInput=$('reportTo');
- const rows=$('reportHighRows'),status=$('reportStatus'),kpis=$('reportKpis');
- let currentHighRisk=[];
 
- function isoLocal(date){
-  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
- }
- function parseSIDCODate(value){return normalizeSIDCODate(value);}
- function displayDate(value){
-  if(!value)return 'Sin fecha';
-  const p=value.split('-');
-  return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:value;
- }
- function esc(value){
-  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
- }
- function isExternal(e){
-  const distance=Number(e?.distancia_m);
-  return Number.isFinite(distance)&&distance>0;
- }
- function highRisk(e){return isExternal(e)&&Number(e.distancia_m)<1000;}
- function distance(m){
-  const n=Number(m);
-  return n<1000?Math.round(n)+' m':(n/1000).toFixed(2)+' km';
- }
- function activeInWindow(e,from,to){return eventActiveInWindow(e,from,to);}
- function setDefaultDates(){
-  const today=new Date();
-  const end=new Date(today.getFullYear(),today.getMonth(),today.getDate()+4);
-  fromInput.value=isoLocal(today);
-  toInput.value=isoLocal(end);
- }
- function renderRiskReport(){
-  let from=fromInput.value,to=toInput.value;
-  if(!from||!to){
-   currentHighRisk=[];kpis.innerHTML='';$('reportHighCount').textContent='0 registros';
-   status.textContent='Selecciona ambas fechas para generar el informe.';
-   rows.innerHTML='<tr><td colspan="7" class="report-empty">Falta seleccionar el período.</td></tr>';
-   return;
-  }
-  if(from>to){
-   currentHighRisk=[];kpis.innerHTML='';$('reportHighCount').textContent='0 registros';
-   status.textContent='La fecha inicial no puede ser posterior a la fecha final.';
-   rows.innerHTML='<tr><td colspan="7" class="report-empty">Corrige el rango de fechas.</td></tr>';
-   return;
-  }
-  const overlapping=events.filter(e=>activeInWindow(e,from,to));
-  const excludedInside=overlapping.filter(e=>Number(e.distancia_m)===0).length;
-  const all=overlapping.filter(isExternal).sort((a,b)=>a.fecha.localeCompare(b.fecha)||Number(a.distancia_m)-Number(b.distancia_m));
-  const high=all.filter(highRisk).sort((a,b)=>Number(a.distancia_m)-Number(b.distancia_m));
-  const medium=all.filter(e=>Number(e.distancia_m)>=1000&&Number(e.distancia_m)<3000);
-  const low=all.filter(e=>Number(e.distancia_m)>=3000&&Number(e.distancia_m)<=5000);
-  currentHighRisk=high;
-  kpis.innerHTML=[
-   ['Avisos externos vigentes en el período',all.length,'total'],
-   ['Riesgo alto · menos de 1 km',high.length,'high'],
-   ['Seguimiento · 1 a 3 km',medium.length,'medium'],
-   ['Preventivo · 3 a 5 km',low.length,'low']
-  ].map(([label,value,kind])=>'<div class="report-kpi '+kind+'"><strong>'+value+'</strong><span>'+label+'</span></div>').join('');
-  $('reportPeriod').textContent='Período del informe: '+displayDate(from)+' al '+displayDate(to)+' · Ventana de '+(Math.round((new Date(to+'T12:00:00')-new Date(from+'T12:00:00'))/86400000)+1)+' días.';
-  $('reportHighCount').textContent=high.length+' registros';
-  if(!all.length){
-   status.textContent='No hay avisos externos con vigencia coincidente en el período seleccionado. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC.';
-  }else{
-   const starts=[...new Set(all.map(e=>parseSIDCODate(e.fecha)))].sort();
-   const startText=starts.map(displayDate).join(', ');
-   const startsInside=all.filter(e=>parseSIDCODate(e.fecha)>=from&&parseSIDCODate(e.fecha)<=to).length;
-   const alreadyActive=all.length-startsInside;
-   const latest=events.map(e=>parseSIDCODate(e.fecha)).filter(Boolean).sort().at(-1);
-   status.textContent='Se encontraron '+all.length+' avisos externos con vigencia coincidente: '+startsInside+' comienzan dentro del período y '+alreadyActive+' comenzaron antes y siguen vigentes en parte de la ventana. Se excluyeron '+excludedInside+' avisos ubicados dentro de predios CMPC. Fechas de inicio registradas: '+startText+'. Última fecha de inicio cargada: '+displayDate(latest)+'.';
-  }
-  if(!high.length){
-   rows.innerHTML='<tr><td colspan="7" class="report-empty">No se identifican avisos externos de riesgo alto para este período.</td></tr>';
-  }else{
-   rows.innerHTML=high.map(e=>'<tr>'+
-    '<td>'+displayDate(parseSIDCODate(e.fecha))+' – '+displayDate(parseSIDCODate(e.fecha_fin)||parseSIDCODate(e.fecha))+'</td>'+
-    '<td>'+esc(e.inicio||'s/i')+' – '+esc(e.termino||'s/i')+'</td>'+
-    '<td><strong>'+esc(e.quema||'Quema SIDCO')+'</strong><br><small>Aviso '+esc(e.aviso||'s/i')+'</small></td>'+
-    '<td>'+esc(e.comuna||'No informada')+'</td>'+
-    '<td>'+esc(e.predio_cercano||'No informado')+'</td>'+
-    '<td class="report-distance">'+distance(e.distancia_m)+'</td>'+
-    '<td><button class="report-map-button" type="button" data-map-event="'+esc(e.id)+'">Ver en mapa</button></td>'+
-   '</tr>').join('');
-  }
- }
- function exportCsv(){
-  const columns=['fecha','inicio','termino','quema','aviso','comuna_aviso','predio_cercano','distancia_m','alerta','lat','lon'];
-  const quote=v=>'"'+String(v??'').replaceAll('"','""')+'"';
-  const lines=[columns.join(';'),...currentHighRisk.map(e=>[
-   e.fecha,e.inicio,e.termino,e.quema,e.aviso,e.comuna,e.predio_cercano,e.distancia_m,e.alerta,e.lat,e.lon
-  ].map(quote).join(';'))];
-  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='informe_riesgo_alto_externo_CPMC_'+fromInput.value+'_'+toInput.value+'.csv';
-  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
- }
-
- setDefaultDates();
- renderRiskReport();
- $('refreshReport').addEventListener('click',renderRiskReport);
- fromInput.addEventListener('change',renderRiskReport);
- toInput.addEventListener('change',renderRiskReport);
- window.addEventListener('cmpc-live-events-updated',renderRiskReport);
- $('nextFiveDays').addEventListener('click',()=>{setDefaultDates();renderRiskReport();});
- $('printReport').addEventListener('click',()=>window.print());
- $('exportReport').addEventListener('click',exportCsv);
- rows.addEventListener('click',event=>{
-  const button=event.target.closest('[data-map-event]');
-  if(!button)return;
-  const e=events.find(item=>item.id===button.dataset.mapEvent);
-  if(!e)return;
-  $('from').value='';$('to').value='';$('commune').value='';$('search').value='';
-  $('radius').value='5000';
-  ['showInside','showRed','showOrange','showYellow'].forEach(id=>$(id).checked=true);
-  selectMapModule();
-  function selectMapModule(){
-   const monitor=$('burnMonitorModule'),converter=$('coordinateConverter');
-   monitor.classList.add('active');converter.classList.remove('active');
-   $('navMonitor').classList.add('active');$('navCoordinates').classList.remove('active');
-   $('navMonitor').setAttribute('aria-current','page');$('navCoordinates').removeAttribute('aria-current');
-   $('pageTitle').textContent='Monitor de quemas próximas a predios CMPC';
-   document.title='Monitor CMPC | Alertas territoriales';
-   window.setTimeout(()=>{
-    if(typeof map!=='undefined')map.invalidateSize({pan:false});
-    filter();
-    const idx=visible.findIndex(v=>v.id===e.id);
-    if(idx>=0&&markerByEvent[idx]){
-      map.setView([e.lat,e.lon],13);
-      markerByEvent[idx].openPopup();
-    }
-   },180);
-  }
- });
- window.renderRiskReport=renderRiskReport;
-})();
-</script>
 
 </body></html>
