@@ -4635,7 +4635,7 @@ setTimeout(()=>map.invalidateSize(),1000)
 };
 const assignBases=payload=>{(payload.zones||[]).forEach(z=>z.resources.forEach(r=>{r.base=r.base||baseByZone[z.id]?.[r.code]||'';}));return payload;};
  const defaultData=()=>({
-  zones:zones.map(z=>({...z,resources:z.resources.map(code=>({code,base:baseByZone[z.id]?.[code]||'',status:'Sin actualizar',activity:'',sector:'',hours:'',base:''}))})),
+  zones:zones.map(z=>({...z,resources:z.resources.map(code=>({code,base:baseByZone[z.id]?.[code]||'',status:'Sin actualizar',activity:'',sector:'',hours:''}))})),
   supervisors:['S4 PINOCHET','S5 BENAVÍDEZ','S6 SEPÚLVEDA','SA2 CABARZA','SA3 JACUÑA','SB3 HYVALENZ','SB6 MGARCIA'].map(code=>({code,status:'Sin actualizar',observation:''})),
   aircraft:['AM1','AM2','AM3','AM4','AM5','AM6','AM7','AM8','AM9','AM10','DM1','DM3','HM9'].map(code=>({code,status:'Sin actualizar',autonomy:'',activity:'',sector:''})),
   version:0,updatedAt:null,updatedBy:null
