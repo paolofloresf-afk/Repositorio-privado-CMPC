@@ -4555,10 +4555,103 @@ setTimeout(()=>map.invalidateSize(),1000)
   });
 })();
 
+
+(() => {
+ const root=document.getElementById('operationalResources');if(!root)return;
+ const API='/api/operational/resources',DRAFT_KEY='cmpc-operational-resources-draft-v1';
+ const states=['Sin actualizar','Disponible','En ruta','En R24','Retorno','Exceso jornada','Día libre','No disponible','Coordinación'];
+ const zones=[
+  {id:'center',title:'CENTRO',bases:'PIN · MDO · TRAL · NAC · TRI · YUM · YUN · TALC · MILL',resources:['BM312A','BM312B','BM312C','BM312D','BHM314-HM4','CM311','BHM318-HM5','BM413','BM414A','BM414B','BHM417-HM3','CM411','BM415A','BM415B','BM416A','BM416B','BM416C','BM514A','BM514B','BM514C','BM514D','BM315A','BM315B','BM315C','BM315D','BM316A','BM316B','BM316C','BM316D','BM315D','SM31.2']},
+  {id:'south',title:'SUR',bases:'TUE · MIN · MUL · ANT · VIC',resources:['BHM512-HM6','BM517','CM511','BM514A','BM514B','BM514C','BM514D','BM519','BM513A','BM513B','BM513C','BM513D','BHM617-HM8','BM613','CM611','BM618A','BM618B','BM618C','BM618D','SM6110','BHM612-HM7','BM614','CM611','SM619','BM615A','BM615B','BM615C','BM615D']},
+  {id:'north',title:'NORTE / COSTA',bases:'PAN · PEN · COS · EMP · OSC · IMP',resources:['BHM212-HM1','CM211','SM219','BM213','BM214','BM215','BM714','BM715A','BM715B','BM715C','BM715D','BM713','CM711']}
+ ];
+ const defaultData=()=>({
+  zones:zones.map(z=>({...z,resources:z.resources.map(code=>({code,status:'Sin actualizar',activity:'',sector:'',hours:'',base:''}))})),
+  supervisors:['S4 PINOCHET','S5 BENAVÍDEZ','S6 SEPÚLVEDA','SA2 CABARZA','SA3 JACUÑA','SB3 HYVALENZ','SB6 MGARCIA'].map(code=>({code,status:'Sin actualizar',observation:''})),
+  aircraft:['AM1','AM2','AM3','AM4','AM5','AM6','AM7','AM8','AM9','AM10','DM1','DM3','HM9'].map(code=>({code,status:'Sin actualizar',autonomy:'',activity:'',sector:''})),
+  version:0,updatedAt:null,updatedBy:null
+ });
+ let data=defaultData(),serverAvailable=false,dirty=false;
+ const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const statusColor=status=>({'Disponible':'#36b86c','En ruta':'#3299e8','En R24':'#f39b38','Retorno':'#6f9ed0','Exceso jornada':'#ef4055','Día libre':'#aab6c8','No disponible':'#89949c','Coordinación':'#f39b38','Sin actualizar':'#89949c'}[status]||'#89949c');
+ const setNotice=(message,type='')=>{const el=document.getElementById('operationsSyncNotice');el.className='operations-sync-notice '+type;el.textContent=message;};
+ const allResources=()=>data.zones.flatMap(z=>z.resources);
+ function statusSelect(value,kind,zone,index){return '<select aria-label="Estado" data-kind="'+kind+'" data-zone="'+zone+'" data-index="'+index+'" data-field="status">'+states.map(st=>'<option '+(st===value?'selected':'')+'>'+st+'</option>').join('')+'</select>';}
+ function inputCell(value,kind,zone,index,field,placeholder,extra=''){return '<input '+extra+' data-kind="'+kind+'" data-zone="'+zone+'" data-index="'+index+'" data-field="'+field+'" value="'+esc(value)+'" placeholder="'+esc(placeholder||'—')+'">';}
+ function render(){
+  const resources=allResources(),counts=states.reduce((a,st)=>(a[st]=resources.filter(r=>r.status===st).length,a),{});
+  const kpis=[['TOTAL RECURSOS',resources.length],['DISPONIBLES',counts['Disponible']||0],['EN RUTA',counts['En ruta']||0],['EN R24',counts['En R24']||0],['RETORNO',counts['Retorno']||0],['EXCESO JORNADA',counts['Exceso jornada']||0],['DÍA LIBRE',counts['Día libre']||0]];
+  document.getElementById('operationsKpis').innerHTML=kpis.map((k,i)=>'<div class="operations-kpi"><strong style="color:'+(['#b8c9d0','#36b86c','#3299e8','#f39b38','#6f9ed0','#ef4055','#aab6c8'][i])+'">'+k[1]+'</strong><span>'+k[0]+'</span></div>').join('');
+  document.getElementById('operationsZones').innerHTML=data.zones.map(z=>'<section class="operations-panel"><div class="operations-panel-title"><span>⌁</span><h3>'+esc(z.title)+'</h3><button type="button" class="secondary" data-add-zone="'+esc(z.id)+'">＋ Agregar</button></div><div style="padding:5px 12px;color:var(--muted);font-size:9px;border-bottom:1px solid var(--line)">'+esc(z.bases)+'</div><div class="operations-table-scroll"><table class="operations-table"><thead><tr><th>Recurso</th><th>Estado</th><th>Act.</th><th>Incendio / sector</th><th>Carga laboral</th><th></th></tr></thead><tbody>'+z.resources.map((r,i)=>'<tr><td>'+inputCell(r.code,'resource',z.id,i,'code','Código','class="resource-code"')+'</td><td>'+statusSelect(r.status,'resource',z.id,i)+'</td><td class="cell-small">'+inputCell(r.activity,'resource',z.id,i,'activity','—')+'</td><td class="cell-sector">'+inputCell(r.sector,'resource',z.id,i,'sector','Sector')+'</td><td class="cell-hours">'+inputCell(r.hours,'resource',z.id,i,'hours','hh:mm')+'</td><td><button type="button" class="remove-row" data-remove-zone="'+esc(z.id)+'" data-index="'+i+'" title="Eliminar recurso">×</button></td></tr>').join('')+'</tbody></table></div></section>').join('');
+  document.getElementById('operationsSupervisors').innerHTML=data.supervisors.map((r,i)=>'<tr><td>'+inputCell(r.code,'supervisor','',i,'code','Supervisor','class="resource-code"')+'</td><td>'+statusSelect(r.status,'supervisor','',i)+'</td><td>'+inputCell(r.observation,'supervisor','',i,'observation','Observación')+'</td><td><button type="button" class="remove-row" data-remove-group="supervisors" data-index="'+i+'">×</button></td></tr>').join('');
+  document.getElementById('operationsAircraft').innerHTML=data.aircraft.map((r,i)=>'<div class="operations-air-card"><strong>'+inputCell(r.code,'aircraft','',i,'code','Código')+'</strong><label>ESTADO'+statusSelect(r.status,'aircraft','',i)+'</label><label>AUTONOMÍA'+inputCell(r.autonomy,'aircraft','',i,'autonomy','Ej. 02:30')+'</label><label>ACTIVIDAD'+inputCell(r.activity,'aircraft','',i,'activity','Ej. Incendio 11')+'</label><label>SECTOR'+inputCell(r.sector,'aircraft','',i,'sector','Sector')+'</label><button type="button" class="remove-row" data-remove-group="aircraft" data-index="'+i+'">Eliminar</button></div>').join('');
+  const alerts=resources.filter(r=>r.status==='Exceso jornada'||r.status==='Retorno'||r.status==='Coordinación');
+  document.getElementById('operationsAlertList').textContent=alerts.length?alerts.map(r=>r.code+' · '+r.status+(r.sector?' · '+r.sector:'')).join('  |  '):'Sin alertas registradas';
+  document.getElementById('operationsUpdatedAt').textContent=data.updatedAt?'Actualizado: '+new Date(data.updatedAt).toLocaleString('es-CL'):'Sin actualización publicada';
+  document.getElementById('operationsVersion').textContent=data.version?'Versión '+data.version:'Borrador';
+  document.getElementById('operationsSyncLabel').textContent=serverAvailable?'Conexión compartida':'Sin conexión central';
+  document.querySelector('.operations-live').classList.toggle('online',serverAvailable);
+ }
+ function setField(target,value){
+  const kind=target.dataset.kind,field=target.dataset.field,index=Number(target.dataset.index),zone=target.dataset.zone;
+  if(kind==='resource'){const z=data.zones.find(x=>x.id===zone);if(z&&z.resources[index])z.resources[index][field]=value;}
+  else if(kind==='supervisor'&&data.supervisors[index])data.supervisors[index][field]=value;
+  else if(kind==='aircraft'&&data.aircraft[index])data.aircraft[index][field]=value;
+  dirty=true;setNotice('Hay cambios sin publicar. Presiona “Guardar cambios” para compartirlos.','pending');renderSummaryOnly();
+ }
+ function renderSummaryOnly(){
+  const resources=allResources(),counts={};resources.forEach(r=>counts[r.status]=(counts[r.status]||0)+1);
+  const values=[resources.length,counts['Disponible']||0,counts['En ruta']||0,counts['En R24']||0,counts['Retorno']||0,counts['Exceso jornada']||0,counts['Día libre']||0];
+  document.querySelectorAll('.operations-kpi strong').forEach((el,i)=>el.textContent=values[i]??0);
+  const alerts=resources.filter(r=>['Exceso jornada','Retorno','Coordinación'].includes(r.status));
+  document.getElementById('operationsAlertList').textContent=alerts.length?alerts.map(r=>r.code+' · '+r.status+(r.sector?' · '+r.sector:'')).join('  |  '):'Sin alertas registradas';
+ }
+ root.addEventListener('input',e=>{const t=e.target;if(t.matches('[data-field]'))setField(t,t.value);});
+ root.addEventListener('change',e=>{const t=e.target;if(t.matches('[data-field]'))setField(t,t.value);});
+ root.addEventListener('click',e=>{
+  const addZone=e.target.closest('[data-add-zone]');if(addZone){const z=data.zones.find(x=>x.id===addZone.dataset.addZone);z.resources.push({code:'',status:'Sin actualizar',activity:'',sector:'',hours:'',base:''});render();dirty=true;return;}
+  const addGroup=e.target.closest('[data-add-group]');if(addGroup){data[addGroup.dataset.addGroup].push(addGroup.dataset.addGroup==='aircraft'?{code:'',status:'Sin actualizar',autonomy:'',activity:'',sector:''}:{code:'',status:'Sin actualizar',observation:''});render();dirty=true;return;}
+  const removeZone=e.target.closest('[data-remove-zone]');if(removeZone){const z=data.zones.find(x=>x.id===removeZone.dataset.removeZone);z.resources.splice(Number(removeZone.dataset.index),1);render();dirty=true;return;}
+  const removeGroup=e.target.closest('[data-remove-group]');if(removeGroup){data[removeGroup.dataset.removeGroup].splice(Number(removeGroup.dataset.index),1);render();dirty=true;return;}
+  const add=e.target.closest('#operationsAddResource');if(add){data.zones[0].resources.push({code:'',status:'Sin actualizar',activity:'',sector:'',hours:'',base:''});render();dirty=true;return;}
+  if(e.target.closest('#operationsSave'))save();
+ });
+ function cleanPayload(){return {zones:data.zones,supervisors:data.supervisors,aircraft:data.aircraft};}
+ async function load(){
+  try{
+   const res=await fetch(API,{cache:'no-store',credentials:'same-origin'});
+   if(!res.ok)throw new Error('API '+res.status);
+   const payload=await res.json();
+   if(payload&&payload.data){data={...defaultData(),...payload.data};serverAvailable=true;dirty=false;setNotice('Datos cargados desde el servidor compartido.','success');}
+   else throw new Error('Respuesta de datos no válida');
+  }catch(error){
+   serverAvailable=false;
+   try{const draft=JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');if(draft)data={...defaultData(),...draft};}catch(_){}
+   setNotice('La base compartida aún no está conectada. Puedes preparar un borrador en este navegador, pero no será visible para otros usuarios hasta habilitar el servidor central.','error');
+  }
+  render();
+ }
+ async function save(){
+  if(!serverAvailable){localStorage.setItem(DRAFT_KEY,JSON.stringify(cleanPayload()));setNotice('Borrador guardado solo en este navegador. No está publicado ni compartido. Falta activar la base central.','error');return;}
+  const button=document.getElementById('operationsSave');button.disabled=true;
+  try{
+   const res=await fetch(API,{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:cleanPayload(),expectedVersion:data.version})});
+   if(!res.ok)throw new Error(res.status===409?'Otra persona publicó cambios. Recarga para evitar sobrescribirlos.':'No se pudo guardar (HTTP '+res.status+').');
+   const result=await res.json();data={...data,version:result.version,updatedAt:result.updatedAt,updatedBy:result.updatedBy};dirty=false;
+   setNotice('Cambios publicados correctamente. Todos los usuarios recibirán la misma información.','success');render();
+  }catch(error){setNotice(error.message,'error');}
+  finally{button.disabled=false;}
+ }
+ document.getElementById('operationsSave').addEventListener('click',save);
+ window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+ load();
+})();
+
 (() => {
  const modules={
   monitor:{page:document.getElementById('burnMonitorModule'),link:document.getElementById('navMonitor'),title:'Monitor de quemas próximas a predios CMPC',docTitle:'Monitor CMPC | Alertas territoriales'},
-  coordinates:{page:document.getElementById('coordinateConverter'),link:document.getElementById('navCoordinates'),title:'Conversor de coordenadas',docTitle:'Conversor de coordenadas | Monitor CMPC'}
+  coordinates:{page:document.getElementById('coordinateConverter'),link:document.getElementById('navCoordinates'),title:'Conversor de coordenadas',docTitle:'Conversor de coordenadas | Monitor CMPC'},
+  operations:{page:document.getElementById('operationalResources'),link:document.getElementById('navOperations'),title:'Estado operacional de recursos',docTitle:'Estado operacional | Monitor CMPC'}
  };
  const title=document.getElementById('pageTitle');
  function closeSidebar(){
@@ -4583,6 +4676,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  }
  modules.monitor.link.addEventListener('click',event=>{event.preventDefault();selectModule('monitor');});
  modules.coordinates.link.addEventListener('click',event=>{event.preventDefault();selectModule('coordinates');});
+ modules.operations.link.addEventListener('click',event=>{event.preventDefault();selectModule('operations');});
 })();
 </script>
 
