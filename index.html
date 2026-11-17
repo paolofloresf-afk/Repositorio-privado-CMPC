@@ -4962,4 +4962,31 @@ setTimeout(()=>map.invalidateSize(),1000)
  populate();window.addEventListener('cmpc-predios-loaded',populate);
 })();
 </script>
+
+<script>
+/* Mantener el módulo y la posición de lectura al recargar la página */
+(() => {
+ const KEY='cmpc-page-position-v1';
+ if('scrollRestoration' in history) history.scrollRestoration='manual';
+ const activeModule=()=>{
+  const active=document.querySelector('.page.active');
+  return active?.id==='operationalResources'?'operations':active?.id==='coordinateConverter'?'coordinates':'monitor';
+ };
+ const save=()=>{
+  try{sessionStorage.setItem(KEY,JSON.stringify({module:activeModule(),y:window.scrollY||window.pageYOffset||0}));}catch(_){}
+ };
+ window.addEventListener('pagehide',save);
+ window.addEventListener('beforeunload',save);
+ document.addEventListener('DOMContentLoaded',()=>{
+  let saved;try{saved=JSON.parse(sessionStorage.getItem(KEY)||'null');}catch(_){}
+  if(!saved)return;
+  const links={monitor:'navMonitor',operations:'navOperations',coordinates:'navCoordinates'};
+  const link=document.getElementById(links[saved.module]||'navMonitor');
+  if(link && !link.classList.contains('active'))link.click();
+  const restore=()=>window.scrollTo({top:Math.max(0,Number(saved.y)||0),left:0,behavior:'instant'});
+  requestAnimationFrame(()=>requestAnimationFrame(restore));
+  window.addEventListener('load',()=>setTimeout(restore,120),{once:true});
+ });
+})();
+</script>
 </body></html>
