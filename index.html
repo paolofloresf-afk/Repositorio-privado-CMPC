@@ -2243,6 +2243,9 @@ html[data-theme="dark"] .operations-sync-notice.pending{background:#3b2d1b;color
 @media(max-width:1250px){.operations-zone-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.operations-zone-grid{grid-template-columns:1fr}.operations-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+.ops-sheet .ops-compact th:nth-child(1){width:12%}.ops-sheet .ops-compact th:nth-child(2){width:27%}.ops-sheet .ops-compact th:nth-child(3){width:30%}.ops-sheet .ops-compact th:nth-child(4){width:15%}.ops-sheet .ops-compact th:nth-child(5){width:16%}
+.ops-sheet .ops-compact td.ops-base-cell input{background:#c9e3d1;color:#183b27;text-align:center;font-size:9px;font-weight:900;letter-spacing:.02em}
 </style>
 
 </head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
@@ -4625,8 +4628,14 @@ setTimeout(()=>map.invalidateSize(),1000)
   {id:'south',title:'SUR',bases:'TUE · MIN · MUL · ANT · VIC',resources:['BHM512-HM6','BM517','CM511','BM514A','BM514B','BM514C','BM514D','BM519','BM513A','BM513B','BM513C','BM513D','BHM617-HM8','BM613','CM611','BM618A','BM618B','BM618C','BM618D','SM6110','BHM612-HM7','BM614','CM611','SM619','BM615A','BM615B','BM615C','BM615D']},
   {id:'north',title:'NORTE / COSTA',bases:'PAN · PEN · COS · EMP · OSC · IMP',resources:['BHM212-HM1','CM211','SM219','BM213','BM214','BM215','BM714','BM715A','BM715B','BM715C','BM715D','BM713','CM711']}
  ];
+ const baseByZone={
+ center:{'BM312A':'PIN','BM312B':'PIN','BM312C':'PIN','BM312D':'PIN','BHM314-HM4':'MDO','CM311':'MDO','BHM318-HM5':'TRAL','BM315A':'NAC','BM315B':'NAC','BM315C':'NAC','BM315D':'NAC','SM219':'Camp','BHM412-HM2':'TRI','CM411':'TRI','SM419':'TRI','BM418':'tejas','BM413':'YUM','BM414A':'YUIN','BM414B':'YUIN','BM414C':'YUIN','BM414D':'YUIN','BHM417-HM3':'TALC','BM415A':'TALC','BM415B':'TALC','BM415C':'TALC','BM415D':'TALC','SM31.12':'MILL','BM416A':'MILL','BM416B':'MILL','BM416C':'MILL'},
+ south:{'BHM512-HM6':'TUE','BM517':'TUE','CM511':'TUE','BM514A':'MIN','BM514B':'MIN','BM514C':'MIN','BM514D':'MIN','BM519':'MIN','BM513A':'MIN','BM513B':'MIN','BM513C':'MIN','BM513D':'MIN','BHM617-HM8':'MUL','BM613':'MUL','CM611':'MUL','BM618A':'MUL','BM618B':'MUL','BM618C':'MUL','BM618D':'MUL','SM6110':'MUL','BHM612-HM7':'ANT','BM614':'ANT','SM619':'ANT','BM615A':'VIC','BM615B':'VIC','BM615C':'VIC','BM615D':'VIC'},
+ north:{'BHM212-HM1':'PAN','CM211':'PAN','SM219':'QUI','BM213':'EMP','BM214':'EMP','BM215':'EMP','BM714':'OSC','BM715A':'OSC','BM715B':'OSC','BM715C':'OSC','BM715D':'OSC','BM713':'IMP','CM711':'IMP'}
+};
+const assignBases=payload=>{(payload.zones||[]).forEach(z=>z.resources.forEach(r=>{r.base=r.base||baseByZone[z.id]?.[r.code]||'';}));return payload;};
  const defaultData=()=>({
-  zones:zones.map(z=>({...z,resources:z.resources.map(code=>({code,status:'Sin actualizar',activity:'',sector:'',hours:'',base:''}))})),
+  zones:zones.map(z=>({...z,resources:z.resources.map(code=>({code,base:baseByZone[z.id]?.[code]||'',status:'Sin actualizar',activity:'',sector:'',hours:'',base:''}))})),
   supervisors:['S4 PINOCHET','S5 BENAVÍDEZ','S6 SEPÚLVEDA','SA2 CABARZA','SA3 JACUÑA','SB3 HYVALENZ','SB6 MGARCIA'].map(code=>({code,status:'Sin actualizar',observation:''})),
   aircraft:['AM1','AM2','AM3','AM4','AM5','AM6','AM7','AM8','AM9','AM10','DM1','DM3','HM9'].map(code=>({code,status:'Sin actualizar',autonomy:'',activity:'',sector:''})),
   version:0,updatedAt:null,updatedBy:null
@@ -4642,7 +4651,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   const resources=allResources(),counts=states.reduce((a,st)=>(a[st]=resources.filter(r=>r.status===st).length,a),{});
   const kpis=[['TOTAL RECURSOS',resources.length],['DISPONIBLES',counts['Disponible']||0],['EN RUTA',counts['En ruta']||0],['EN R24',counts['En R24']||0],['RETORNO',counts['Retorno']||0],['EXCESO JORNADA',counts['Exceso jornada']||0],['DÍA LIBRE',counts['Día libre']||0]];
   document.getElementById('operationsKpis').innerHTML=kpis.map((k,i)=>'<div class="operations-kpi" style="--kpi-color:'+(['#8291a2','#24965b','#287fc0','#d88725','#398fae','#d94350','#8291a2'][i])+'"><strong style="color:'+(['#8291a2','#24965b','#287fc0','#d88725','#398fae','#d94350','#8291a2'][i])+'">'+k[1]+'</strong><span>'+k[0]+'</span></div>').join('');
-  document.getElementById('operationsZones').innerHTML=data.zones.map(z=>'<section class="operations-panel ops-sheet"><div class="operations-panel-title"><span>▦</span><h3>'+esc(z.title)+'</h3><button type="button" class="secondary" data-add-zone="'+esc(z.id)+'">＋</button></div><div class="operations-table-scroll"><table class="operations-table ops-compact"><thead><tr><th>Recursos</th><th>Estado</th><th>Act</th><th>R24</th></tr></thead><tbody>'+z.resources.map((r,i)=>'<tr><td>'+inputCell(r.code,'resource',z.id,i,'code','Código','class="resource-code"')+'</td><td>'+statusSelect(r.status,'resource',z.id,i)+'</td><td>'+inputCell(r.activity,'resource',z.id,i,'activity','—')+'</td><td>'+inputCell(r.hours,'resource',z.id,i,'hours','—')+'</td></tr>').join('')+'</tbody></table></div></section>').join('')+'<section class="operations-panel ops-sheet ops-supervisors"><div class="operations-panel-title"><span>♙</span><h3>SUPERVISORES</h3><button type="button" class="secondary" data-add-group="supervisors">＋</button></div><div class="operations-table-scroll"><table class="operations-table ops-compact"><thead><tr><th>Recursos</th><th>Estado</th><th>Act</th><th>R24</th></tr></thead><tbody>'+data.supervisors.map((r,i)=>'<tr><td>'+inputCell(r.code,'supervisor','',i,'code','Supervisor','class="resource-code"')+'</td><td>'+statusSelect(r.status,'supervisor','',i)+'</td><td>'+inputCell(r.observation,'supervisor','',i,'observation','—')+'</td><td></td></tr>').join('')+'</tbody></table></div></section>';
+  document.getElementById('operationsZones').innerHTML=data.zones.map(z=>'<section class="operations-panel ops-sheet"><div class="operations-panel-title"><span>▦</span><h3>'+esc(z.title)+'</h3><button type="button" class="secondary" data-add-zone="'+esc(z.id)+'">＋</button></div><div class="operations-table-scroll"><table class="operations-table ops-compact"><thead><tr><th>Base</th><th>Recursos</th><th>Estado</th><th>Act</th><th>R24</th></tr></thead><tbody>'+z.resources.map((r,i)=>'<tr><td class="ops-base-cell">'+inputCell(r.base||baseByZone[z.id]?.[r.code]||'','resource',z.id,i,'base','Base','class="resource-base"')+'</td><td>'+inputCell(r.code,'resource',z.id,i,'code','Código','class="resource-code"')+'</td><td>'+statusSelect(r.status,'resource',z.id,i)+'</td><td>'+inputCell(r.activity,'resource',z.id,i,'activity','—')+'</td><td>'+inputCell(r.hours,'resource',z.id,i,'hours','—')+'</td></tr>').join('')+'</tbody></table></div></section>').join('')+'<section class="operations-panel ops-sheet ops-supervisors"><div class="operations-panel-title"><span>♙</span><h3>SUPERVISORES</h3><button type="button" class="secondary" data-add-group="supervisors">＋</button></div><div class="operations-table-scroll"><table class="operations-table ops-compact"><thead><tr><th>Recursos</th><th>Estado</th><th>Act</th><th>R24</th></tr></thead><tbody>'+data.supervisors.map((r,i)=>'<tr><td>'+inputCell(r.code,'supervisor','',i,'code','Supervisor','class="resource-code"')+'</td><td>'+statusSelect(r.status,'supervisor','',i)+'</td><td>'+inputCell(r.observation,'supervisor','',i,'observation','—')+'</td><td></td></tr>').join('')+'</tbody></table></div></section>';
   document.getElementById('operationsSupervisors').innerHTML=data.supervisors.map((r,i)=>'<tr><td>'+inputCell(r.code,'supervisor','',i,'code','Supervisor','class="resource-code"')+'</td><td>'+statusSelect(r.status,'supervisor','',i)+'</td><td>'+inputCell(r.observation,'supervisor','',i,'observation','Observación')+'</td><td><button type="button" class="remove-row" data-remove-group="supervisors" data-index="'+i+'">×</button></td></tr>').join('');
   document.getElementById('operationsAircraft').innerHTML=data.aircraft.map((r,i)=>'<div class="operations-air-card"><strong>'+inputCell(r.code,'aircraft','',i,'code','Código')+'</strong><label>ESTADO'+statusSelect(r.status,'aircraft','',i)+'</label><label>AUTONOMÍA'+inputCell(r.autonomy,'aircraft','',i,'autonomy','Ej. 02:30')+'</label><label>ACTIVIDAD'+inputCell(r.activity,'aircraft','',i,'activity','Ej. Incendio 11')+'</label><label>SECTOR'+inputCell(r.sector,'aircraft','',i,'sector','Sector')+'</label><button type="button" class="remove-row" data-remove-group="aircraft" data-index="'+i+'">Eliminar</button></div>').join('');
   const alerts=resources.filter(r=>r.status==='Exceso jornada'||r.status==='Retorno'||r.status==='Coordinación');
@@ -4681,7 +4690,7 @@ setTimeout(()=>map.invalidateSize(),1000)
    const res=await fetch(API,{cache:'no-store',credentials:'same-origin'});
    if(!res.ok)throw new Error('API '+res.status);
    const payload=await res.json();
-   if(payload&&payload.data){data={...defaultData(),...payload.data};serverAvailable=true;dirty=false;setNotice('Datos cargados desde el servidor compartido.','success');}
+   if(payload&&payload.data){data=assignBases({...defaultData(),...payload.data});serverAvailable=true;dirty=false;setNotice('Datos cargados desde el servidor compartido.','success');}
    else throw new Error('Respuesta de datos no válida');
   }catch(error){
    serverAvailable=false;
@@ -4698,7 +4707,7 @@ setTimeout(()=>map.invalidateSize(),1000)
    const payload=await res.json();
    if(payload&&Number(payload.version)>Number(data.version||0)){
     if(dirty){setNotice('Hay una versión nueva publicada por otro usuario. Guarda o descarta tu borrador antes de recargar.','pending');return;}
-    data={...defaultData(),...payload.data,version:payload.version,updatedAt:payload.updatedAt,updatedBy:payload.updatedBy};render();setNotice('Información sincronizada con una actualización de otro usuario.','success');
+    data=assignBases({...defaultData(),...payload.data,version:payload.version,updatedAt:payload.updatedAt,updatedBy:payload.updatedBy});render();setNotice('Información sincronizada con una actualización de otro usuario.','success');
    }
   }catch(_){serverAvailable=false;setNotice('Se perdió la conexión con el servidor compartido. Los cambios no se publicarán hasta reconectar.','error');render();}
  }
