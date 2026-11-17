@@ -2171,6 +2171,23 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 
+
+<style id="operations-module-styles">
+.operations-module{display:none}.operations-module.active{display:block}
+.operations-head{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:10px 0 18px}.operations-eyebrow{font-size:10px;font-weight:850;letter-spacing:.14em;color:var(--cyan)}.operations-head h2{margin:5px 0;font-size:clamp(23px,3vw,32px)}.operations-head p{margin:0;color:var(--muted);font-size:12px}
+.operations-live{min-width:190px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:grid;grid-template-columns:10px 1fr;align-items:center;gap:3px 8px}.operations-live-dot{width:9px;height:9px;border-radius:50%;background:#d69a37;grid-row:span 2}.operations-live.online .operations-live-dot{background:#36b86c;box-shadow:0 0 0 4px #36b86c22}.operations-live small{grid-column:2;color:var(--muted);font-size:10px}
+.operations-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:10px}.operations-toolbar>div:first-child{display:grid;gap:3px}.operations-toolbar span{font-size:11px;color:var(--muted)}.operations-toolbar-actions{display:flex;gap:8px;flex-wrap:wrap}
+.operations-sync-notice{padding:9px 12px;border:1px solid var(--line);border-radius:9px;margin-bottom:14px;color:var(--muted);font-size:11px;background:var(--surface-alt)}.operations-sync-notice.pending{border-color:#c18b3d;color:#d6a34e}.operations-sync-notice.error{border-color:#b94b57;color:#e47c85}.operations-sync-notice.success{border-color:#34865b;color:#62c58a}
+.operations-kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;margin:0 0 14px}.operations-kpi{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}.operations-kpi strong{display:block;font-size:25px;line-height:1.15}.operations-kpi span{font-size:10px;color:var(--muted);font-weight:750;text-transform:uppercase}
+.operations-alerts{display:grid;grid-template-columns:180px 1fr;gap:12px;padding:12px 14px;border:1px solid #9f3e49;border-radius:10px;background:color-mix(in srgb,#a82f40 12%,var(--surface));margin-bottom:14px}.operations-alerts strong{color:#e36b77;font-size:12px;text-transform:uppercase}.operations-alerts span{font-size:11px;color:var(--ink)}
+.operations-zone-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}.operations-panel{min-width:0;border:1px solid var(--line);border-radius:11px;background:var(--surface);overflow:hidden;margin-bottom:14px}.operations-panel-title{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid var(--line);background:var(--surface-alt)}.operations-panel-title>span{font-size:19px;color:var(--cyan)}.operations-panel-title h3{font-size:16px;margin:0;flex:1}.operations-panel-title button{padding:6px 9px;font-size:10px}
+.operations-table-scroll{overflow:auto}.operations-table{width:100%;border-collapse:collapse;min-width:510px;font-size:11px}.operations-table th{padding:8px 7px;text-align:left;background:color-mix(in srgb,var(--blue) 18%,var(--surface));color:var(--muted);font-size:9px;text-transform:uppercase;white-space:nowrap}.operations-table td{padding:5px 6px;border-top:1px solid var(--line);vertical-align:middle}.operations-table input,.operations-table select,.operations-air-card input,.operations-air-card select{width:100%;min-width:0;padding:6px 7px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--ink);font:11px inherit}.operations-table .resource-code{font-weight:850;min-width:90px}.operations-table .cell-small{width:68px}.operations-table .cell-sector{min-width:95px}.operations-table .cell-hours{width:90px}.operations-table .remove-row{padding:4px 7px;min-width:0;background:transparent;color:#df737c;border:1px solid transparent}
+.operations-air-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0}.operations-air-card{padding:10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0;display:grid;gap:7px}.operations-air-card strong{font-size:12px}.operations-air-card label{display:grid;gap:3px;font-size:9px;color:var(--muted)}.operations-air-card input,.operations-air-card select{font-size:10px}.operations-air-card .remove-row{justify-self:end}
+.operations-footer{display:flex;justify-content:space-between;gap:10px;padding:8px 2px;color:var(--muted);font-size:10px}
+@media(max-width:1100px){.operations-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.operations-zone-grid{grid-template-columns:1fr 1fr}.operations-air-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.operations-head,.operations-toolbar{align-items:stretch;flex-direction:column}.operations-live{width:100%}.operations-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.operations-zone-grid{grid-template-columns:1fr}.operations-air-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.operations-alerts{grid-template-columns:1fr}.operations-toolbar-actions button{flex:1}.operations-footer{flex-direction:column}}
+</style>
+
 </head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
   <div class="sidebar-topline">
     <svg class="sidebar-pines-logo" viewBox="0 0 48 38" role="img" aria-label="SUPPORT"><g fill="#55bd50"><path d="M24 2 17 12h4l-6 8h5l-7 9h22l-7-9h5l-6-8h4L24 2Z"/><path d="M24 29h2v5h-2z"/></g><g fill="#72cf62"><path d="m10 12-5 7h3l-4 7h12l-4-7h3l-5-7Z"/><path d="M9 26h2v5H9z"/><path d="m38 12-5 7h3l-4 7h12l-4-7h3l-5-7Z"/><path d="M37 26h2v5h-2z"/></g></svg>
@@ -2183,6 +2200,7 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>
       <span>Monitor de quemas</span>
     </a>
+    <a class="sidebar-link" id="navOperations" href="#operationalResources" title="Estado operacional"><span aria-hidden="true">▦</span><span>Estado operacional</span></a>
     <a class="sidebar-link" id="navCoordinates" href="#coordinateConverter" title="Conversor de coordenadas">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/><path d="M3 21h18"/></svg>
       <span>Conversor de coordenadas</span>
@@ -2523,6 +2541,21 @@ html[data-theme="dark"] .listing-row{padding:11px 14px;min-height:62px}
 
 <div class="footer">Distancia calculada desde cada aviso hasta el predio CMPC más cercano. Los puntos dentro de un predio se clasifican a 0 m.</div>
 
+</section>
+
+<section id="operationalResources" class="module-page operations-module" aria-labelledby="operationsTitle">
+  <div class="operations-head">
+    <div><div class="operations-eyebrow">PROTECCIÓN FORESTAL · CENTRO DE OPERACIONES</div><h2 id="operationsTitle">Estado operacional de recursos</h2><p>Actualización de recursos, supervisores y medios aéreos en línea.</p></div>
+    <div class="operations-live"><span class="operations-live-dot"></span><span id="operationsSyncLabel">Comprobando conexión…</span><small id="operationsUpdatedAt">Sin actualización publicada</small></div>
+  </div>
+  <div class="operations-toolbar"><div><strong>Panel de edición</strong><span>Modifica las casillas directamente. Los cambios se publican al guardar.</span></div><div class="operations-toolbar-actions"><button type="button" class="secondary" id="operationsAddResource">＋ Agregar recurso</button><button type="button" id="operationsSave">Guardar cambios</button></div></div>
+  <div class="operations-sync-notice" id="operationsSyncNotice" role="status">Conectando con el almacenamiento compartido…</div>
+  <div class="operations-kpis" id="operationsKpis"></div>
+  <div class="operations-alerts" id="operationsAlerts"><strong>Alertas operacionales</strong><span id="operationsAlertList">Sin alertas registradas</span></div>
+  <div class="operations-zone-grid" id="operationsZones"></div>
+  <section class="operations-panel"><div class="operations-panel-title"><span>♙</span><h3>Supervisores</h3><button type="button" class="secondary" data-add-group="supervisors">＋ Agregar</button></div><div class="operations-table-scroll"><table class="operations-table"><thead><tr><th>Recurso</th><th>Estado</th><th>Observación</th><th></th></tr></thead><tbody id="operationsSupervisors"></tbody></table></div></section>
+  <section class="operations-panel"><div class="operations-panel-title"><span>✈</span><h3>Recursos aéreos</h3><button type="button" class="secondary" data-add-group="aircraft">＋ Agregar</button></div><div class="operations-air-grid" id="operationsAircraft"></div></section>
+  <div class="operations-footer"><span>Los cambios solo se consideran compartidos cuando el servidor confirma el guardado.</span><span id="operationsVersion"></span></div>
 </section>
 <section id="coordinateConverter" class="module-page converter-module" aria-labelledby="converterTitle">
   <div class="converter-heading">
