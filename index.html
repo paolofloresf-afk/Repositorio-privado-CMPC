@@ -2207,6 +2207,42 @@ html[data-theme="dark"] .operations-sync-notice.pending{background:#3b2d1b;color
 @media(max-width:700px){.operations-head{padding:17px;flex-direction:column}.operations-live{width:100%}.operations-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.operations-toolbar-actions{display:grid;grid-template-columns:1fr 1fr}.operations-toolbar-actions button{min-width:0;width:100%}.operations-alerts{grid-template-columns:1fr}.operations-air-grid{grid-template-columns:1fr 1fr}.operations-status-guide{gap:9px 12px}}
 @media(max-width:420px){.operations-air-grid{grid-template-columns:1fr}.operations-toolbar-actions{grid-template-columns:1fr}}
 
+
+/* Vista tipo planilla operacional solicitada */
+.operations-zone-grid{display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));gap:9px;align-items:start}
+.operations-panel.ops-sheet{border:1px solid #8b9aa5;border-radius:2px;box-shadow:none;margin:0;background:#fff;color:#14212b}
+.ops-sheet .operations-panel-title{padding:5px 7px;background:#315f9d;color:#fff;border-bottom:1px solid #172d48;min-height:25px}
+.ops-sheet .operations-panel-title h3{font-size:11px;color:#fff;font-weight:850;letter-spacing:.02em}
+.ops-sheet .operations-panel-title>span{font-size:12px;color:#fff}
+.ops-sheet .operations-panel-title button{padding:2px 6px;min-height:20px;font-size:10px}
+.ops-sheet .operations-table-scroll{overflow-x:auto}
+.ops-sheet .operations-table.ops-compact{width:100%;min-width:0;border-collapse:collapse;font-size:10px;table-layout:fixed}
+.ops-sheet .ops-compact th{background:#4779b8;color:#fff;padding:4px 5px;font-size:9px;text-transform:none;letter-spacing:0;border:1px solid #243e5d}
+.ops-sheet .ops-compact td{padding:0;border:1px solid #aab4bd;height:22px}
+.ops-sheet .ops-compact th:nth-child(1){width:34%}.ops-sheet .ops-compact th:nth-child(2){width:35%}.ops-sheet .ops-compact th:nth-child(3){width:15%}.ops-sheet .ops-compact th:nth-child(4){width:16%}
+.ops-sheet .ops-compact input,.ops-sheet .ops-compact select{border:0;border-radius:0;width:100%;min-width:0;height:22px;min-height:22px;padding:2px 4px;font-size:10px;box-shadow:none!important;background:#e7f1ed;color:#14212b}
+.ops-sheet .ops-compact td:first-child input{font-weight:750;background:#d9e9df}
+.ops-sheet .ops-compact select[data-field=status]{font-weight:850}
+.ops-sheet .ops-compact select[data-status="BASE"]{background:#315d9d;color:#fff}
+.ops-sheet .ops-compact select[data-status="NO DISPONIBLE"]{background:#777f83;color:#f36d24}
+.ops-sheet .ops-compact select[data-status="DISPONIBLE"]{background:#b9e7c8;color:#08752e}
+.ops-sheet .ops-compact select[data-status="R29"]{background:#d9e8f8;color:#1c4e83}
+.ops-sheet .ops-compact select[data-status="DL"]{background:#161a20;color:#fff}
+.ops-sheet .ops-compact select[data-status="Sin actualizar"]{background:#e5e9ed;color:#536273}
+.ops-sheet .ops-compact select[data-status="En ruta"]{background:#d7eafb;color:#155c95}
+.ops-sheet .ops-compact select[data-status="En R24"]{background:#ffedcf;color:#8b5108}
+.ops-sheet .ops-compact select[data-status="Retorno"]{background:#d8eff4;color:#1b687e}
+.ops-sheet .ops-compact select[data-status="Exceso jornada"]{background:#f9dadd;color:#a52e3b}
+.ops-sheet .ops-compact select[data-status="Coordinación"]{background:#ffedcf;color:#8b5108}
+.ops-sheet .ops-compact input:focus,.ops-sheet .ops-compact select:focus{outline:2px solid #e6ad35;outline-offset:-2px;z-index:2}
+.ops-supervisors{grid-column:auto}
+.operations-status-guide{padding:8px 11px;margin-bottom:10px;border-radius:5px}
+.operations-kpis{grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.operations-kpi{min-height:65px;padding:9px 10px;border-radius:6px;box-shadow:none}
+.operations-kpi strong{font-size:22px}.operations-kpi span{font-size:8px}
+@media(max-width:1250px){.operations-zone-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.operations-zone-grid{grid-template-columns:1fr}.operations-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 
 </head><body><aside class="app-sidebar" id="appSidebar" aria-label="Panel lateral de navegación">
@@ -2571,7 +2607,7 @@ html[data-theme="dark"] .operations-sync-notice.pending{background:#3b2d1b;color
   </div>
   <div class="operations-toolbar"><div class="operations-toolbar-copy"><strong>Centro de control de recursos</strong><span>Actualiza estados y asignaciones. Los colores permiten identificar rápidamente la disponibilidad.</span></div><div class="operations-toolbar-actions"><button type="button" class="secondary" id="operationsAddResource">＋ Agregar recurso</button><button type="button" id="operationsSave"><span aria-hidden="true">↥</span> Publicar cambios</button></div></div>
   <div class="operations-status-guide" aria-label="Leyenda de estados">
-    <span><i class="status-dot available"></i>Disponible</span><span><i class="status-dot route"></i>En ruta</span><span><i class="status-dot r24"></i>En R24</span><span><i class="status-dot return"></i>Retorno</span><span><i class="status-dot excess"></i>Exceso jornada</span><span><i class="status-dot off"></i>Día libre</span><span><i class="status-dot unavailable"></i>No disponible</span>
+    <span><i class="status-dot available"></i>DISPONIBLE</span><span><i class="status-dot route"></i>BASE</span><span><i class="status-dot unavailable"></i>NO DISPONIBLE</span><span><i class="status-dot r24"></i>R29</span><span><i class="status-dot off"></i>DL</span>
   </div>
   <div class="operations-sync-notice" id="operationsSyncNotice" role="status">Conectando con el almacenamiento compartido…</div>
   <div class="operations-kpis" id="operationsKpis"></div>
@@ -4583,7 +4619,7 @@ setTimeout(()=>map.invalidateSize(),1000)
 (() => {
  const root=document.getElementById('operationalResources');if(!root)return;
  const API='/api/operational/resources',DRAFT_KEY='cmpc-operational-resources-draft-v1';
- const states=['Sin actualizar','Disponible','Base','En ruta','En R24','Retorno','Exceso jornada','Día libre','No disponible','Coordinación'];
+ const states=['Sin actualizar','DISPONIBLE','BASE','NO DISPONIBLE','En ruta','En R24','Retorno','R29','DL','Exceso jornada','Coordinación'];
  const zones=[
   {id:'center',title:'CENTRO',bases:'PIN · MDO · TRAL · NAC · TRI · YUM · YUN · TALC · MILL',resources:['BM312A','BM312B','BM312C','BM312D','BHM314-HM4','CM311','BHM318-HM5','BM413','BM414A','BM414B','BHM417-HM3','CM411','BM415A','BM415B','BM416A','BM416B','BM416C','BM514A','BM514B','BM514C','BM514D','BM315A','BM315B','BM315C','BM315D','BM316A','BM316B','BM316C','BM316D','BM315D','SM31.2']},
   {id:'south',title:'SUR',bases:'TUE · MIN · MUL · ANT · VIC',resources:['BHM512-HM6','BM517','CM511','BM514A','BM514B','BM514C','BM514D','BM519','BM513A','BM513B','BM513C','BM513D','BHM617-HM8','BM613','CM611','BM618A','BM618B','BM618C','BM618D','SM6110','BHM612-HM7','BM614','CM611','SM619','BM615A','BM615B','BM615C','BM615D']},
@@ -4597,7 +4633,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  });
  let data=defaultData(),serverAvailable=false,dirty=false;
  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const statusColor=status=>({'Disponible':'#36b86c','En ruta':'#3299e8','En R24':'#f39b38','Retorno':'#6f9ed0','Exceso jornada':'#ef4055','Día libre':'#aab6c8','No disponible':'#89949c','Coordinación':'#f39b38','Sin actualizar':'#89949c'}[status]||'#89949c');
+ const statusColor=status=>({'DISPONIBLE':'#16853f','BASE':'#315d9d','NO DISPONIBLE':'#747b80','En ruta':'#287fc0','En R24':'#d88725','Retorno':'#398fae','R29':'#b8752a','DL':'#20252b','Exceso jornada':'#d94350','Coordinación':'#d88725','Sin actualizar':'#89949c'}[status]||'#89949c');
  const setNotice=(message,type='')=>{const el=document.getElementById('operationsSyncNotice');el.className='operations-sync-notice '+type;el.textContent=message;};
  const allResources=()=>[...data.zones.flatMap(z=>z.resources),...data.aircraft];
  function statusSelect(value,kind,zone,index){return '<select aria-label="Estado" data-status="'+esc(value)+'" data-kind="'+kind+'" data-zone="'+zone+'" data-index="'+index+'" data-field="status">'+states.map(st=>'<option '+(st===value?'selected':'')+'>'+st+'</option>').join('')+'</select>';}
@@ -4606,7 +4642,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   const resources=allResources(),counts=states.reduce((a,st)=>(a[st]=resources.filter(r=>r.status===st).length,a),{});
   const kpis=[['TOTAL RECURSOS',resources.length],['DISPONIBLES',counts['Disponible']||0],['EN RUTA',counts['En ruta']||0],['EN R24',counts['En R24']||0],['RETORNO',counts['Retorno']||0],['EXCESO JORNADA',counts['Exceso jornada']||0],['DÍA LIBRE',counts['Día libre']||0]];
   document.getElementById('operationsKpis').innerHTML=kpis.map((k,i)=>'<div class="operations-kpi" style="--kpi-color:'+(['#8291a2','#24965b','#287fc0','#d88725','#398fae','#d94350','#8291a2'][i])+'"><strong style="color:'+(['#8291a2','#24965b','#287fc0','#d88725','#398fae','#d94350','#8291a2'][i])+'">'+k[1]+'</strong><span>'+k[0]+'</span></div>').join('');
-  document.getElementById('operationsZones').innerHTML=data.zones.map(z=>'<section class="operations-panel"><div class="operations-panel-title"><span>⌁</span><h3>'+esc(z.title)+'</h3><button type="button" class="secondary" data-add-zone="'+esc(z.id)+'">＋ Agregar</button></div><div style="padding:5px 12px;color:var(--muted);font-size:9px;border-bottom:1px solid var(--line)">'+esc(z.bases)+'</div><div class="operations-table-scroll"><table class="operations-table"><thead><tr><th>Recurso</th><th>Estado</th><th>Act.</th><th>Incendio / sector</th><th>Carga laboral</th><th></th></tr></thead><tbody>'+z.resources.map((r,i)=>'<tr><td>'+inputCell(r.code,'resource',z.id,i,'code','Código','class="resource-code"')+'</td><td>'+statusSelect(r.status,'resource',z.id,i)+'</td><td class="cell-small">'+inputCell(r.activity,'resource',z.id,i,'activity','—')+'</td><td class="cell-sector">'+inputCell(r.sector,'resource',z.id,i,'sector','Sector')+'</td><td class="cell-hours">'+inputCell(r.hours,'resource',z.id,i,'hours','hh:mm')+'</td><td><button type="button" class="remove-row" data-remove-zone="'+esc(z.id)+'" data-index="'+i+'" title="Eliminar recurso">×</button></td></tr>').join('')+'</tbody></table></div></section>').join('');
+  document.getElementById('operationsZones').innerHTML=data.zones.map(z=>'<section class="operations-panel ops-sheet"><div class="operations-panel-title"><span>▦</span><h3>'+esc(z.title)+'</h3><button type="button" class="secondary" data-add-zone="'+esc(z.id)+'">＋</button></div><div class="operations-table-scroll"><table class="operations-table ops-compact"><thead><tr><th>Recursos</th><th>Estado</th><th>Act</th><th>R24</th></tr></thead><tbody>'+z.resources.map((r,i)=>'<tr><td>'+inputCell(r.code,'resource',z.id,i,'code','Código','class="resource-code"')+'</td><td>'+statusSelect(r.status,'resource',z.id,i)+'</td><td>'+inputCell(r.activity,'resource',z.id,i,'activity','—')+'</td><td>'+inputCell(r.hours,'resource',z.id,i,'hours','—')+'</td></tr>').join('')+'</tbody></table></div></section>').join('')+'<section class="operations-panel ops-sheet ops-supervisors"><div class="operations-panel-title"><span>♙</span><h3>SUPERVISORES</h3><button type="button" class="secondary" data-add-group="supervisors">＋</button></div><div class="operations-table-scroll"><table class="operations-table ops-compact"><thead><tr><th>Recursos</th><th>Estado</th><th>Act</th><th>R24</th></tr></thead><tbody>'+data.supervisors.map((r,i)=>'<tr><td>'+inputCell(r.code,'supervisor','',i,'code','Supervisor','class="resource-code"')+'</td><td>'+statusSelect(r.status,'supervisor','',i)+'</td><td>'+inputCell(r.observation,'supervisor','',i,'observation','—')+'</td><td></td></tr>').join('')+'</tbody></table></div></section>';
   document.getElementById('operationsSupervisors').innerHTML=data.supervisors.map((r,i)=>'<tr><td>'+inputCell(r.code,'supervisor','',i,'code','Supervisor','class="resource-code"')+'</td><td>'+statusSelect(r.status,'supervisor','',i)+'</td><td>'+inputCell(r.observation,'supervisor','',i,'observation','Observación')+'</td><td><button type="button" class="remove-row" data-remove-group="supervisors" data-index="'+i+'">×</button></td></tr>').join('');
   document.getElementById('operationsAircraft').innerHTML=data.aircraft.map((r,i)=>'<div class="operations-air-card"><strong>'+inputCell(r.code,'aircraft','',i,'code','Código')+'</strong><label>ESTADO'+statusSelect(r.status,'aircraft','',i)+'</label><label>AUTONOMÍA'+inputCell(r.autonomy,'aircraft','',i,'autonomy','Ej. 02:30')+'</label><label>ACTIVIDAD'+inputCell(r.activity,'aircraft','',i,'activity','Ej. Incendio 11')+'</label><label>SECTOR'+inputCell(r.sector,'aircraft','',i,'sector','Sector')+'</label><button type="button" class="remove-row" data-remove-group="aircraft" data-index="'+i+'">Eliminar</button></div>').join('');
   const alerts=resources.filter(r=>r.status==='Exceso jornada'||r.status==='Retorno'||r.status==='Coordinación');
