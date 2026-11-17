@@ -4716,7 +4716,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  document.getElementById('operationsSave').addEventListener('click',save);
  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
  load();
- window.setInterval(refreshShared,20000);
+ window.setInterval(refreshShared,3000);
 })();
 
 (() => {
