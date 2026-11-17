@@ -4559,7 +4559,7 @@ setTimeout(()=>map.invalidateSize(),1000)
 (() => {
  const root=document.getElementById('operationalResources');if(!root)return;
  const API='/api/operational/resources',DRAFT_KEY='cmpc-operational-resources-draft-v1';
- const states=['Sin actualizar','Disponible','En ruta','En R24','Retorno','Exceso jornada','Día libre','No disponible','Coordinación'];
+ const states=['Sin actualizar','Disponible','Base','En ruta','En R24','Retorno','Exceso jornada','Día libre','No disponible','Coordinación'];
  const zones=[
   {id:'center',title:'CENTRO',bases:'PIN · MDO · TRAL · NAC · TRI · YUM · YUN · TALC · MILL',resources:['BM312A','BM312B','BM312C','BM312D','BHM314-HM4','CM311','BHM318-HM5','BM413','BM414A','BM414B','BHM417-HM3','CM411','BM415A','BM415B','BM416A','BM416B','BM416C','BM514A','BM514B','BM514C','BM514D','BM315A','BM315B','BM315C','BM315D','BM316A','BM316B','BM316C','BM316D','BM315D','SM31.2']},
   {id:'south',title:'SUR',bases:'TUE · MIN · MUL · ANT · VIC',resources:['BHM512-HM6','BM517','CM511','BM514A','BM514B','BM514C','BM514D','BM519','BM513A','BM513B','BM513C','BM513D','BHM617-HM8','BM613','CM611','BM618A','BM618B','BM618C','BM618D','SM6110','BHM612-HM7','BM614','CM611','SM619','BM615A','BM615B','BM615C','BM615D']},
@@ -4630,6 +4630,18 @@ setTimeout(()=>map.invalidateSize(),1000)
   }
   render();
  }
+ async function refreshShared(){
+  if(document.hidden)return;
+  if(!serverAvailable){await load();return;}
+  try{
+   const res=await fetch(API,{cache:'no-store',credentials:'same-origin'});if(!res.ok)throw new Error('API '+res.status);
+   const payload=await res.json();
+   if(payload&&Number(payload.version)>Number(data.version||0)){
+    if(dirty){setNotice('Hay una versión nueva publicada por otro usuario. Guarda o descarta tu borrador antes de recargar.','pending');return;}
+    data={...defaultData(),...payload.data,version:payload.version,updatedAt:payload.updatedAt,updatedBy:payload.updatedBy};render();setNotice('Información sincronizada con una actualización de otro usuario.','success');
+   }
+  }catch(_){serverAvailable=false;setNotice('Se perdió la conexión con el servidor compartido. Los cambios no se publicarán hasta reconectar.','error');render();}
+ }
  async function save(){
   if(!serverAvailable){localStorage.setItem(DRAFT_KEY,JSON.stringify(cleanPayload()));dirty=false;setNotice('Borrador guardado solo en este navegador. No está publicado ni compartido. Falta activar la base central.','error');return;}
   const button=document.getElementById('operationsSave');button.disabled=true;
@@ -4644,6 +4656,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  document.getElementById('operationsSave').addEventListener('click',save);
  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
  load();
+ window.setInterval(refreshShared,20000);
 })();
 
 (() => {
