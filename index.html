@@ -4575,7 +4575,7 @@ setTimeout(()=>map.invalidateSize(),1000)
  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const statusColor=status=>({'Disponible':'#36b86c','En ruta':'#3299e8','En R24':'#f39b38','Retorno':'#6f9ed0','Exceso jornada':'#ef4055','Día libre':'#aab6c8','No disponible':'#89949c','Coordinación':'#f39b38','Sin actualizar':'#89949c'}[status]||'#89949c');
  const setNotice=(message,type='')=>{const el=document.getElementById('operationsSyncNotice');el.className='operations-sync-notice '+type;el.textContent=message;};
- const allResources=()=>data.zones.flatMap(z=>z.resources);
+ const allResources=()=>[...data.zones.flatMap(z=>z.resources),...data.aircraft];
  function statusSelect(value,kind,zone,index){return '<select aria-label="Estado" data-kind="'+kind+'" data-zone="'+zone+'" data-index="'+index+'" data-field="status">'+states.map(st=>'<option '+(st===value?'selected':'')+'>'+st+'</option>').join('')+'</select>';}
  function inputCell(value,kind,zone,index,field,placeholder,extra=''){return '<input '+extra+' data-kind="'+kind+'" data-zone="'+zone+'" data-index="'+index+'" data-field="'+field+'" value="'+esc(value)+'" placeholder="'+esc(placeholder||'—')+'">';}
  function render(){
@@ -4631,7 +4631,7 @@ setTimeout(()=>map.invalidateSize(),1000)
   render();
  }
  async function save(){
-  if(!serverAvailable){localStorage.setItem(DRAFT_KEY,JSON.stringify(cleanPayload()));setNotice('Borrador guardado solo en este navegador. No está publicado ni compartido. Falta activar la base central.','error');return;}
+  if(!serverAvailable){localStorage.setItem(DRAFT_KEY,JSON.stringify(cleanPayload()));dirty=false;setNotice('Borrador guardado solo en este navegador. No está publicado ni compartido. Falta activar la base central.','error');return;}
   const button=document.getElementById('operationsSave');button.disabled=true;
   try{
    const res=await fetch(API,{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:cleanPayload(),expectedVersion:data.version})});
