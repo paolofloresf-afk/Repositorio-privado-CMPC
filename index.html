@@ -4614,7 +4614,6 @@ setTimeout(()=>map.invalidateSize(),1000)
   const removeZone=e.target.closest('[data-remove-zone]');if(removeZone){const z=data.zones.find(x=>x.id===removeZone.dataset.removeZone);z.resources.splice(Number(removeZone.dataset.index),1);render();dirty=true;return;}
   const removeGroup=e.target.closest('[data-remove-group]');if(removeGroup){data[removeGroup.dataset.removeGroup].splice(Number(removeGroup.dataset.index),1);render();dirty=true;return;}
   const add=e.target.closest('#operationsAddResource');if(add){data.zones[0].resources.push({code:'',status:'Sin actualizar',activity:'',sector:'',hours:'',base:''});render();dirty=true;return;}
-  if(e.target.closest('#operationsSave'))save();
  });
  function cleanPayload(){return {zones:data.zones,supervisors:data.supervisors,aircraft:data.aircraft};}
  async function load(){
